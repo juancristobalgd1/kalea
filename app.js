@@ -173,8 +173,9 @@ const JOBS=[
  {biz:'Panadería del centro',puesto:'Dependiente/a de mañanas',det:'De lunes a viernes, de 7:00 a 13:00.',when:'ayer',ej:1},
  {biz:'Taller mecánico',puesto:'Ayudante de mecánico',det:'Jornada completa. Se valora carnet B.',when:'hace 3 días',ej:1}];
 function firstArr(d,depth=0){if(Array.isArray(d))return d;if(d&&typeof d==='object'&&depth<3){for(const v of Object.values(d)){const a=firstArr(v,depth+1);if(a)return a}}return null}
-function lbLoad(k){if(LB[k]||LB.ld[k])return;LB.ld[k]=1;LB.err[k]=0;let ok=0;
- const fin=()=>{if(tab==='work')workV()};
+function lbLoad(k,skipFile){if(LB[k]||(LB.ld[k]&&!skipFile))return;LB.ld[k]=1;LB.err[k]=0;let ok=0;
+ const fin=()=>{if(tab==='work')workV();else refreshHome()};
+ if(k==='of'&&!skipFile){fetch('lanbide.json?_='+Date.now()).then(r=>{if(!r.ok)throw 0;return r.json()}).then(d=>{if(!d.items||!d.items.length)throw 0;LB.of=d.items;LB.ld.of=0;fin()}).catch(()=>{LB.ld.of=0;lbLoad('of',1)});return}
  window[k==='of'?'kaleaOf':'kaleaCu']=d=>{ok=1;LB.ld[k]=0;LB[k]=firstArr(d)||[];fin()};
  const sc=document.createElement('script');sc.src=LBURL[k]+'&_='+Date.now();
  const fail=()=>{if(ok)return;LB.ld[k]=0;LB.err[k]=1;fin()};sc.onerror=fail;setTimeout(fail,12000);document.body.appendChild(sc)}
@@ -212,6 +213,24 @@ function qPost(q){const l=liked.has('q-'+q.id),n=q.ans.length;return `<article c
  <div class="qtext">${q.q}</div><div class="qai">${aiBox(q.q)}</div>
  <div class="pa"><button class="pill ${l?'liked':''}" data-like="q-${q.id}">${ic('heart')} ${(q.mine?0:12)+(l?1:0)}</button><button class="pill" data-tab="ask">${ic('chat')} ${n} ${n===1?'respuesta':'respuestas'}</button><button class="cta" data-tab="ask">${ic('chat')} Responder</button></div></article>`}
 
+
+/* ===== Noticias de Euskadi y empleo en el inicio ===== */
+let EUNEWS=null;
+const esc=x=>String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const ago=ts=>{if(!ts)return '';const m=Math.max(1,Math.round((Date.now()/1000-ts)/60));return m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`};
+function refreshHome(){if(tab!=='home')return;const y=view.scrollTop;home();view.scrollTop=y}
+function loadNews(){if(EUNEWS)return;EUNEWS=[];fetch('news.json?_='+Date.now()).then(r=>r.json()).then(d=>{EUNEWS=d.items||[];refreshHome()}).catch(()=>{})}
+function newsPost(n){const l=liked.has('n-'+n.u);return `<article class="post ai npost"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Resumen automático</span></b><small>Noticias de Euskadi · ${ago(n.ts)}</small></div></div>
+ ${n.img?`<img class="pimg nimg" src="${esc(n.img)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}
+ <div class="evbody">${n.local?'<span class="near">Cerca de ti</span>':''}<h4>${esc(n.t)}</h4>${n.d?`<p>${esc(n.d)}</p>`:''}<small class="nsrc">Fuente: ${esc(n.s)}</small></div>
+ <div class="pa"><button class="pill ${l?'liked':''}" data-like="n-${esc(n.u)}">${ic('heart')} ${l?1:0}</button><a class="cta nlink" href="${esc(n.u)}" target="_blank" rel="noopener">Leer en ${esc(n.s)}</a></div></article>`}
+function lbPost(o){const d=(o.desPuesto||'').replace(/<[^>]+>/g,'');return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Creado con IA</span></b><small>Empleo en tu zona · Fuente: Lanbide</small></div></div>
+ <div class="qtext jtext"><small>Oferta de empleo · ${esc(cap(o.municipio))}</small>Se busca ${esc(cap(o.desEmpleo))}</div><div class="evbody">${d?`<p>${esc(d.length>180?d.slice(0,180)+'…':d)}</p>`:''}<small class="nsrc">Publicada el ${esc((o.fecPub||'').trim())} en Lanbide</small></div>
+ <div class="pa"><a class="pill" href="${esc(o.url)}" target="_blank" rel="noopener">${ic('bag')} Ver oferta</a><button class="cta" data-tab="work" data-wt="of">Más ofertas</button></div></article>`}
+function jobPost(j){const i=JOBS.indexOf(j);return `<article class="post"><div class="ph"><div class="av qav2 jav">${ic('store')}</div><div class="nm"><b>${j.biz}${j.ej?' <span class="ej">Ejemplo</span>':''}</b><small>${j.when} · Se busca</small></div><span style="color:var(--muted)">•••</span></div>
+ <div class="qtext jtext"><small>Se busca</small>${j.puesto}</div>${j.det?`<div class="evbody"><p>${j.det}</p></div>`:''}
+ <div class="pa"><button class="pill" data-tab="work" data-wt="se">${ic('store')} Más ofertas</button><button class="cta" data-jobi="${i}">Me interesa</button></div></article>`}
+
 function home(){view.innerHTML=topBar()+stories()+agenda()+askCard()+workCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
@@ -230,9 +249,20 @@ function incSheet(){openSheet(`<h3>Avisar de una incidencia</h3><p class="sub">L
 function evSheet(id){const e=AIEV.find(x=>x.id===id);openSheet(`<div class="post ai sheetpost">${aiPost(e).replace(/^<article class="post ai">|<\/article>$/g,'')}</div>`)}
 function newsSheet(id){const n=NEWS.find(x=>x.id===id);openSheet(`<div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><h3>${n.title}</h3><p class="sub">${n.txt}</p><small class="aisrc">${ic('spark')} Resumido por Kalea IA · Fuente: ${n.src}</small>`)}
 function feed(){
- if(scope==='provincia')return AIEV.map(aiPost).join('');
- const ev=AIEV.filter(e=>e.scope==='pueblo');const out=[];
- myQs.forEach(q=>out.push(qPost(q)));POSTS.forEach((p,i)=>{out.push(post(p));if(i===0)out.push(qPost(QS[0]));if(ev[i])out.push(aiPost(ev[i]))});return out.join('');
+ loadNews();if(!LB.of&&!LB.ld.of&&!LB.err.of)lbLoad('of');
+ const nw=EUNEWS||[];
+ if(scope==='provincia'){const out=[];const n=nw.filter(x=>!x.local);AIEV.forEach((e,i)=>{out.push(aiPost(e));if(n[i])out.push(newsPost(n[i]))});n.slice(AIEV.length,12).forEach(x=>out.push(newsPost(x)));return out.join('')}
+ const ev=AIEV.filter(e=>e.scope==='pueblo'),loc=nw.filter(x=>x.local).concat(nw.filter(x=>!x.local)).slice(0,8);
+ const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z))).sort((a,b)=>pd(b.fecPub)-pd(a.fecPub)).slice(0,3);
+ const out=[];myQs.forEach(q=>out.push(qPost(q)));JOBS.filter(j=>!j.ej).forEach(j=>out.push(jobPost(j)));
+ POSTS.forEach((p,i)=>{out.push(post(p));
+  if(i===0)out.push(qPost(QS[0]));
+  if(i===1)out.push(lb[0]?lbPost(lb[0]):jobPost(JOBS.find(j=>j.ej)));
+  if(i===3&&lb[1])out.push(lbPost(lb[1]));
+  if(ev[i])out.push(aiPost(ev[i]));
+  if(loc[i])out.push(newsPost(loc[i]))});
+ loc.slice(POSTS.length).forEach(x=>out.push(newsPost(x)));
+ return out.join('');
 }
 function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Creado con IA</span></b><small>Fuente: ${e.src}</small></div></div>
  <div class="evimg"><img class="pimg" src="${e.img}" alt=""><div class="evdate"><b>${e.day}</b><small>${e.mon}</small></div><span class="evscope">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div>
@@ -412,7 +442,7 @@ document.addEventListener('click',e=>{
  else if(d.walert){need('Para recibir avisos',()=>{walert=!walert;workV();toast(walert?'Te avisaremos cuando salga algo nuevo en tu zona':'Aviso desactivado')})}
  else if(d.lbretry){LB.err[d.lbretry]=0;workV()}
  else if(d.jobi){const j=JOBS[+d.jobi];need('Para enviar tu interés',()=>toast('Interés enviado a '+j.biz))}
- else if(d.jobpub){need('Para publicar una oferta',()=>{openSheet(`<h3>Publicar oferta</h3><div class="sub">Gratis para negocios de Elgoibar</div><input class="field" id="jp" placeholder="Puesto (ej.: camarero/a fines de semana)"><input class="field" id="jb" placeholder="Nombre del negocio"><textarea class="field" id="jd" rows="3" placeholder="Horario, condiciones y requisitos"></textarea><button class="big-cta" id="jsend">Publicar</button>`);$('#jsend').onclick=()=>{const p=$('#jp').value.trim(),b=$('#jb').value.trim();if(!p||!b)return;const esc=x=>x.replace(/</g,'&lt;');JOBS.unshift({biz:esc(b),puesto:esc(p),det:esc($('#jd').value.trim()),when:'ahora'});closeSheet();wtab='se';tab='work';render();toast('Oferta publicada')}})}
+ else if(d.jobpub){need('Para publicar una oferta',()=>{openSheet(`<h3>Publicar oferta</h3><div class="sub">Gratis para negocios de Elgoibar</div><input class="field" id="jp" placeholder="Puesto (ej.: camarero/a fines de semana)"><input class="field" id="jb" placeholder="Nombre del negocio"><textarea class="field" id="jd" rows="3" placeholder="Horario, condiciones y requisitos"></textarea><button class="big-cta" id="jsend">Publicar</button>`);$('#jsend').onclick=()=>{const p=$('#jp').value.trim(),b=$('#jb').value.trim();if(!p||!b)return;const esc=x=>x.replace(/</g,'&lt;');JOBS.unshift({biz:esc(b),puesto:esc(p),det:esc($('#jd').value.trim()),when:'ahora'});closeSheet();tab='home';render();toast('Oferta publicada. Ya la ven tus vecinos en el inicio')}})}
  else if(d.sug){pendingQ=d.sug;askV()}
  else if(d.upv){const k=d.upv;need('Para votar respuestas',()=>{upv.has(k)?upv.delete(k):upv.add(k);askV()})}
  else if(d.reply){const id=d.reply,inp=$('#r-'+id),txt=inp?inp.value.trim():'';if(!txt){inp&&inp.focus();return}need('Para responder',()=>{const q=myQs.concat(QS).find(x=>x.id===id);q.ans.push({who:(user.name||'Tú').split(' ')[0],txt:txt.replace(/</g,'&lt;'),v:0});points+=10;askV();toast('Respuesta publicada',10)})}
