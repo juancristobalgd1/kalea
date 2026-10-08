@@ -75,7 +75,7 @@ function topBar(){return `<div class="top"><button class="place"><div><small>Tu 
 function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${i>3?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].name.split(' ')[0]==='Taberna'?'Itsasoa':B[k].name.split(' ')[0]}</span></button>`).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
-function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><span class="pill">${ic('chat')} ${p.com}</span><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
+function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
 function home(){view.innerHTML=topBar()+stories()+flash()+muni()+`<div class="sec"><h3>${t('feed')}</h3></div>`+POSTS.map(post).join('')}
 
 function explore(){
@@ -99,15 +99,15 @@ function profile(k){
  view.innerHTML=`<div class="cover" style="background-image:url(${b.img})"><button class="back" data-tab="${tab}">${ic('back')}</button></div><div class="prof"><img class="big" src="${b.img}" alt=""><h2>${b.name} ${ic('ver','ver')}</h2><div class="meta">${b.cat} · <span class="star">★ ${b.rating}</span> (${b.rev}) · <span class="open">${b.open}</span></div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
  <div class="acts"><button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button><button class="ghost" onclick="toast('Llamando a ${b.name}...')">${ic('phone')}</button><button class="ghost" onclick="toast('${b.street}, Elgoibar')">${ic('pin')}</button></div>
  <div class="stats"><div><b>${b.followers}</b><small>vecinos le siguen</small></div><div><b>${b.rev}</b><small>reseñas</small></div><div><b>+5%</b><small>en puntos</small></div></div>
- <div class="tabs2"><button class="on" data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button><button data-pt="pubs">Publicaciones</button><button data-pt="info">Info</button></div><div id="pt"></div></div>`;
+ <button class="rate" data-rate="${k}"><span>Valora ${b.name}</span><span class="st5">★★★★★</span></button><div class="tabs2"><button class="on" data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button><button data-pt="pubs">Publicaciones</button><button data-pt="info">Info</button></div><div id="pt"></div></div>`;
  const pt=w=>{$('#pt').innerHTML=w==='menu'?b.menu.map(m=>`<div class="menu-i"><div>${m[0]}<small>${m[1]}</small></div><b>${m[2]}</b></div>`).join(''):w==='pubs'?`<div class="grid3">${order.concat(order).slice(0,9).map(x=>`<img src="${B[x].img}" alt="">`).join('')}</div>`:`<div class="hours">${b.street}, 20870 Elgoibar<br>Lunes a jueves: 9:00 a 22:00<br>Viernes y sábado: 9:00 a 1:00<br>Domingo: 10:00 a 16:00<br><br>Esta página se crea sola al unirse a Kalea y sale en Google.</div>`;
   document.querySelectorAll('[data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w))};
  document.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>pt(x.dataset.pt));pt('menu');view.scrollTop=0;
 }
 
 function pointsV(){
- view.innerHTML=`<div class="top"><div class="place">${t('points')}</div></div><div class="wallet"><small>Puntos Kalea</small><div class="pts">${points.toLocaleString('es-ES')}</div><small>= ${(points/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar</small><div class="qr">${ic('qr')}</div></div>
- <div class="sec"><h3>Cómo ganar puntos</h3></div><div class="list">
+ view.innerHTML=`<div class="top"><div class="place">${t('points')}</div></div><div class="wallet"><small>Puntos Kalea</small><div class="pts">${(user?points:0).toLocaleString('es-ES')}</div><small>= ${((user?points:0)/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar</small><div class="qr">${ic('qr')}</div></div>
+ ${user?'':`<div style="margin:0 18px 14px"><button class="gbtn" data-login="1">${GLOGO} Entra para empezar a sumar</button></div>`}<div class="sec"><h3>Cómo ganar puntos</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Reserva o pide cita</b><small>En cualquier negocio de Kalea</small></div><span class="v">+50</span></div>
  <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Compra en el comercio local</b><small>5 puntos por cada euro</small></div><span class="v">+5/€</span></div>
  <div class="li"><div class="ic">${ic('star')}</div><div class="t"><b>Deja una reseña</b><small>Después de tu visita</small></div><span class="v">+20</span></div>
@@ -127,25 +127,62 @@ function publish(){
  <label>Qué ofreces</label><input class="field" value="${ptype==='flash'?'Mesa para 4 esta noche':ptype==='offer'?'2x1 en pintxos los jueves':'Pintxo pote este jueves'}">
  ${ptype==='flash'?`<label>Hora</label><div class="opts"><span class="opt">20:30</span><span class="opt on">21:30</span><span class="opt">22:00</span></div><label>Descuento</label><div class="opts"><span class="opt">-10%</span><span class="opt on">-15%</span><span class="opt">-20%</span></div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
  <div class="reach">${ic('bell')} Avisaremos a 1.240 vecinos a menos de 1 km</div>
- <button class="big-cta" onclick="toast('Publicado. Ya lo ven tus vecinos')">Publicar ahora</button></div>`;
+ <button class="big-cta" id="pubgo">Publicar ahora</button></div>`;
 }
 
+function hookPub(){const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar como negocio',()=>toast('Publicado. Ya lo ven tus vecinos'))}
 function me(){
+ if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div><div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
- <div class="me"><div class="ava">J</div><div><b>Junci</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
+ <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
  <div class="sec"><h3>Próximas</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Mendi Jatetxea · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
  <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>Txema Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
  <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Goxo Okindegia · pedido en camino</b><small>Llega en 15 min</small></div></div></div>
  <div class="sec"><h3>Siguiendo</h3></div><div class="stories">${order.map(k=>`<button class="st" data-biz="${k}"><div class="ring seen"><img src="${B[k].img}" alt=""></div><span>${B[k].name.split(' ')[0]}</span></button>`).join('')}</div>
- <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;
+ <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish}[tab])();view.scrollTop=0}
+function render(){nav();({home,explore,points:pointsV,profile:me,publish}[tab])();hookPub();view.scrollTop=0}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
 function toast(m,p){const e=$('#toast');e.innerHTML=ic('check')+' '+m+(p?`<span>+${p}</span>`:'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600)}
+
+const CFG=window.KALEA_CONFIG||{};
+let user=null;try{user=JSON.parse(localStorage.getItem('kalea_user')||'null')}catch(e){}
+let pending=null;
+const GLOGO='<svg class="gsvg" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>';
+function need(why,cb){if(user)return cb();pending=cb;loginSheet(why)}
+function loginSheet(why){
+ openSheet(`<div class="login"><div class="logo lg">K</div><h3>Entra en Kalea</h3><div class="sub">${why}. Es gratis y se hace en 5 segundos.</div>
+ <div id="gbtn"></div>${CFG.googleClientId?'':`<button class="gbtn" id="gdemo">${GLOGO} Continuar con Google</button><div class="demo">Modo demo: el acceso real con Google se activa al poner la clave</div>`}
+ <button class="later" id="later">Ahora no, seguir mirando</button>
+ <p class="legal">Puedes ver todo sin registrarte. Solo te pedimos entrar para reservar, pedir, comentar, valorar o dar me gusta.</p></div>`);
+ $('#later').onclick=()=>{pending=null;closeSheet()};
+ if(CFG.googleClientId)renderGoogle();else $('#gdemo').onclick=()=>done({name:'Vecino de Elgoibar',email:'',picture:''});
+}
+function renderGoogle(){
+ const go=()=>{google.accounts.id.initialize({client_id:CFG.googleClientId,callback:r=>{try{const b=r.credential.split('.')[1].replace(/-/g,'+').replace(/_/g,'/');const p=JSON.parse(decodeURIComponent(escape(atob(b))));done({name:p.name||p.email,email:p.email,picture:p.picture||''})}catch(e){toast('No se pudo entrar, prueba otra vez')}}});
+  google.accounts.id.renderButton($('#gbtn'),{theme:'outline',size:'large',shape:'pill',text:'continue_with',width:300,locale:'es'})};
+ if(window.google&&google.accounts)go();else{const sc=document.createElement('script');sc.src='https://accounts.google.com/gsi/client';sc.async=true;sc.onload=go;document.head.appendChild(sc)}
+}
+function done(u){user=u;try{localStorage.setItem('kalea_user',JSON.stringify(u))}catch(e){}closeSheet();toast('Hola, '+u.name.split(' ')[0]);const cb=pending;pending=null;if(cb)setTimeout(cb,380);else if(tab==='profile'||tab==='points')render()}
+function logout(){user=null;try{localStorage.removeItem('kalea_user')}catch(e){}if(window.google&&google.accounts)google.accounts.id.disableAutoSelect();render();toast('Sesión cerrada')}
+const COMMENTS={itsasoa:[['Ane','El jueves ahí estamos'],['Iker','Las gildas, las mejores del pueblo']],goxo:[['Maite','Los de chocolate también, porfa']],ile:[['Leire','Me encantó el color']],etxea:[['Jon','La Elgoibar está brutal'],['Nerea','¿Reparto a Azkue también?']]};
+function commentSheet(i){
+ const p=POSTS[i],cs=COMMENTS[p.b]||[];
+ openSheet(`<h3>Comentarios</h3><div class="sub">${B[p.b].name}</div><div id="cl">${cs.map(c=>`<div class="cm"><b>${c[0]}</b> ${c[1]}</div>`).join('')}</div>
+ <div class="cbox"><input class="field" id="ci" placeholder="Escribe un comentario..."><button class="send" id="cs">Enviar</button></div>`);
+ const send=()=>{const v=$('#ci').value.trim();if(!v){$('#ci').focus();return}need('Para comentar',()=>{(COMMENTS[p.b]=COMMENTS[p.b]||[]).push([user.name.split(' ')[0],v]);p.com++;closeSheet();toast('Comentario publicado');if(tab==='home')home()})};
+ $('#cs').onclick=send;
+}
+function rateSheet(k){
+ let r=0;
+ openSheet(`<h3>Valorar ${B[k].name}</h3><div class="sub">Tu opinión ayuda a otros vecinos</div><div class="stars">${[1,2,3,4,5].map(n=>`<button data-r="${n}">★</button>`).join('')}</div><textarea class="field" rows="3" placeholder="Cuéntanos qué tal (opcional)"></textarea><button class="big-cta" id="rs">Publicar valoración</button><div class="earn">${ic('coin')} +20 puntos</div>`);
+ document.querySelectorAll('[data-r]').forEach(x=>x.onclick=()=>{r=+x.dataset.r;document.querySelectorAll('[data-r]').forEach(y=>y.classList.toggle('on',+y.dataset.r<=r))});
+ $('#rs').onclick=()=>{if(!r){toast('Elige de 1 a 5 estrellas');return}closeSheet();points+=20;toast('Gracias por tu valoración',20)};
+}
 window.toast=toast;
 function opts(list,on,deal){return `<div class="opts">${list.map(x=>`<button class="opt ${x===on?'on':''} ${deal&&deal[x]?'deal':''}" ${deal&&deal[x]?`data-d="${deal[x]}"`:''}>${x}</button>`).join('')}</div>`}
 function action(k,pre){
@@ -155,7 +192,7 @@ function action(k,pre){
   const q=b.menu.map((_,i)=>i===0?2:0),pr=b.menu.map(m=>parseFloat(m[2].replace(',','.')));
   const up=()=>{const s=q.reduce((a,n,i)=>a+n*pr[i],0);$('#tot').textContent=s.toFixed(2).replace('.',',')+' €';q.forEach((n,i)=>$('#q'+i).textContent=n);return s};up();
   document.querySelectorAll('[data-q]').forEach(x=>x.onclick=()=>{const i=+x.dataset.q;q[i]=Math.max(0,q[i]+ +x.dataset.d);up()});
-  $('#go').onclick=()=>{const p=Math.round(up()*5);closeSheet();points+=p;toast('Pedido enviado a '+b.name,p)};return;
+  $('#go').onclick=()=>{const s=up();if(!s){toast('Añade algo al pedido');return}const p=Math.round(s*5);need('Para hacer tu pedido',()=>{closeSheet();if(user)points+=p;toast('Pedido enviado a '+b.name,p)})};return;
  }
  const isC=b.action==='cita';
  openSheet(`<h3>${isC?'Pedir cita en':'Reservar en'} ${b.name}</h3><div class="sub">${b.open}</div>
@@ -164,7 +201,7 @@ function action(k,pre){
  <label>Hora</label>${opts(isC?['10:00','12:30','16:00','17:30','19:00']:['13:30','14:00','20:30','21:30','22:00'],pre||(isC?'17:30':'21:30'),isC?{'17:30':'-20%'}:{'21:30':'-15%'})}
  <button class="big-cta" id="go">${isC?'Confirmar cita':'Confirmar reserva'}</button><div class="earn">${ic('coin')} +50 puntos al confirmar</div>`);
  document.querySelectorAll('.sheet .opts').forEach(g=>g.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')}));
- $('#go').onclick=()=>{closeSheet();points+=50;toast((isC?'Cita confirmada en ':'Reserva confirmada en ')+b.name,50)};
+ $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{closeSheet();points+=50;toast((isC?'Cita confirmada en ':'Reserva confirmada en ')+b.name,50)});
 }
 function story(k){
  const b=B[k],a=ACT[b.action],caps={itsasoa:'Pintxo pote esta noche. Txakoli + pintxo 3 €',mendi:'Chuletón del día listo para la brasa',goxo:'Sale hornada nueva a las 18:00',ile:'Colores de otoño. Reserva y te regalamos el tratamiento',txema:'Me queda un hueco hoy a las 17:30',etxea:'Viernes: reparto gratis en todo el pueblo'};
@@ -175,17 +212,21 @@ function story(k){
 }
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang]');if(!el)return;
+ const el=e.target.closest('[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
  if(d.tab){tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
- else if(d.like){liked.has(d.like)?liked.delete(d.like):liked.add(d.like);home()}
+ else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
+ else if(d.com)commentSheet(+d.com);
+ else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
+ else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
+ else if(d.logout)logout();
  else if(d.story)story(d.story);
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
- else if(d.ptype){ptype=d.ptype;publish()}
+ else if(d.ptype){ptype=d.ptype;publish();hookPub()}
  else if(d.lang){lang=d.lang;render();tab='profile';nav()}
 });
 $('#scrim').onclick=closeSheet;
