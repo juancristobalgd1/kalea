@@ -1,3 +1,4 @@
+(()=>{
 const I={
 home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
@@ -70,16 +71,17 @@ function nav(){
  const tabs=[['home','home'],['explore','search'],['plus','plus'],['points','coin'],['profile','user']];
  $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
-function top(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
+function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
 function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${i>3?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].name.split(' ')[0]==='Taberna'?'Itsasoa':B[k].name.split(' ')[0]}</span></button>`).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><span class="pill">${ic('chat')} ${p.com}</span><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
-function home(){view.innerHTML=top()+stories()+flash()+muni()+`<div class="sec"><h3>${t('feed')}</h3></div>`+POSTS.map(post).join('')}
+function home(){view.innerHTML=topBar()+stories()+flash()+muni()+`<div class="sec"><h3>${t('feed')}</h3></div>`+POSTS.map(post).join('')}
 
 function explore(){
  const cats=['Todos','Bares','Restaurantes','Peluquerías','Barberías','Panaderías','A domicilio'];
- const match=k=>{const c=B[k].cat;return cat==='Todos'||(cat==='Bares'&&c.includes('Bar ')||c.startsWith('Bar'))&&cat==='Bares'||(cat==='Restaurantes'&&c.includes('Restaurante'))||(cat==='Peluquerías'&&c.includes('Peluquería'))||(cat==='Barberías'&&c.includes('Barbería'))||(cat==='Panaderías'&&c.includes('Panadería'))||(cat==='A domicilio'&&c.includes('domicilio'))};
+ const M={'Bares':'Bar','Restaurantes':'Restaurante','Peluquerías':'Peluquería','Barberías':'Barbería','Panaderías':'Panadería','A domicilio':'domicilio'};
+ const match=k=>cat==='Todos'||B[k].cat.includes(M[cat]);
  view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div></div><label class="search">${ic('search')}<input placeholder="Bares, peluquerías, pizza..."></label><div class="chips">${cats.map(c=>`<button class="chip ${c===cat?'on':''}" data-cat="${c}">${c}</button>`).join('')}</div>`+
  order.filter(match).map(k=>{const b=B[k],a=ACT[b.action];return `<button class="biz" data-biz="${k}"><img src="${b.img}" alt=""><div class="i"><b>${b.name}</b><small>${b.cat}</small><small><span class="star">★ ${b.rating}</span> (${b.rev}) · <span class="open">${b.open.split(' · ')[0]}</span></small></div><span class="mini">${t(a[0])}</span></button>`}).join('')+
  `<div class="sec"><h3>${t('agenda')}</h3></div><div class="row">
@@ -188,3 +190,5 @@ document.addEventListener('click',e=>{
 });
 $('#scrim').onclick=closeSheet;
 render();
+
+})();
