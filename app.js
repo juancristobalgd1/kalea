@@ -43,35 +43,31 @@ es:{home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Hue
 eu:{home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
 const t=k=>T[lang][k]||k;
 
-const B={
-itsasoa:{name:'Taberna Itsasoa',cat:'Bar · Pintxos',img:'assets/bar.jpg',rating:4.7,rev:312,open:'Abierto · cierra a las 23:00',action:'reservar',street:'Kale Nagusia 12',followers:'1.204',
- menu:[['Pintxo de txangurro','Con mahonesa casera','2,80 €'],['Gilda clásica','Anchoa, guindilla, aceituna','2,20 €'],['Txakoli (copa)','Getariako Txakolina','2,50 €'],['Tortilla de bacalao','Ración','9,50 €']]},
-mendi:{name:'Mendi Jatetxea',cat:'Restaurante · Cocina vasca',img:'assets/restaurante.jpg',rating:4.5,rev:428,open:'Abierto · cocina hasta 23:00',action:'reservar',street:'Plaza Berria 3',followers:'2.310',
- menu:[['Menú del día','Primero, segundo, postre y bebida','16,00 €'],['Chuletón a la brasa','1 kg, para dos','48,00 €'],['Merluza en salsa verde','Con almejas','22,00 €'],['Goxua','Postre de la casa','6,00 €']]},
-goxo:{name:'Goxo Okindegia',cat:'Panadería · A domicilio',img:'assets/panaderia.jpg',rating:4.8,rev:196,open:'Abierto · cierra a las 20:00',action:'pedir',street:'Errota Kalea 7',followers:'986',
- menu:[['Croissant de mantequilla','Recién hecho','1,40 €'],['Pan de masa madre','750 g','3,90 €'],['Pastel vasco','Crema o cereza','14,00 €'],['Caja sorpresa','Lo que sobra del día','3,00 €']]},
-ile:{name:'Ile Studio',cat:'Peluquería',img:'assets/peluqueria.jpg',rating:4.9,rev:88,open:'Abierto · cierra a las 20:00',action:'cita',street:'Iturri Kalea 5',followers:'742',
- menu:[['Corte y peinado','45 min','28,00 €'],['Color completo','90 min','55,00 €'],['Mechas','120 min','70,00 €'],['Tratamiento hidratante','30 min','20,00 €']]},
-txema:{name:'Txema Barber',cat:'Barbería',img:'assets/barber.jpg',rating:4.8,rev:64,open:'Abierto · cierra a las 20:00',action:'cita',street:'Zubi Kalea 2',followers:'531',
- menu:[['Corte clásico','30 min','15,00 €'],['Corte y barba','45 min','22,00 €'],['Arreglo de barba','20 min','10,00 €'],['Corte infantil','Menores de 12','12,00 €']]},
-etxea:{name:'Pizzeria Etxea',cat:'Pizzería · A domicilio',img:'assets/pizza.jpg',rating:4.4,rev:251,open:'Abierto · reparto hasta 23:30',action:'pedir',street:'Geltoki Kalea 9',followers:'1.877',
- menu:[['Pizza margarita','Mediana','9,50 €'],['Pizza Elgoibar','Idiazabal, txistorra, piparras','12,50 €'],['Pizza barbacoa','Mediana','11,50 €'],['Tiramisú','Casero','4,50 €']]}
-};
+const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',belleza:'cita',tienda:'pedir',salud:'cita'};
+const MENUS={
+ bar:[['Pintxo del día','Ejemplo','2,50 €'],['Caña','Ejemplo','2,20 €'],['Txakoli (copa)','Ejemplo','2,50 €'],['Ración de croquetas','Ejemplo','8,00 €']],
+ rest:[['Menú del día','Ejemplo','16,00 €'],['Chuletón a la brasa','Ejemplo','48,00 €'],['Pescado del día','Ejemplo','22,00 €'],['Postre casero','Ejemplo','6,00 €']],
+ cafe:[['Café con leche','Ejemplo','1,60 €'],['Croissant','Ejemplo','1,40 €'],['Pan de masa madre','Ejemplo','3,90 €'],['Pastel vasco','Ejemplo','14,00 €']],
+ belleza:[['Corte','Ejemplo','15,00 €'],['Corte y peinado','Ejemplo','28,00 €'],['Color','Ejemplo','55,00 €'],['Tratamiento','Ejemplo','20,00 €']],
+ tienda:[['Pedido para recoger','Ejemplo','Gratis'],['Envío a domicilio en Elgoibar','Ejemplo','2,00 €']],
+ salud:[['Primera consulta','Ejemplo','40,00 €'],['Sesión','Ejemplo','35,00 €'],['Bono 5 sesiones','Ejemplo','160,00 €']]};
+const B={};(window.PL||[]).forEach(p=>{B[p.k]={name:p.n,short:p.s,cat:p.sub,cg:p.c,img:p.ph,rating:p.r,rev:p.v,street:p.a,phone:p.t,maps:'https://maps.google.com/?cid='+p.m,web:p.w,action:ACTBY[p.c],menu:MENUS[p.c]}});
+const av=(b,cls)=>b.img?`<img class="${cls}" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<div class="${cls} noimg">${b.name.replace(/^(Bar|Restaurante|Peluquería|Panadería|Farmacia|Cafetería) /,'')[0]}</div>`;
 const FLASH=[
- {b:'mendi',txt:'Mesa para 4 · hoy 21:30',off:'-15%',left:'quedan 2'},
- {b:'txema',txt:'Corte · hoy 17:30',off:'-20%',left:'1 hueco'},
- {b:'goxo',txt:'Caja sorpresa · recoge 19:45',off:'-50%',left:'quedan 5'},
- {b:'ile',txt:'Peinado · mañana 10:00',off:'-10%',left:'1 hueco'}];
+ {b:'txarriduna',txt:'Mesa para 4 · hoy 21:30',off:'-15%',left:'quedan 2'},
+ {b:'josebarber',txt:'Corte · hoy 17:30',off:'-20%',left:'1 hueco'},
+ {b:'pasteleria',txt:'Caja sorpresa · recoge 19:45',off:'-50%',left:'quedan 5'},
+ {b:'meraki',txt:'Peinado · mañana 10:00',off:'-10%',left:'1 hueco'}];
 const POSTS=[
- {b:'itsasoa',time:'hace 12 min',txt:'Este jueves pintxo pote de 19:00 a 22:00. Txakoli y pintxo por 3 €. Reserva tu sitio en la barra desde Kalea y suma puntos.',likes:212,com:20},
- {b:'goxo',time:'hace 40 min',txt:'Croissants recién salidos del horno. Pídelos antes de las 8:30 y te los llevamos a casa para el desayuno.',likes:158,com:12},
- {b:'ile',time:'hace 2 h',txt:'Nuevo color de otoño. Esta semana, tratamiento hidratante gratis con cualquier color reservado en la app.',likes:96,com:8},
- {b:'etxea',time:'hace 3 h',txt:'Llega la Pizza Elgoibar: Idiazabal, txistorra y piparras. Reparto gratis en todo el pueblo los viernes.',likes:301,com:41}];
-const order=Object.keys(B);
+ {b:'tantaka',time:'hace 12 min',txt:'Este jueves pintxo pote de 19:00 a 22:00. Txakoli y pintxo por 3 €. Reserva tu sitio en la barra desde Kalea y suma puntos.',likes:212,com:20},
+ {b:'pasteleria',time:'hace 40 min',txt:'Croissants recién salidos del horno. Pídelos antes de las 8:30 y te los llevamos a casa para el desayuno.',likes:158,com:12},
+ {b:'meraki',time:'hace 2 h',txt:'Nuevo color de otoño. Esta semana, tratamiento hidratante gratis con cualquier color reservado en la app.',likes:96,com:8},
+ {b:'maala',time:'hace 3 h',txt:'Terraza abierta con vistas al pueblo. Esta tarde, café y pastel por 4 € reservando desde Kalea.',likes:301,com:41}];
+const order=['tantaka','txarriduna','pasteleria','meraki','josebarber','maala','lanbroa','vientosur','ibaiondo','malape','ametsa','marem','kingkong','belaustegi','bst'].filter(k=>B[k]);
 const AIEV=[
- {id:'mercado',scope:'pueblo',title:'Mercado de productores',when:'Sábado 17 de octubre · 10:00 a 14:00',day:'17',mon:'oct',where:'Plaza de Elgoibar',img:'assets/mercado.jpg',txt:'Vuelve el mercado de productores a la plaza: queso Idiazabal, verdura de temporada, miel y talos recién hechos. Plan perfecto para ir con los niños por la mañana.',tip:'Mendi Jatetxea y Taberna Itsasoa tienen mesas libres para después',src:'Agenda del ayuntamiento',going:86,s:'20261017T100000',e:'20261017T140000'},
+ {id:'mercado',scope:'pueblo',title:'Mercado de productores',when:'Sábado 17 de octubre · 10:00 a 14:00',day:'17',mon:'oct',where:'Plaza de Elgoibar',img:'assets/mercado.jpg',txt:'Vuelve el mercado de productores a la plaza: queso Idiazabal, verdura de temporada, miel y talos recién hechos. Plan perfecto para ir con los niños por la mañana.',tip:'Los bares de la plaza avisan en Kalea si tienen mesa libre para después',src:'Agenda del ayuntamiento',going:86,s:'20261017T100000',e:'20261017T140000'},
  {id:'pintxos',scope:'pueblo',title:'Ruta de pintxos de otoño',when:'Viernes 23 de octubre · desde las 19:00',day:'23',mon:'oct',where:'12 bares de Elgoibar',img:'assets/bar.jpg',txt:'Doce bares del pueblo preparan un pintxo especial de otoño. Sella tu ruta en la app y entra en el sorteo de una cena para dos.',tip:'Cada bar visitado te da 30 puntos',src:'Bares de Kalea',going:142,s:'20261023T190000',e:'20261023T230000'},
- {id:'festival',scope:'provincia',title:'Festival de música al aire libre',when:'Sábado 24 de octubre · 20:00',day:'24',mon:'oct',where:'Donostia · a 45 min',img:'assets/concierto.jpg',txt:'Grupos vascos en directo, food trucks y ambiente hasta tarde. Si vas desde Elgoibar, te avisamos de quién comparte coche.',tip:'Pizzeria Etxea te guarda la cena para la vuelta',src:'Agenda cultural de Euskadi',going:340,s:'20261024T200000',e:'20261025T010000'}];
+ {id:'festival',scope:'provincia',title:'Festival de música al aire libre',when:'Sábado 24 de octubre · 20:00',day:'24',mon:'oct',where:'Donostia · a 45 min',img:'assets/concierto.jpg',txt:'Grupos vascos en directo, food trucks y ambiente hasta tarde. Si vas desde Elgoibar, te avisamos de quién comparte coche.',tip:'Los restaurantes del pueblo pueden guardarte la cena para la vuelta',src:'Agenda cultural de Euskadi',going:340,s:'20261024T200000',e:'20261025T010000'}];
 const NEWS=[
  {id:'n1',kind:'Aviso',title:'Corte de tráfico por obras en el centro',txt:'El martes 13 de octubre, de 8:00 a 15:00, se corta el tráfico en el centro por obras de asfaltado. Los comercios siguen abiertos y se puede llegar andando.',src:'Ayuntamiento de Elgoibar'},
  {id:'n2',kind:'Noticia',title:'Abren las inscripciones de los cursos de otoño',txt:'Ya puedes apuntarte a los cursos de otoño del polideportivo: natación para niños, yoga y pilates. Plazas limitadas.',src:'Polideportivo municipal'},
@@ -80,7 +76,7 @@ const POLL={q:'¿Qué quieres para las próximas fiestas?',o:[['Más conciertos'
 let voted=null,bonoOk=false;
 const PLANS=[
  {id:'bus',org:'Ayuntamiento',by:'Ayuntamiento de Elgoibar',title:'Autobús al festival de Donostia',price:10,min:50,now:42,until:'Cierra el jueves 22',img:'assets/concierto.jpg',cof:'El ayuntamiento pone 5 € por persona'},
- {id:'cena',org:'Negocio',by:'Mendi Jatetxea',title:'Cena de sidrería con menú cerrado',price:35,min:30,now:24,until:'Cierra el miércoles 21',img:'assets/restaurante.jpg'},
+ {id:'cena',org:'Negocio',by:'Restaurante Txarriduna',title:'Cena de sidrería con menú cerrado',price:35,min:30,now:24,until:'Cierra el miércoles 21',img:B.txarriduna?B.txarriduna.img:'assets/restaurante.jpg'},
  {id:'mus',org:'Vecino',by:'Ane, vecina de Elgoibar',title:'Txapelketa de mus en el bar del jubilado',price:5,min:16,now:16,until:'Cierra el sábado 17',img:'assets/bar.jpg'}];
 const joinedP=new Set();
 function planCard(p){const j=joinedP.has(p.id),n=p.now+(j?1:0),ok=n>=p.min,pc=Math.min(100,Math.round(n*100/p.min));
@@ -101,10 +97,10 @@ function nav(){
  $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
 function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
-function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${i>3?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].name.split(' ')[0]==='Taberna'?'Itsasoa':B[k].name.split(' ')[0]}</span></button>`).join('')}</div>`}
-function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
+function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${i>3?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>`}
+function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
-function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
+function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph">${av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.name} <span class="ej">Ejemplo</span></b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer"><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
 function home(){view.innerHTML=topBar()+stories()+agenda()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
@@ -134,31 +130,28 @@ function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<arti
 function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kalea//ES','BEGIN:VEVENT','UID:'+e.id+'@kalea','DTSTART;TZID=Europe/Madrid:'+e.s,'DTEND;TZID=Europe/Madrid:'+e.e,'SUMMARY:'+e.title,'LOCATION:'+e.where,'DESCRIPTION:'+e.txt,'END:VEVENT','END:VCALENDAR'].join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=e.id+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Añadido a tu calendario')}
 
+let q='';
+const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud']];
+function bizList(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0])[1],qq=q.trim().toLowerCase();
+ const L=PL.filter(p=>(!cg||p.c===cg)&&(!qq||(p.n+' '+p.sub+' '+p.a).toLowerCase().includes(qq))).sort((a,b)=>(!!b.ph-!!a.ph)||(b.v-a.v));
+ if(!L.length)return `<div class="empty">No hay resultados para "${q}"</div>`;
+ return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${b.cat} · ${b.street}</small><small><span class="star">★ ${b.rating}</span> · ${b.rev} reseñas</small></div><span class="mini">${t(ACT[b.action][0])}</span></button>`}).join('')}
 function explore(){
- const cats=['Todos','Bares','Restaurantes','Peluquerías','Barberías','Panaderías','A domicilio'];
- const M={'Bares':'Bar','Restaurantes':'Restaurante','Peluquerías':'Peluquería','Barberías':'Barbería','Panaderías':'Panadería','A domicilio':'domicilio'};
- const match=k=>cat==='Todos'||B[k].cat.includes(M[cat]);
- view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div></div><label class="search">${ic('search')}<input placeholder="Bares, peluquerías, pizza..."></label><div class="chips">${cats.map(c=>`<button class="chip ${c===cat?'on':''}" data-cat="${c}">${c}</button>`).join('')}</div>`+
- order.filter(match).map(k=>{const b=B[k],a=ACT[b.action];return `<button class="biz" data-biz="${k}"><img src="${b.img}" alt=""><div class="i"><b>${b.name}</b><small>${b.cat}</small><small><span class="star">★ ${b.rating}</span> (${b.rev}) · <span class="open">${b.open.split(' · ')[0]}</span></small></div><span class="mini">${t(a[0])}</span></button>`}).join('')+
- `<div class="sec"><h3>${t('agenda')}</h3></div><div class="row">
- <div class="ev"><div class="date"><small>sáb</small><b>17</b></div><div><p>Mercado de productores</p><span>Plaza · 10:00 a 14:00</span></div></div>
- <div class="ev"><div class="date"><small>vie</small><b>23</b></div><div><p>Ruta de pintxos de otoño</p><span>12 bares · 19:00</span></div></div>
- <div class="ev"><div class="date"><small>dom</small><b>25</b></div><div><p>Concierto de la banda</p><span>Kultur etxea · 18:00</span></div></div></div>
+ view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div id="bl">${bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
  <div class="sec"><h3>${t('board')}</h3></div>
- <div class="board"><div class="k">${ic('work')} Empleo</div><b>Camarero/a fines de semana</b><small>Taberna Itsasoa · Elgoibar · publicado hoy</small></div>
- <div class="board"><div class="k">Empleo</div><b>Ayudante de peluquería, media jornada</b><small>Ile Studio · hace 2 días</small></div>
- <div class="board"><div class="k">Pisos · con Pisder</div><b>Piso de 3 habitaciones con balcón</b><small>Elgoibar · 165.000 € · ver en Pisder</small></div>`;
+ <div class="board"><div class="k">${ic('work')} Empleo</div><b>Camarero/a fines de semana</b><small>Bar del centro · Elgoibar · ejemplo</small></div>
+ <div class="board"><div class="k">Pisos · con Pisder</div><b>Piso de 3 habitaciones con balcón</b><small>Elgoibar · ejemplo · ver en Pisder</small></div>`;
+ const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=bizList()};
 }
 
 function profile(k){
  const b=B[k],a=ACT[b.action];
- view.innerHTML=`<div class="cover" style="background-image:url(${b.img})"><button class="back" data-tab="${tab}">${ic('back')}</button></div><div class="prof"><img class="big" src="${b.img}" alt=""><h2>${b.name} ${ic('ver','ver')}</h2><div class="meta">${b.cat} · <span class="star">★ ${b.rating}</span> (${b.rev}) · <span class="open">${b.open}</span></div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
- <div class="acts"><button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button><button class="ghost" onclick="toast('Llamando a ${b.name}...')">${ic('phone')}</button><button class="ghost" onclick="toast('${b.street}, Elgoibar')">${ic('pin')}</button></div>
- <div class="stats"><div><b>${b.followers}</b><small>vecinos le siguen</small></div><div><b>${b.rev}</b><small>reseñas</small></div><div><b>+5%</b><small>en puntos</small></div></div>
- <button class="rate" data-rate="${k}"><span>Valora ${b.name}</span><span class="st5">★★★★★</span></button><div class="tabs2"><button class="on" data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button><button data-pt="pubs">Publicaciones</button><button data-pt="info">Info</button></div><div id="pt"></div></div>`;
- const pt=w=>{$('#pt').innerHTML=w==='menu'?b.menu.map(m=>`<div class="menu-i"><div>${m[0]}<small>${m[1]}</small></div><b>${m[2]}</b></div>`).join(''):w==='pubs'?`<div class="grid3">${order.concat(order).slice(0,9).map(x=>`<img src="${B[x].img}" alt="">`).join('')}</div>`:`<div class="hours">${b.street}, 20870 Elgoibar<br>Lunes a jueves: 9:00 a 22:00<br>Viernes y sábado: 9:00 a 1:00<br>Domingo: 10:00 a 16:00<br><br>Esta página se crea sola al unirse a Kalea y sale en Google.</div>`;
+ view.innerHTML=`<div class="cover" style="${b.img?`background-image:url('${b.img}')`:'background:#efefef'}"><button class="back" data-tab="${tab}">${ic('back')}</button>${b.img?'<span class="gcred">Foto: Google Maps</span>':''}</div><div class="prof">${av(b,'big')}<h2>${b.name}</h2><div class="meta">${b.cat} · <span class="star">★ ${b.rating}</span> · ${b.rev} reseñas en Google</div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
+ <div class="acts"><button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button>${b.phone?`<a class="ghost" href="tel:+34${b.phone.replace(/\s/g,'')}" aria-label="Llamar">${ic('phone')}</a>`:`<span class="ghost off2">${ic('phone')}</span>`}<a class="ghost" href="${b.maps}" target="_blank" rel="noopener" aria-label="Cómo llegar">${ic('pin')}</a></div>
+ <div class="tabs2"><button class="on" data-pt="info">Info</button><button data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button></div><div id="pt"></div></div>`;
+ const pt=w=>{$('#pt').innerHTML=w==='info'?`<div class="hours"><b>Dirección</b><br>${b.street}, 20870 Elgoibar<br><br>${b.phone?`<b>Teléfono</b><br><a href="tel:+34${b.phone.replace(/\s/g,'')}">${b.phone}</a><br><br>`:''}${b.web?`<b>Web</b><br><a href="${b.web}" target="_blank" rel="noopener">${b.web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,40)}</a><br><br>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Ver horario y reseñas en Google Maps</a><br><br><small class="muted">Datos públicos de Google Maps. Cuando el negocio se una a Kalea podrá editar su página, carta, horarios y fotos.</small></div>`:`<div class="note">Ejemplo de cómo se vería su ${b.action==='cita'?'lista de servicios':'carta'}</div>`+b.menu.map(m=>`<div class="menu-i"><div>${m[0]}</div><b>${m[2]}</b></div>`).join('');
   document.querySelectorAll('[data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w))};
- document.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>pt(x.dataset.pt));pt('menu');view.scrollTop=0;
+ document.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>pt(x.dataset.pt));pt('info');view.scrollTop=0;
 }
 
 function pointsV(){
@@ -170,9 +163,9 @@ function pointsV(){
  <div class="li"><div class="ic">${ic('user')}</div><div class="t"><b>Invita a un vecino</b><small>Cuando haga su primera reserva</small></div><span class="v">+200</span></div></div>
  ${muni()}
  <div class="sec"><h3>Últimos movimientos</h3></div><div class="list">
- <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Reserva en Mendi Jatetxea</b><small>Ayer</small></div><span class="v">+50</span></div>
- <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Pedido en Goxo Okindegia</b><small>Martes</small></div><span class="v">+42</span></div>
- <div class="li"><div class="ic">${ic('coin')}</div><div class="t"><b>Canjeado en Txema Barber</b><small>Lunes</small></div><span class="v" style="color:var(--muted)">-500</span></div></div>`;
+ <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Reserva en Txarriduna</b><small>Ayer</small></div><span class="v">+50</span></div>
+ <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Pedido en Pastelería Doña Mercedes</b><small>Martes</small></div><span class="v">+42</span></div>
+ <div class="li"><div class="ic">${ic('coin')}</div><div class="t"><b>Canjeado en El Jose Barber</b><small>Lunes</small></div><span class="v" style="color:var(--muted)">-500</span></div></div>`;
 }
 
 let ptype='flash';
@@ -201,10 +194,10 @@ function me(){
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
  <div class="sec"><h3>Próximas</h3></div><div class="list">
- <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Mendi Jatetxea · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
- <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>Txema Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
- <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Goxo Okindegia · pedido en camino</b><small>Llega en 15 min</small></div></div></div>
- <div class="sec"><h3>Siguiendo</h3></div><div class="stories">${order.map(k=>`<button class="st" data-biz="${k}"><div class="ring seen"><img src="${B[k].img}" alt=""></div><span>${B[k].name.split(' ')[0]}</span></button>`).join('')}</div>
+ <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Txarriduna · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
+ <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>El Jose Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
+ <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Pastelería Doña Mercedes · pedido en camino</b><small>Llega en 15 min</small></div></div></div>
+ <div class="sec"><h3>Siguiendo</h3></div><div class="stories">${order.map(k=>`<button class="st" data-biz="${k}"><div class="ring seen"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
@@ -260,7 +253,7 @@ function action(k,pre){
   $('#go').onclick=()=>{const s=up();if(!s){toast('Añade algo al pedido');return}const p=Math.round(s*5);need('Para hacer tu pedido',()=>{closeSheet();if(user)points+=p;toast('Pedido enviado a '+b.name,p)})};return;
  }
  const isC=b.action==='cita';
- openSheet(`<h3>${isC?'Pedir cita en':'Reservar en'} ${b.name}</h3><div class="sub">${b.open}</div>
+ openSheet(`<h3>${isC?'Pedir cita en':'Reservar en'} ${b.name}</h3><div class="sub">${b.street}, Elgoibar</div>
  <label>${isC?'Servicio':'Personas'}</label>${isC?opts(b.menu.map(m=>m[0]),b.menu[0][0]):opts(['2','3','4','5','6+'],'2')}
  <label>Día</label>${opts(['Hoy','Mañana','Sábado','Domingo'],'Hoy')}
  <label>Hora</label>${opts(isC?['10:00','12:30','16:00','17:30','19:00']:['13:30','14:00','20:30','21:30','22:00'],pre||(isC?'17:30':'21:30'),isC?{'17:30':'-20%'}:{'21:30':'-15%'})}
@@ -269,8 +262,8 @@ function action(k,pre){
  $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{closeSheet();points+=50;toast((isC?'Cita confirmada en ':'Reserva confirmada en ')+b.name,50)});
 }
 function story(k){
- const b=B[k],a=ACT[b.action],caps={itsasoa:'Pintxo pote esta noche. Txakoli + pintxo 3 €',mendi:'Chuletón del día listo para la brasa',goxo:'Sale hornada nueva a las 18:00',ile:'Colores de otoño. Reserva y te regalamos el tratamiento',txema:'Me queda un hueco hoy a las 17:30',etxea:'Viernes: reparto gratis en todo el pueblo'};
- const s=$('#story');s.innerHTML=`<img class="bg" src="${b.img}" alt=""><div class="bars"><i id="sb"></i></div><div class="sh"><img class="av" src="${b.img}" alt=""><div><b>${b.name}</b><br><small>hace 1 h</small></div><button class="x" id="sx">×</button></div><div class="cap">${caps[k]}</div><div class="scta"><button class="big-cta" id="sgo">${t(a[0])}</button></div>`;
+ const b=B[k],a=ACT[b.action],caps={tantaka:'Ejemplo de historia: pintxo pote esta noche',txarriduna:'Ejemplo de historia: chuletón del día',pasteleria:'Ejemplo de historia: hornada nueva a las 18:00',meraki:'Ejemplo de historia: colores de otoño',josebarber:'Ejemplo de historia: me queda un hueco hoy',maala:'Ejemplo de historia: terraza abierta'};
+ const s=$('#story');s.innerHTML=`<img class="bg" src="${b.img}" alt=""><div class="bars"><i id="sb"></i></div><div class="sh"><img class="av" src="${b.img}" alt=""><div><b>${b.name}</b><br><small>hace 1 h</small></div><button class="x" id="sx">×</button></div><div class="cap">${caps[k]||"Ejemplo de historia de "+b.name}</div><div class="scta"><button class="big-cta" id="sgo">${t(a[0])}</button></div>`;
  s.classList.add('on');requestAnimationFrame(()=>requestAnimationFrame(()=>$('#sb').classList.add('go')));
  const close=()=>{s.classList.remove('on');clearTimeout(s._t)};s._t=setTimeout(close,5000);
  $('#sx').onclick=close;$('#sgo').onclick=()=>{close();action(k)};
