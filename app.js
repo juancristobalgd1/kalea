@@ -14,6 +14,7 @@ scis:'<circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M8.5 7
 phone:'<path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/>',
 pin:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
 globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
 bolt:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>',
 town:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-5h6v5"/>',
 check:'<path d="M5 12l4 4 10-10"/>',
@@ -61,6 +62,11 @@ const POSTS=[
  {b:'ile',time:'hace 2 h',txt:'Nuevo color de otoño. Esta semana, tratamiento hidratante gratis con cualquier color reservado en la app.',likes:96,com:8},
  {b:'etxea',time:'hace 3 h',txt:'Llega la Pizza Elgoibar: Idiazabal, txistorra y piparras. Reparto gratis en todo el pueblo los viernes.',likes:301,com:41}];
 const order=Object.keys(B);
+const AIEV=[
+ {id:'mercado',scope:'pueblo',title:'Mercado de productores',when:'Sábado 17 de octubre · 10:00 a 14:00',day:'17',mon:'oct',where:'Plaza de Elgoibar',img:'assets/mercado.jpg',txt:'Vuelve el mercado de productores a la plaza: queso Idiazabal, verdura de temporada, miel y talos recién hechos. Plan perfecto para ir con los niños por la mañana.',tip:'Mendi Jatetxea y Taberna Itsasoa tienen mesas libres para después',src:'Agenda del ayuntamiento',going:86,s:'20261017T100000',e:'20261017T140000'},
+ {id:'pintxos',scope:'pueblo',title:'Ruta de pintxos de otoño',when:'Viernes 23 de octubre · desde las 19:00',day:'23',mon:'oct',where:'12 bares de Elgoibar',img:'assets/bar.jpg',txt:'Doce bares del pueblo preparan un pintxo especial de otoño. Sella tu ruta en la app y entra en el sorteo de una cena para dos.',tip:'Cada bar visitado te da 30 puntos',src:'Bares de Kalea',going:142,s:'20261023T190000',e:'20261023T230000'},
+ {id:'festival',scope:'provincia',title:'Festival de música al aire libre',when:'Sábado 24 de octubre · 20:00',day:'24',mon:'oct',where:'Donostia · a 45 min',img:'assets/concierto.jpg',txt:'Grupos vascos en directo, food trucks y ambiente hasta tarde. Si vas desde Elgoibar, te avisamos de quién comparte coche.',tip:'Pizzeria Etxea te guarda la cena para la vuelta',src:'Agenda cultural de Euskadi',going:340,s:'20261024T200000',e:'20261025T010000'}];
+let scope='pueblo';const going=new Set();
 const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag']};
 
 const $=s=>document.querySelector(s);
@@ -76,7 +82,18 @@ function stories(){return `<div class="stories">${order.map((k,i)=>`<button clas
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
-function home(){view.innerHTML=topBar()+stories()+flash()+muni()+`<div class="sec"><h3>${t('feed')}</h3></div>`+POSTS.map(post).join('')}
+function home(){view.innerHTML=topBar()+stories()+flash()+muni()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function feed(){
+ if(scope==='provincia')return AIEV.map(aiPost).join('');
+ const ev=AIEV.filter(e=>e.scope==='pueblo');const out=[];
+ POSTS.forEach((p,i)=>{out.push(post(p));if(ev[i])out.push(aiPost(ev[i]))});return out.join('');
+}
+function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Creado con IA</span></b><small>Fuente: ${e.src}</small></div></div>
+ <div class="evimg"><img class="pimg" src="${e.img}" alt=""><div class="evdate"><b>${e.day}</b><small>${e.mon}</small></div><span class="evscope">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div>
+ <div class="evbody"><h4>${e.title}</h4><div class="evmeta">${ic('cal')} ${e.when}</div><div class="evmeta">${ic('pin')} ${e.where}</div><p>${e.txt}</p><div class="evtip">${ic('bolt')} ${e.tip}</div></div>
+ <div class="pa"><button class="pill ${l?'liked':''}" data-like="ai-${e.id}">${ic('heart')} ${(e.likes||Math.round(e.going*1.4))+(l?1:0)}</button><button class="pill" data-ics="${e.id}">${ic('cal')} Calendario</button><button class="cta ${g?'done':''}" data-going="${e.id}">${g?ic('check')+' Vas':ic('user')+' Me apunto'}</button></div><div class="evgo">${e.going+(g?1:0)} vecinos van</div></article>`}
+function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kalea//ES','BEGIN:VEVENT','UID:'+e.id+'@kalea','DTSTART;TZID=Europe/Madrid:'+e.s,'DTEND;TZID=Europe/Madrid:'+e.e,'SUMMARY:'+e.title,'LOCATION:'+e.where,'DESCRIPTION:'+e.txt,'END:VEVENT','END:VCALENDAR'].join('\r\n');
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=e.id+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Añadido a tu calendario')}
 
 function explore(){
  const cats=['Todos','Bares','Restaurantes','Peluquerías','Barberías','Panaderías','A domicilio'];
@@ -212,10 +229,13 @@ function story(k){
 }
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.tab){tab=d.tab;render()}
+ if(d.scope){scope=d.scope;home()}
+ else if(d.ics)ics(d.ics);
+ else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
+ else if(d.tab){tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
