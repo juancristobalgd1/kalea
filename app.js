@@ -146,7 +146,7 @@ function aiAnswer(text){const tx=nrm(text);
  if(L.length)return{intro:'Esto es lo que he encontrado en Elgoibar:',list:L.map(p=>p.k)};
  return{intro:'No encuentro un negocio del pueblo para eso. Publica la pregunta y los vecinos te ayudan.',list:[]}}
 function miniBiz(k){const b=B[k];return `<button class="minib" data-biz="${k}">${av(b,'mav')}<div><b>${b.name}</b><small>${b.cat} · ${b.street}${b.rev?` · ★ ${b.rating}`:''}</small></div><span>Ver</span></button>`}
-function aiBox(text){const r=aiAnswer(text);return `<div class="aians"><div class="aihd"><span class="aidot">${ic('spark')}</span><b>Kalea IA</b><span class="aitag">Creado con IA</span></div><p>${r.intro}</p>${r.list.map(miniBiz).join('')}${r.pisder?'<a class="pisder" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener">Ver pisos en Pisder</a>':''}</div>`}
+function aiBox(text){const r=aiAnswer(text);return `<div class="aians"><div class="aihd"><span class="aidot">${ic('spark')}</span><b>Kalea IA</b><span class="aitag">Automático</span></div><p>${r.intro}</p>${r.list.map(miniBiz).join('')}${r.pisder?'<a class="pisder" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener">Ver pisos en Pisder</a>':''}</div>`}
 const QS=[
  {id:'q1',who:'Ane',time:'hace 25 min',q:'¿Alguien sabe quién arregla persianas en Elgoibar?',ans:[{who:'Mikel',txt:'Pregunta en la ferretería, suelen conocer a quién lo hace en el pueblo.',v:7},{who:'Itziar',txt:'A nosotros nos lo arregló un autónomo del pueblo, si quieres te paso el contacto por privado.',v:3}]},
  {id:'q2',who:'Iker',time:'hace 1 h',q:'¿Dónde puedo ver el partido del sábado con buen ambiente?',ans:[{who:'Jon',txt:'En la zona de San Frantzisko suele haber ambiente los días de partido.',v:5}]},
