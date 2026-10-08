@@ -1,5 +1,5 @@
 (()=>{
-const I={book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21V5M8 7h7"/>',store:'<path d="M4 9l1.5-5h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/>',
+const I={glass:'<path d="M5 4h14l-7 8zM12 12v8M8 20h8"/>',fork:'<path d="M7 3v8a2 2 0 0 0 2 2v8M5 3v5M9 3v5M17 3c-2 0-3 2-3 5s1 4 3 4v9"/>',cup:'<path d="M4 8h12v5a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5zM16 10h2a2 2 0 0 1 0 4h-2M8 3v2M12 3v2"/>',cross:'<path d="M10 4h4v6h6v4h-6v6h-4v-6H4v-4h6z"/>',map:'<path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2zM9 4v14M15 6v14"/>',list:'<path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/>',book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21V5M8 7h7"/>',store:'<path d="M4 9l1.5-5h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/>',
 home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
 plus:'<path d="M12 5v14M5 12h14"/>',
@@ -37,7 +37,7 @@ ver:'<path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-
 };
 const ic=(n,c='')=>`<svg viewBox="0 0 24 24" class="${c}">${I[n]}</svg>`;
 
-let lang='es';
+let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
 es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo'},
 eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
@@ -54,7 +54,10 @@ const MENUS={
  serv:[['Pedir información','Ejemplo','Gratis'],['Pedir presupuesto','Ejemplo','Gratis'],['Cita','Ejemplo','Consultar']],
  salud:[['Primera consulta','Ejemplo','40,00 €'],['Sesión','Ejemplo','35,00 €'],['Bono 5 sesiones','Ejemplo','160,00 €']]};
 const B={};(window.PL||[]).forEach(p=>{B[p.k]={name:p.n,short:p.s,cat:p.sub,cg:p.c,img:p.ph,rating:p.r,rev:p.v,street:p.a,phone:p.t,maps:'https://maps.google.com/?cid='+p.m,web:p.w,action:ACTBY[p.c],menu:MENUS[p.c]}});
-const av=(b,cls)=>b.img?`<img class="${cls}" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<div class="${cls} noimg">${b.name.replace(/^(Bar|Restaurante|Peluquería|Panadería|Farmacia|Cafetería) /,'')[0]}</div>`;
+const CIC={bar:'glass',rest:'fork',cafe:'cup',alim:'bag',belleza:'scis',tienda:'tag',salud:'cross',serv:'wrench'};
+const noimg=(cls,cg)=>`<div class="${cls} noimg">${ic(CIC[cg]||'store')}</div>`;
+function imgFail(el,cls,cg){el.outerHTML=noimg(cls,cg)}
+const av=(b,cls)=>b.img?`<img class="${cls}" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this,'${cls}','${b.cg}')">`:noimg(cls,b.cg);
 const FLASH=[
  {b:'txarriduna',txt:'Mesa para 4 · hoy 21:30',off:'-15%',left:'quedan 2'},
  {b:'josebarber',txt:'Corte · hoy 17:30',off:'-20%',left:'1 hueco'},
@@ -65,7 +68,10 @@ const POSTS=[
  {b:'pasteleria',time:'hace 40 min',txt:'Croissants recién salidos del horno. Pídelos antes de las 8:30 y te los llevamos a casa para el desayuno.',likes:158,com:12},
  {b:'meraki',time:'hace 2 h',txt:'Nuevo color de otoño. Esta semana, tratamiento hidratante gratis con cualquier color reservado en la app.',likes:96,com:8},
  {b:'maala',time:'hace 3 h',txt:'Terraza abierta con vistas al pueblo. Esta tarde, café y pastel por 4 € reservando desde Kalea.',likes:301,com:41}];
+const ONKP=['tantaka','pasteleria','meraki','maala','txarriduna','josebarber'];
 const order=['tantaka','txarriduna','pasteleria','meraki','josebarber','maala','lanbroa','vientosur','ibaiondo','malape','ametsa','marem','kingkong','belaustegi','bst'].filter(k=>B[k]);
+const ONK=new Set([...order,...ONKP]);
+const tel=b=>'tel:+34'+(b.phone||'').replace(/\s/g,'');
 const AIEV=[
  {id:'mercado',scope:'pueblo',title:'Mercado de productores',when:'Sábado 17 de octubre · 10:00 a 14:00',day:'17',mon:'oct',where:'Plaza de Elgoibar',img:'assets/mercado.jpg',txt:'Vuelve el mercado de productores a la plaza: queso Idiazabal, verdura de temporada, miel y talos recién hechos. Plan perfecto para ir con los niños por la mañana.',tip:'Los bares de la plaza avisan en Kalea si tienen mesa libre para después',src:'Agenda del ayuntamiento',going:86,s:'20261017T100000',e:'20261017T140000'},
  {id:'pintxos',scope:'pueblo',title:'Ruta de pintxos de otoño',when:'Viernes 23 de octubre · desde las 19:00',day:'23',mon:'oct',where:'12 bares de Elgoibar',img:'assets/bar.jpg',txt:'Doce bares del pueblo preparan un pintxo especial de otoño. Sella tu ruta en la app y entra en el sorteo de una cena para dos.',tip:'Cada bar visitado te da 30 puntos',src:'Bares de Kalea',going:142,s:'20261023T190000',e:'20261023T230000'},
@@ -98,8 +104,8 @@ function nav(){
  const tabs=[['home','home'],['explore','search'],['plus','plus'],['ask','chat'],['profile','user']];
  $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
-function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
-function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>`}
+function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-notif="1" aria-label="Avisos">${ic('bell')}${notifRead?'':'<i class="dot"></i>'}</button></div></div>`}
+function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this,'stfb','${B[k].cg}')"></div><span>${B[k].short}</span></button>`).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph">${av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.name} <span class="ej">Ejemplo</span></b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer"><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
@@ -153,7 +159,7 @@ function qCard(q){const all=q.ans.map((a,i)=>({...a,i,v:a.v+(upv.has(q.id+':'+i)
 function askCard(){const q=QS[0];return `<div class="sec"><h3>Pregunta al pueblo</h3><a href="#" data-tab="ask">Ver todas</a></div><div class="askc"><button class="askin" data-tab="publish" data-pt2="ask">${ic('spark')}<span>¿Qué necesitas en Elgoibar?</span></button><button class="askq" data-tab="ask"><small>${q.who} preguntó <span class="ej">Ejemplo</span></small><b>${q.q}</b><span>Kalea IA y ${q.ans.length} vecinos han respondido</span></button></div>`}
 function askV(){
  view.innerHTML=`<div class="top"><div class="place">Pregunta al pueblo</div></div><p class="asksub">Pregunta lo que quieras. La IA te responde al momento con negocios de Elgoibar y los vecinos te dan su opinión.</p>
- <div class="askbox"><textarea id="aq" rows="2" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><button class="cta" id="ago">Preguntar</button></div>
+ <div class="askbox"><textarea id="aq" rows="2" placeholder="¿Qué necesitas en Elgoibar? Ej.: quién arregla persianas"></textarea><button class="cta" id="ago">Preguntar</button></div>
  <div class="chips">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños','Peluquería esta tarde'].map(x=>`<button class="chip" data-sug="${x}">${x}</button>`).join('')}</div>
  <div id="ares"></div><div class="sec"><h3>Últimas preguntas</h3></div>${myQs.concat(QS).map(qCard).join('')}`;
  const go=()=>{const v=$('#aq').value.trim();if(!v)return;$('#ares').innerHTML=`<div class="qcard mineq"><p class="qq">${v.replace(/</g,'&lt;')}</p>${aiBox(v)}<button class="big-cta" id="apub">Publicar para que respondan los vecinos</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`;
@@ -206,7 +212,7 @@ function workV(){
  ${wtab==='se'?`<button class="big-cta wpub" data-jobpub="1">Publicar una oferta de mi negocio</button>${JOBS.map(jobCard).join('')}`:lbList(wtab)}`}
 
 
-function askForm(){return `<div class="preview"><b>Nueva pregunta al pueblo</b><label>Qué necesitas</label><textarea class="field" id="pq" rows="3" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><div class="chips pqs">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños'].map(x=>`<button class="chip" data-pqs="${x}">${x}</button>`).join('')}</div><div id="pqai"></div><div class="reach">${ic('bell')} Sale en el inicio como una publicación y la ven tus vecinos</div><button class="big-cta" id="pubq">Publicar pregunta</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`}
+function askForm(){return `<div class="preview"><b>Nueva pregunta al pueblo</b><label>Qué necesitas</label><textarea class="field" id="pq" rows="3" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><div class="chips pqs">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños'].map(x=>`<button class="chip" data-pqs="${x}">${x}</button>`).join('')}</div><div id="pqai"></div><div class="reach">${ic('bell')} Sale en el inicio como una publicación y la ven tus vecinos</div><button class="big-cta stick" id="pubq">Publicar pregunta</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`}
 let pqT;function pqPrev(){const v=($('#pq')||{}).value||'';$('#pqai').innerHTML=v.trim().length>3?aiBox(v):''}
 function publishQ(v){need('Para publicar tu pregunta',()=>{const q={id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true};myQs.unshift(q);points+=5;tab='home';render();const el=document.getElementById('qp-'+q.id);if(el)el.scrollIntoView({block:'start'});toast('Pregunta publicada. Ya la ven tus vecinos',5)})}
 function qPost(q){const l=liked.has('q-'+q.id),n=q.ans.length;return `<article class="post qpost" id="qp-${q.id}"><div class="ph"><div class="av qav2">${q.who[0]}</div><div class="nm"><b>${q.who}${q.mine?'':' <span class="ej">Ejemplo</span>'}</b><small>${q.time} · Pregunta al pueblo</small></div><span style="color:var(--muted)">•••</span></div>
@@ -220,19 +226,24 @@ const esc=x=>String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>
 const ago=ts=>{if(!ts)return '';const m=Math.max(1,Math.round((Date.now()/1000-ts)/60));return m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`};
 function refreshHome(){if(tab!=='home')return;const y=view.scrollTop;home();view.scrollTop=y}
 function loadNews(){if(EUNEWS)return;EUNEWS=[];fetch('news.json?_='+Date.now()).then(r=>r.json()).then(d=>{EUNEWS=d.items||[];refreshHome()}).catch(()=>{})}
-function newsPost(n){const l=liked.has('n-'+n.u);return `<article class="post ai npost"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Resumen automático</span></b><small>Noticias de Euskadi · ${ago(n.ts)}</small></div></div>
+function newsPost(n){const l=liked.has('n-'+n.u);return `<article class="post ai npost"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Noticias de Euskadi · ${ago(n.ts)}</small></div></div>
  ${n.img?`<img class="pimg nimg" src="${esc(n.img)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}
  <div class="evbody">${n.local?'<span class="near">Cerca de ti</span>':''}<h4>${esc(n.t)}</h4>${n.d?`<p>${esc(n.d)}</p>`:''}<small class="nsrc">Fuente: ${esc(n.s)}</small></div>
- <div class="pa"><button class="pill ${l?'liked':''}" data-like="n-${esc(n.u)}">${ic('heart')} ${l?1:0}</button><a class="cta nlink" href="${esc(n.u)}" target="_blank" rel="noopener">Leer en ${esc(n.s)}</a></div></article>`}
+ <div class="pa"><button class="pill ${l?'liked':''}" data-like="n-${esc(n.u)}">${ic('heart')}${l?' 1':''}</button><a class="cta nlink" href="${esc(n.u)}" target="_blank" rel="noopener">Leer en ${esc(n.s)}</a></div></article>`}
 function lbPost(o){const d=(o.desPuesto||'').replace(/<[^>]+>/g,'');return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Empleo en tu zona · Fuente: Lanbide</small></div></div>
  <div class="qtext jtext"><small>Oferta de empleo · ${esc(cap(o.municipio))}</small>Se busca ${esc(cap(o.desEmpleo))}</div><div class="evbody">${d?`<p>${esc(d.length>180?d.slice(0,180)+'…':d)}</p>`:''}<small class="nsrc">Publicada el ${esc((o.fecPub||'').trim())} en Lanbide</small></div>
- <div class="pa"><a class="pill" href="${esc(o.url)}" target="_blank" rel="noopener">${ic('bag')} Ver oferta</a><button class="cta" data-tab="work" data-wt="of">Más ofertas</button></div></article>`}
+ <div class="pa"><a class="pill" href="${esc(o.url)}" target="_blank" rel="noopener">${ic('bag')} Ver oferta</a><button class="cta" data-tab="work" data-wt="of">Ofertas y cursos</button></div></article>`}
 function jobPost(j){const i=JOBS.indexOf(j);return `<article class="post"><div class="ph"><div class="av qav2 jav">${ic('store')}</div><div class="nm"><b>${j.biz}${j.ej?' <span class="ej">Ejemplo</span>':''}</b><small>${j.when} · Se busca</small></div><span style="color:var(--muted)">•••</span></div>
  <div class="qtext jtext"><small>Se busca</small>${j.puesto}</div>${j.det?`<div class="evbody"><p>${j.det}</p></div>`:''}
  <div class="pa"><button class="pill" data-tab="work" data-wt="se">${ic('store')} Más ofertas</button><button class="cta" data-jobi="${i}">Me interesa</button></div></article>`}
 
-function home(){view.innerHTML=topBar()+stories()+agenda()+workCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
-function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
+let notifRead=false;
+function demoBar(){return `<div class="demobar">Versión de prueba. Los negocios son reales (Google Maps); sus publicaciones son ejemplos.</div>`}
+function notifSheet(){notifRead=true;const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z)))[0];const p=PLANS[1];
+ const it=[[ 'bolt',`${B[FLASH[0].b].name}: ${FLASH[0].txt}`,'Hueco de última hora · ejemplo',`data-flash="0"`],lb?['bag',`Nueva oferta en ${cap(lb.municipio)}: ${cap(lb.desEmpleo)}`,'Lanbide',`data-tab="work" data-wt="of"`]:null,['user',`${p.title}: faltan ${Math.max(0,p.min-p.now)} para que se haga`,'Plan en grupo · ejemplo',`data-tab="home"`],['chat','Ane ha recibido 2 respuestas en su pregunta','Pregunta al pueblo · ejemplo',`data-tab="ask"`]].filter(Boolean);
+ openSheet(`<h3>Avisos</h3><div class="nots">${it.map(x=>`<button class="notr" ${x[3]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div></button>`).join('')}</div><button class="big-cta ghostcta" data-tab="profile">Elegir qué avisos recibo</button>`);if(tab==='home')refreshHome()}
+function home(){view.innerHTML=topBar()+demoBar()+stories()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Automático</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
  view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div><span class="tag">Ejemplo</span></div>
@@ -252,43 +263,45 @@ function feed(){
  loadNews();if(!LB.of&&!LB.ld.of&&!LB.err.of)lbLoad('of');
  const nw=EUNEWS||[];
  if(scope==='provincia'){const out=[];const n=nw.filter(x=>!x.local);AIEV.forEach((e,i)=>{out.push(aiPost(e));if(n[i])out.push(newsPost(n[i]))});n.slice(AIEV.length,12).forEach(x=>out.push(newsPost(x)));return out.join('')}
- const ev=AIEV.filter(e=>e.scope==='pueblo'),loc=nw.filter(x=>x.local).concat(nw.filter(x=>!x.local)).slice(0,8);
- const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z))).sort((a,b)=>pd(b.fecPub)-pd(a.fecPub)).slice(0,3);
+ const isEuT=x=>/\b(eta|dira|dute|izango|baina|ere|gaur|bihar|arituko|inguruko|egingo|du|da)\b|(tzen|aren|etako|etan|ekin) /i.test(' '+(x||'')+' ');
+ const byLang=nw.filter(x=>lang==='eu'?isEuT(x.t):!isEuT(x.t));
+ const loc=byLang.filter(x=>x.local).concat(byLang.filter(x=>!x.local));
+ const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z))).sort((a,b)=>pd(b.fecPub)-pd(a.fecPub)).slice(0,2);
  const out=[];myQs.forEach(q=>out.push(qPost(q)));JOBS.filter(j=>!j.ej).forEach(j=>out.push(jobPost(j)));
- POSTS.forEach((p,i)=>{out.push(post(p));
-  if(i===0)out.push(qPost(QS[0]));
-  if(i===1)out.push(lb[0]?lbPost(lb[0]):jobPost(JOBS.find(j=>j.ej)));
-  if(i===3&&lb[1])out.push(lbPost(lb[1]));
-  if(ev[i])out.push(aiPost(ev[i]));
-  if(loc[i])out.push(newsPost(loc[i]))});
- loc.slice(POSTS.length).forEach(x=>out.push(newsPost(x)));
+ const ins=[qPost(QS[0]),flash(),lb[0]?lbPost(lb[0]):jobPost(JOBS.find(j=>j.ej)),plans(),townCard(),lb[1]?lbPost(lb[1]):''];
+ let ni=0;
+ POSTS.forEach((p,i)=>{out.push(post(p));if(ins[i])out.push(ins[i]);if(i%2===1&&loc[ni])out.push(newsPost(loc[ni++]))});
+ ins.slice(POSTS.length).forEach(x=>x&&out.push(x));
+ const rest=loc.slice(ni,ni+6);
+ if(rest.length)out.push(`<div class="nlist"><div class="nlh">${ic('news')} Más noticias de la zona</div>${rest.map(n=>`<a href="${esc(n.u)}" target="_blank" rel="noopener"><b>${esc(n.t)}</b><small>${n.local?'Cerca de ti · ':''}${esc(n.s)} · ${ago(n.ts)}</small></a>`).join('')}</div>`);
  return out.join('');
 }
-function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Creado con IA</span></b><small>Fuente: ${e.src}</small></div></div>
+function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Fuente: ${e.src}</small></div></div>
  <div class="evimg"><img class="pimg" src="${e.img}" alt=""><div class="evdate"><b>${e.day}</b><small>${e.mon}</small></div><span class="evscope">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div>
  <div class="evbody"><h4>${e.title}</h4><div class="evmeta">${ic('cal')} ${e.when}</div><div class="evmeta">${ic('pin')} ${e.where}</div><p>${e.txt}</p><div class="evtip">${ic('bolt')} ${e.tip}</div></div>
  <div class="pa"><button class="pill ${l?'liked':''}" data-like="ai-${e.id}">${ic('heart')} ${(e.likes||Math.round(e.going*1.4))+(l?1:0)}</button><button class="pill" data-ics="${e.id}">${ic('cal')} Calendario</button><button class="cta ${g?'done':''}" data-going="${e.id}">${g?ic('check')+' Vas':ic('user')+' Me apunto'}</button></div><div class="evgo">${e.going+(g?1:0)} vecinos van</div></article>`}
 function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kalea//ES','BEGIN:VEVENT','UID:'+e.id+'@kalea','DTSTART;TZID=Europe/Madrid:'+e.s,'DTEND;TZID=Europe/Madrid:'+e.e,'SUMMARY:'+e.title,'LOCATION:'+e.where,'DESCRIPTION:'+e.txt,'END:VEVENT','END:VCALENDAR'].join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=e.id+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Añadido a tu calendario')}
 
-let q='';
+let q='',exMode='list';
+function exMap(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0]);const term=(q.trim()||(cg[1]?cg[0]:'comercios y bares'))+' Elgoibar';return `<div class="mapw"><iframe title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(term)}&output=embed"></iframe><small>En el mapa ves el horario, si está abierto ahora y la distancia.</small></div>`}
 const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Alimentación','alim'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud'],['Servicios','serv']];
 function bizList(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0])[1],qq=q.trim().toLowerCase();
- const L=PL.filter(p=>(!cg||p.c===cg)&&(!qq||(p.n+' '+p.sub+' '+p.a).toLowerCase().includes(qq))).sort((a,b)=>(!!b.ph-!!a.ph)||(b.v-a.v));
+ const L=PL.filter(p=>(!cg||p.c===cg)&&(!qq||(p.n+' '+p.sub+' '+p.a).toLowerCase().includes(qq))).sort((a,b)=>(ONK.has(b.k)-ONK.has(a.k))||(!!b.ph-!!a.ph)||(b.v-a.v));
  if(!L.length)return `<div class="empty">No hay resultados para "${q}"</div>`;
- return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${b.cat} · ${b.street}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} reseñas`:'Sin reseñas todavía'}</small></div><span class="mini">${t(ACT[b.action][0])}</span></button>`}).join('')}
+ return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${ONK.has(p.k)?'<span class="onk">En Kalea</span> ':''}${b.cat} · ${b.street}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} reseñas`:'Sin reseñas todavía'}</small></div>${ONK.has(p.k)?`<span class="mini">${t(ACT[b.action][0])}</span>`:b.phone?`<span class="mini ghost2" data-tel="${p.k}">Llamar</span>`:`<span class="mini ghost2" data-map="${p.k}">Cómo llegar</span>`}</button>`}).join('')}
 function explore(){
- view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div id="bl">${bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
+ view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div class="viewsw"><button class="${exMode==='list'?'on':''}" data-exm="list">${ic('list')} Lista</button><button class="${exMode==='map'?'on':''}" data-exm="map">${ic('map')} Mapa</button></div><div id="bl">${exMode==='map'?exMap():bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
  <div class="sec"><h3>${t('board')}</h3></div>
- <div class="board"><div class="k">${ic('work')} Empleo</div><b>Camarero/a fines de semana</b><small>Bar del centro · Elgoibar · ejemplo</small></div>
- <div class="board"><div class="k">Pisos · con Pisder</div><b>Piso de 3 habitaciones con balcón</b><small>Elgoibar · ejemplo · ver en Pisder</small></div>`;
- const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=bizList()};
+ <button class="board" data-tab="work" data-wt="of"><div class="k">${ic('work')} Trabajo y formación</div><b>Ofertas de Lanbide, cursos gratis y Se busca</b><small>Elgoibar y comarca</small></button>
+ <a class="board" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener"><div class="k">${ic('house')} Pisos · con Pisder</div><b>Pisos en alquiler y venta</b><small>Se abre en Pisder</small></a>`;
+ const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=exMode==='map'?exMap():bizList()};
 }
 
 function profile(k){
  const b=B[k],a=ACT[b.action];
  view.innerHTML=`<div class="cover" style="${b.img?`background-image:url('${b.img}')`:'background:#efefef'}"><button class="back" data-tab="${tab}">${ic('back')}</button>${b.img?'<span class="gcred">Foto: Google Maps</span>':''}</div><div class="prof">${av(b,'big')}<h2>${b.name}</h2><div class="meta">${b.cat}${b.rev?` · <span class="star">★ ${b.rating}</span> · ${b.rev} reseñas en Google`:''}</div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
- <div class="acts"><button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button>${b.phone?`<a class="ghost" href="tel:+34${b.phone.replace(/\s/g,'')}" aria-label="Llamar">${ic('phone')}</a>`:`<span class="ghost off2">${ic('phone')}</span>`}<a class="ghost" href="${b.maps}" target="_blank" rel="noopener" aria-label="Cómo llegar">${ic('pin')}</a></div>
+ ${ONK.has(k)?'':`<div class="notk">Este negocio todavía no está en Kalea. Puedes llamar o ver cómo llegar.</div>`}<div class="acts">${ONK.has(k)?`<button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button>`:b.phone?`<a class="cta" href="${tel(b)}">${ic('phone')} Llamar</a>`:`<a class="cta" href="${b.maps}" target="_blank" rel="noopener">${ic('pin')} Cómo llegar</a>`}${b.phone?`<a class="ghost" href="tel:+34${b.phone.replace(/\s/g,'')}" aria-label="Llamar">${ic('phone')}</a>`:`<span class="ghost off2">${ic('phone')}</span>`}<a class="ghost" href="${b.maps}" target="_blank" rel="noopener" aria-label="Cómo llegar">${ic('pin')}</a></div>
  <div class="tabs2"><button class="on" data-pt="info">Info</button><button data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button></div><div id="pt"></div></div>`;
  const pt=w=>{$('#pt').innerHTML=w==='info'?`<div class="hours"><b>Dirección</b><br>${b.street}, 20870 Elgoibar<br><br>${b.phone?`<b>Teléfono</b><br><a href="tel:+34${b.phone.replace(/\s/g,'')}">${b.phone}</a><br><br>`:''}${b.web?`<b>Web</b><br><a href="${b.web}" target="_blank" rel="noopener">${b.web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,40)}</a><br><br>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Ver horario y reseñas en Google Maps</a><br><br><small class="muted">Datos públicos de Google Maps. Cuando el negocio se una a Kalea podrá editar su página, carta, horarios y fotos.</small></div>`:`<div class="note">Ejemplo de cómo se vería su ${b.action==='cita'?'lista de servicios':'carta'}</div>`+b.menu.map(m=>`<div class="menu-i"><div>${m[0]}</div><b>${m[2]}</b></div>`).join('');
   document.querySelectorAll('[data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w))};
@@ -309,15 +322,23 @@ function pointsV(){
  <div class="li"><div class="ic">${ic('coin')}</div><div class="t"><b>Canjeado en El Jose Barber</b><small>Lunes</small></div><span class="v" style="color:var(--muted)">-500</span></div></div>`;
 }
 
-let ptype='flash';
+let ptype=null,pubAs='vecino';
 function publish(){
- const types=[['ask','chat','Pregunta al pueblo','La IA y los vecinos te responden'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['story','story','Historia','24 horas en el inicio'],['post','img','Publicación','Foto con botón de reservar'],['offer','tag','Oferta','Descuento para vecinos']];
- view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>
- ${ptype==='ask'?askForm():ptype==='plan'?planForm():`<div class="preview"><b>${ptype==='flash'?'Nuevo hueco de última hora':ptype==='story'?'Nueva historia':ptype==='post'?'Nueva publicación':'Nueva oferta'}</b>
- <label>Qué ofreces</label><input class="field" value="${ptype==='flash'?'Mesa para 4 esta noche':ptype==='offer'?'2x1 en pintxos los jueves':'Pintxo pote este jueves'}">
- ${ptype==='flash'?`<label>Hora</label><div class="opts"><span class="opt">20:30</span><span class="opt on">21:30</span><span class="opt">22:00</span></div><label>Descuento</label><div class="opts"><span class="opt">-10%</span><span class="opt on">-15%</span><span class="opt">-20%</span></div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
- <div class="reach">${ic('bell')} Avisaremos a 1.240 vecinos a menos de 1 km</div>
- <button class="big-cta" id="pubgo">Publicar ahora</button></div>`}`;
+ const V=[['ask','chat','Pregunta al pueblo','La IA y los vecinos te responden'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['photo','img','Foto o texto','Comparte algo con el pueblo'],['story','story','Historia','24 horas en el inicio']];
+ const N=[['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['offer','tag','Oferta','Descuento para vecinos'],['post','img','Publicación','Foto con botón de reservar'],['story','story','Historia','24 horas en el inicio'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['job','store','Se busca','Oferta de trabajo gratis']];
+ const types=pubAs==='vecino'?V:N;if(ptype&&!types.some(x=>x[0]===ptype))ptype=null;
+ const head={photo:'Nueva publicación',story:'Nueva historia',flash:'Nuevo hueco de última hora',offer:'Nueva oferta',post:'Nueva publicación con reserva'};
+ const ph={photo:'¿Qué quieres contar?',story:'Texto de tu historia (opcional)',flash:'Ej.: mesa para 4 esta noche',offer:'Ej.: 2x1 en pintxos los jueves',post:'Ej.: pintxo pote este jueves'};
+ const reach=pubAs==='vecino'?'Lo verán los vecinos de Elgoibar en el inicio':'Avisaremos a los vecinos que siguen tu negocio';
+ let form='';
+ if(ptype==='ask')form=askForm();else if(ptype==='plan')form=planForm();else if(ptype==='job')form=`<div class="preview"><b>Nueva oferta de trabajo</b><p class="pvsub">Sale en el inicio y en Trabajo y formación. Es gratis.</p><button class="big-cta stick" data-jobpub="1">Escribir la oferta</button></div>`;
+ else if(ptype)form=`<div class="preview"><b>${head[ptype]}</b>
+ <label>${ptype==='photo'||ptype==='story'?'Texto':'Qué ofreces'}</label><textarea class="field" rows="3" placeholder="${ph[ptype]}"></textarea>
+ ${ptype==='flash'?`<label>Hora</label><div class="opts">${['20:30','21:30','22:00'].map(h=>`<span class="opt">${h}</span>`).join('')}</div><label>Descuento</label><div class="opts">${['-10%','-15%','-20%'].map(h=>`<span class="opt">${h}</span>`).join('')}</div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
+ <div class="reach">${ic('bell')} ${reach}</div>
+ <button class="big-cta stick" id="pubgo">Publicar</button></div>`;
+ view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><div class="seg pubas"><button class="${pubAs==='vecino'?'on':''}" data-pubas="vecino">Soy vecino</button><button class="${pubAs==='negocio'?'on':''}" data-pubas="negocio">Tengo un negocio</button></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>${form||'<p class="pickhint">Elige qué quieres publicar</p>'}`;
+ if(ptype){const f=view.querySelector('.preview');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),30)}
 }
 
 let prole='Vecino';
@@ -331,6 +352,7 @@ function planForm(){return `<div class="preview"><b>Nuevo plan en grupo</b>
  <button class="big-cta" id="pubgo">Publicar plan</button></div>`}
 function hookPub(){const pq=$('#pq');if(pq){pq.oninput=()=>{clearTimeout(pqT);pqT=setTimeout(pqPrev,350)};$('#pubq').onclick=()=>{const v=pq.value.trim();if(!v){pq.focus();return}publishQ(v)}}const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar',()=>toast(ptype==='plan'?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos'))}
 function walletMini(){const p=user?points:0;return `<button class="wmini" data-tab="points"><div><small>Puntos Kalea</small><b>${p.toLocaleString('es-ES')}</b><span>${user?`= ${(p/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar`:'Entra para empezar a sumar'}</span></div><span class="wgo">Ver ›</span></button>`}
+let alerts={flash:true,job:true,plan:true,ask:true};try{Object.assign(alerts,JSON.parse(localStorage.getItem('kalea_alerts')||'{}'))}catch(e){}
 function me(){
  if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
@@ -340,7 +362,10 @@ function me(){
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Txarriduna · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
  <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>El Jose Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
  <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Pastelería Doña Mercedes · pedido en camino</b><small>Llega en 15 min</small></div></div></div>
- <div class="sec"><h3>Siguiendo</h3></div><div class="stories">${order.map(k=>`<button class="st" data-biz="${k}"><div class="ring seen"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>
+ <div class="sec"><h3>Mis planes</h3></div><div class="list">${joinedP.size?PLANS.filter(p=>joinedP.has(p.id)).map(p=>`<div class="li"><div class="ic">${ic('user')}</div><div class="t"><b>${p.title}</b><small>${p.when||''}</small></div></div>`).join(''):`<div class="li"><div class="t"><small>Aún no te has apuntado a ningún plan.</small></div></div>`}</div>
+ <div class="sec"><h3>Guardados</h3></div><div class="list">${[...liked].filter(k=>B[k]).length?[...liked].filter(k=>B[k]).map(k=>`<button class="li" data-biz="${k}">${av(B[k],'lav')}<div class="t"><b>${B[k].name}</b><small>${B[k].cat}</small></div><span class="v">›</span></button>`).join(''):`<div class="li"><div class="t"><small>Lo que te guste aparecerá aquí.</small></div></div>`}</div>
+ <div class="sec"><h3>Avisos</h3></div><div class="list">${[['flash','Huecos de última hora'],['job','Ofertas de empleo en mi zona'],['plan','Planes en grupo'],['ask','Respuestas a mis preguntas']].map(x=>`<button class="li" data-alert="${x[0]}"><div class="t"><b>${x[1]}</b></div><span class="sw ${alerts[x[0]]?'on':''}"></span></button>`).join('')}</div>
+ <div class="sec"><h3>Siguiendo</h3></div><div class="stories">${order.map(k=>`<button class="st" data-biz="${k}"><div class="ring seen"><img src="${B[k].img}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this,'stfb','${B[k].cg}')"></div><span>${B[k].short}</span></button>`).join('')}</div>
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
@@ -433,9 +458,15 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
+ if(d.tel){e.stopPropagation();location.href=tel(B[d.tel]);return}
+ if(d.map){e.stopPropagation();window.open(B[d.map].maps,'_blank','noopener');return}
+ if(d.exm){exMode=d.exm;explore();return}
+ if(d.notif){notifSheet();return}
+ if(d.pubas){pubAs=d.pubas;ptype=null;publish();hookPub();return}
+ if(d.alert){alerts[d.alert]=!alerts[d.alert];try{localStorage.setItem('kalea_alerts',JSON.stringify(alerts))}catch(e){}me();return}
  if(d.pqs){const pq=$('#pq');if(pq){pq.value=d.pqs;pqPrev()}}
  else if(d.wt&&!d.tab){wtab=d.wt;if(wtab==='of'&&wzone==='online')wzone='comarca';workV()}
  else if(d.wz){wzone=d.wz;workV()}
@@ -456,7 +487,7 @@ document.addEventListener('click',e=>{
  else if(d.scope){scope=d.scope;home()}
  else if(d.ics)ics(d.ics);
  else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
- else if(d.tab){if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
+ else if(d.tab){closeSheet();if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
@@ -468,9 +499,10 @@ document.addEventListener('click',e=>{
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
  else if(d.ptype){ptype=d.ptype;publish();hookPub()}
- else if(d.lang){lang=d.lang;render();tab='profile';nav()}
+ else if(d.lang){lang=d.lang;try{localStorage.setItem('kalea_lang',lang)}catch(e){}closeSheet();render()}
 });
 $('#scrim').onclick=closeSheet;
 render();
+try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`),400)}catch(e){}
 
 })();
