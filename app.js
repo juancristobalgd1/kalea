@@ -16,6 +16,12 @@ pin:'<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" c
 globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
 spark:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
 bolt:'<path d="M13 3L5 14h6l-1 7 8-11h-6z"/>',
+alert:'<path d="M12 3l10 18H2zM12 10v5M12 18h.01"/>',
+vote:'<path d="M4 13l4 4 12-12"/><path d="M4 21h16"/>',
+wrench:'<path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.5 2.5-2.4-.6-.6-2.4z"/>',
+chart:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>',
+news:'<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/>',
+cam:'<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/>',
 town:'<path d="M3 21h18M5 21V10l7-5 7 5v11M9 21v-5h6v5"/>',
 check:'<path d="M5 12l4 4 10-10"/>',
 down:'<path d="M6 9l6 6 6-6"/>',
@@ -66,6 +72,12 @@ const AIEV=[
  {id:'mercado',scope:'pueblo',title:'Mercado de productores',when:'Sábado 17 de octubre · 10:00 a 14:00',day:'17',mon:'oct',where:'Plaza de Elgoibar',img:'assets/mercado.jpg',txt:'Vuelve el mercado de productores a la plaza: queso Idiazabal, verdura de temporada, miel y talos recién hechos. Plan perfecto para ir con los niños por la mañana.',tip:'Mendi Jatetxea y Taberna Itsasoa tienen mesas libres para después',src:'Agenda del ayuntamiento',going:86,s:'20261017T100000',e:'20261017T140000'},
  {id:'pintxos',scope:'pueblo',title:'Ruta de pintxos de otoño',when:'Viernes 23 de octubre · desde las 19:00',day:'23',mon:'oct',where:'12 bares de Elgoibar',img:'assets/bar.jpg',txt:'Doce bares del pueblo preparan un pintxo especial de otoño. Sella tu ruta en la app y entra en el sorteo de una cena para dos.',tip:'Cada bar visitado te da 30 puntos',src:'Bares de Kalea',going:142,s:'20261023T190000',e:'20261023T230000'},
  {id:'festival',scope:'provincia',title:'Festival de música al aire libre',when:'Sábado 24 de octubre · 20:00',day:'24',mon:'oct',where:'Donostia · a 45 min',img:'assets/concierto.jpg',txt:'Grupos vascos en directo, food trucks y ambiente hasta tarde. Si vas desde Elgoibar, te avisamos de quién comparte coche.',tip:'Pizzeria Etxea te guarda la cena para la vuelta',src:'Agenda cultural de Euskadi',going:340,s:'20261024T200000',e:'20261025T010000'}];
+const NEWS=[
+ {id:'n1',kind:'Aviso',title:'Corte de tráfico por obras en el centro',txt:'El martes 13 de octubre, de 8:00 a 15:00, se corta el tráfico en el centro por obras de asfaltado. Los comercios siguen abiertos y se puede llegar andando.',src:'Ayuntamiento de Elgoibar'},
+ {id:'n2',kind:'Noticia',title:'Abren las inscripciones de los cursos de otoño',txt:'Ya puedes apuntarte a los cursos de otoño del polideportivo: natación para niños, yoga y pilates. Plazas limitadas.',src:'Polideportivo municipal'},
+ {id:'n3',kind:'Gipuzkoa',title:'Fin de semana de ferias en la provincia',txt:'Este fin de semana hay ferias y mercados en varios pueblos de Gipuzkoa. Kalea IA te resume los que pillan a menos de 30 minutos.',src:'Agenda cultural de Euskadi'}];
+const POLL={q:'¿Qué quieres para las próximas fiestas?',o:[['Más conciertos',38],['Actividades para niños',31],['Feria gastronómica',22],['Deporte popular',9]]};
+let voted=null,bonoOk=false;
 let scope='pueblo';const going=new Set();
 const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag']};
 
@@ -82,7 +94,23 @@ function stories(){return `<div class="stories">${order.map((k,i)=>`<button clas
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
-function home(){view.innerHTML=topBar()+stories()+flash()+muni()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function home(){view.innerHTML=topBar()+stories()+agenda()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag ev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
+function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
+function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
+ view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div><span class="tag">Ejemplo</span></div>
+ <div class="tsec"><h3>${ic('alert')} Avisos oficiales</h3>${NEWS.filter(n=>n.kind==='Aviso').map(n=>`<div class="tcard warn"><b>${n.title}</b><p>${n.txt}</p><small>Te llega como notificación a todos los vecinos</small></div>`).join('')}<div class="tcard"><b>Recogida de enseres</b><p>Jueves 15 de octubre. Avísanos desde la app y pasamos por tu portal.</p></div></div>
+ <div class="tsec"><h3>${ic('vote')} Participa</h3><div class="tcard"><b>${POLL.q}</b>${POLL.o.map((o,i)=>{const v=o[1]+(voted===i?1:0),p=Math.round(v*100/tot);return `<button class="pollo ${voted===i?'on':''}" data-vote="${i}"><span class="bar" style="width:${voted!==null?p:0}%"></span><span class="lb">${o[0]}</span>${voted!==null?`<span class="pc">${p}%</span>`:''}</button>`}).join('')}<small>${voted!==null?'Gracias por votar · +20 puntos':'312 vecinos han votado · votar da 20 puntos'}</small></div></div>
+ <div class="tsec"><h3>${ic('wrench')} Incidencias</h3><div class="tcard"><p>¿Una farola fundida, un bache, basura acumulada? Haz una foto y llega directa al ayuntamiento. Te avisamos cuando esté arreglado.</p><button class="cta wide" data-inc="1">${ic('wrench')} Avisar de una incidencia</button></div></div>
+ <div class="tsec"><h3>${ic('coin')} Bonos del comercio local</h3><div class="tcard"><p>10 € para gastar en cualquier negocio de Kalea. Cada bono mueve dinero que se queda en el pueblo.</p><button class="cta wide ${bonoOk?'done':''}" data-bono="1">${bonoOk?ic('check')+' Bono activado':ic('coin')+' Pedir mi bono'}</button></div></div>
+ <div class="tsec"><h3>${ic('chart')} Panel para el ayuntamiento</h3><small class="demo">Datos de ejemplo de un mes</small>
+ <div class="kpis"><div><b>2.140</b><small>vecinos activos</small></div><div><b>18.600 €</b><small>gastados en comercio local con bonos</small></div><div><b>1.230</b><small>asistentes a eventos</small></div><div><b>41 de 47</b><small>incidencias resueltas · 2,3 días de media</small></div></div>
+ <div class="tcard"><b>Uso semanal de la app</b><div class="bars">${[38,52,47,61,70,66,88].map((h,i)=>`<div><span style="height:${h}%"></span><small>${'LMXJVSD'[i]}</small></div>`).join('')}</div><p>El ayuntamiento ve qué eventos funcionan, qué piden los vecinos y cuánto dinero se queda en el comercio del pueblo.</p></div></div>`}
+function incSheet(){openSheet(`<h3>Avisar de una incidencia</h3><p class="sub">Llega directa al ayuntamiento</p>${opts(['Farola','Bache','Basura','Ruido','Otro'],'Farola')}<button class="photo">${ic('cam')} Añadir foto</button><div class="loc">${ic('pin')} Ubicación: Calle Nagusia (aprox.)</div><button class="cta wide" id="incgo">Enviar al ayuntamiento</button>`);
+ $('#sheet').querySelectorAll('.opt').forEach(o=>o.onclick=()=>{$('#sheet').querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')});
+ $('#incgo').onclick=()=>{closeSheet();points+=15;toast('Enviado. Te avisamos cuando esté arreglado',15)}}
+function evSheet(id){const e=AIEV.find(x=>x.id===id);openSheet(`<div class="post ai sheetpost">${aiPost(e).replace(/^<article class="post ai">|<\/article>$/g,'')}</div>`)}
+function newsSheet(id){const n=NEWS.find(x=>x.id===id);openSheet(`<div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><h3>${n.title}</h3><p class="sub">${n.txt}</p><small class="aisrc">${ic('spark')} Resumido por Kalea IA · Fuente: ${n.src}</small>`)}
 function feed(){
  if(scope==='provincia')return AIEV.map(aiPost).join('');
  const ev=AIEV.filter(e=>e.scope==='pueblo');const out=[];
@@ -160,7 +188,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish}[tab])();hookPub();view.scrollTop=0}
+function render(){nav();({home,explore,points:pointsV,profile:me,publish,town}[tab])();hookPub();view.scrollTop=0}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
@@ -229,10 +257,15 @@ function story(k){
 }
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.scope){scope=d.scope;home()}
+ if(d.ev)evSheet(d.ev);
+ else if(d.news)newsSheet(d.news);
+ else if(d.vote!==undefined){const i=+d.vote;need('Para votar',()=>{if(voted===null){voted=i;points+=20;toast('Voto enviado al ayuntamiento',20)}town()})}
+ else if(d.inc)need('Para avisar al ayuntamiento',incSheet);
+ else if(d.bono)need('Para pedir tu bono',()=>{if(!bonoOk){bonoOk=true;toast('Bono de 10 € activado. Úsalo en cualquier negocio')}if(tab==='town')town()});
+ else if(d.scope){scope=d.scope;home()}
  else if(d.ics)ics(d.ics);
  else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
  else if(d.tab){tab=d.tab;render()}
