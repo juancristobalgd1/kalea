@@ -78,6 +78,17 @@ const NEWS=[
  {id:'n3',kind:'Gipuzkoa',title:'Fin de semana de ferias en la provincia',txt:'Este fin de semana hay ferias y mercados en varios pueblos de Gipuzkoa. Kalea IA te resume los que pillan a menos de 30 minutos.',src:'Agenda cultural de Euskadi'}];
 const POLL={q:'¿Qué quieres para las próximas fiestas?',o:[['Más conciertos',38],['Actividades para niños',31],['Feria gastronómica',22],['Deporte popular',9]]};
 let voted=null,bonoOk=false;
+const PLANS=[
+ {id:'bus',org:'Ayuntamiento',by:'Ayuntamiento de Elgoibar',title:'Autobús al festival de Donostia',price:10,min:50,now:42,until:'Cierra el jueves 22',img:'assets/concierto.jpg',cof:'El ayuntamiento pone 5 € por persona'},
+ {id:'cena',org:'Negocio',by:'Mendi Jatetxea',title:'Cena de sidrería con menú cerrado',price:35,min:30,now:24,until:'Cierra el miércoles 21',img:'assets/restaurante.jpg'},
+ {id:'mus',org:'Vecino',by:'Ane, vecina de Elgoibar',title:'Txapelketa de mus en el bar del jubilado',price:5,min:16,now:16,until:'Cierra el sábado 17',img:'assets/bar.jpg'}];
+const joinedP=new Set();
+function planCard(p){const j=joinedP.has(p.id),n=p.now+(j?1:0),ok=n>=p.min,pc=Math.min(100,Math.round(n*100/p.min));
+ return `<div class="plan"><div class="im" style="background-image:url(${p.img})"><span class="org o-${p.org}">${p.org}</span>${ok?'<span class="ok">Se hace</span>':''}</div><div class="bd"><b>${p.title}</b><small>${p.by}</small>
+ <div class="prog"><span style="width:${pc}%"></span></div><div class="pn"><b>${n} de ${p.min}</b><span>${ok?'Mínimo conseguido':'Faltan '+(p.min-n)}</span></div>
+ <div class="pm">${p.price} € por persona · ${p.until}</div>${p.cof?`<div class="cof">${ic('town')} ${p.cof}</div>`:''}
+ <button class="cta wide ${j?'done':''}" data-plan="${p.id}">${j?ic('check')+' Apuntado':'Me apunto'}</button><small class="nocharge">${ok?'Se cobra al cerrar el plan':'Solo pagas si se llega al mínimo'}</small></div></div>`}
+function plans(){return `<div class="sec"><h3>Si somos tantos, se hace</h3><a href="#" data-tab="publish" data-pt2="plan">Crear plan</a></div><div class="plans">${PLANS.map(planCard).join('')}</div>`}
 let scope='pueblo';const going=new Set();
 const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag']};
 
@@ -94,7 +105,7 @@ function stories(){return `<div class="stories">${order.map((k,i)=>`<button clas
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph"><img class="av" src="${b.img}" alt=""><button class="nm" data-biz="${p.b}"><b>${b.name} ${ic('ver','ver')}</b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt=""><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
-function home(){view.innerHTML=topBar()+stories()+agenda()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function home(){view.innerHTML=topBar()+stories()+agenda()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
@@ -166,16 +177,25 @@ function pointsV(){
 
 let ptype='flash';
 function publish(){
- const types=[['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['story','story','Historia','24 horas en el inicio'],['post','img','Publicación','Foto con botón de reservar'],['offer','tag','Oferta','Descuento para vecinos']];
- view.innerHTML=`<div class="top"><div class="place">Publicar</div><span class="web" style="margin:0">Modo negocio</span></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>
- <div class="preview"><b>${ptype==='flash'?'Nuevo hueco de última hora':ptype==='story'?'Nueva historia':ptype==='post'?'Nueva publicación':'Nueva oferta'}</b>
+ const types=[['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['story','story','Historia','24 horas en el inicio'],['post','img','Publicación','Foto con botón de reservar'],['offer','tag','Oferta','Descuento para vecinos']];
+ view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>
+ ${ptype==='plan'?planForm():`<div class="preview"><b>${ptype==='flash'?'Nuevo hueco de última hora':ptype==='story'?'Nueva historia':ptype==='post'?'Nueva publicación':'Nueva oferta'}</b>
  <label>Qué ofreces</label><input class="field" value="${ptype==='flash'?'Mesa para 4 esta noche':ptype==='offer'?'2x1 en pintxos los jueves':'Pintxo pote este jueves'}">
  ${ptype==='flash'?`<label>Hora</label><div class="opts"><span class="opt">20:30</span><span class="opt on">21:30</span><span class="opt">22:00</span></div><label>Descuento</label><div class="opts"><span class="opt">-10%</span><span class="opt on">-15%</span><span class="opt">-20%</span></div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
  <div class="reach">${ic('bell')} Avisaremos a 1.240 vecinos a menos de 1 km</div>
- <button class="big-cta" id="pubgo">Publicar ahora</button></div>`;
+ <button class="big-cta" id="pubgo">Publicar ahora</button></div>`}`;
 }
 
-function hookPub(){const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar como negocio',()=>toast('Publicado. Ya lo ven tus vecinos'))}
+let prole='Vecino';
+function planForm(){return `<div class="preview"><b>Nuevo plan en grupo</b>
+ <label>Publicas como</label><div class="opts">${['Vecino','Negocio','Ayuntamiento'].map(r=>`<button class="opt ${prole===r?'on':''}" data-prole="${r}">${r}</button>`).join('')}</div>
+ <label>Qué plan</label><input class="field" value="${prole==='Ayuntamiento'?'Autobús al concierto de Donostia':prole==='Negocio'?'Cena de sidrería con menú cerrado':'Excursión al monte y comida en el bar'}">
+ <div class="row2"><div><label>Precio por persona</label><input class="field" value="${prole==='Negocio'?'35 €':'10 €'}"></div><div><label>Mínimo de gente</label><input class="field" value="${prole==='Negocio'?'30':'20'}"></div></div>
+ <label>Fecha límite para apuntarse</label><input class="field" value="Jueves 22 de octubre">
+ ${prole==='Ayuntamiento'?'<label>Aportación del ayuntamiento</label><input class="field" value="5 € por persona">':`<label class="chk"><input type="checkbox" ${prole==='Vecino'?'checked':''}> Pedir apoyo al ayuntamiento</label>`}
+ <div class="reach">${ic('bell')} ${prole==='Vecino'?'Lo revisamos antes de publicarlo. ':''}Nadie paga hasta que se llegue al mínimo</div>
+ <button class="big-cta" id="pubgo">Publicar plan</button></div>`}
+function hookPub(){const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar',()=>toast(ptype==='plan'?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos'))}
 function me(){
  if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div><div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
@@ -257,10 +277,12 @@ function story(k){
 }
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.ev)evSheet(d.ev);
+ if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
+ else if(d.prole){prole=d.prole;publish();hookPub()}
+ else if(d.ev)evSheet(d.ev);
  else if(d.news)newsSheet(d.news);
  else if(d.vote!==undefined){const i=+d.vote;need('Para votar',()=>{if(voted===null){voted=i;points+=20;toast('Voto enviado al ayuntamiento',20)}town()})}
  else if(d.inc)need('Para avisar al ayuntamiento',incSheet);
@@ -268,7 +290,7 @@ document.addEventListener('click',e=>{
  else if(d.scope){scope=d.scope;home()}
  else if(d.ics)ics(d.ics);
  else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
- else if(d.tab){tab=d.tab;render()}
+ else if(d.tab){if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
