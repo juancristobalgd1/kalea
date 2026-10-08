@@ -103,7 +103,66 @@ function stories(){return `<div class="stories">${order.map((k,i)=>`<button clas
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph">${av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.name} <span class="ej">Ejemplo</span></b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer"><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
-function home(){view.innerHTML=topBar()+stories()+agenda()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+
+/* ===== Pregunta al pueblo ===== */
+const nrm=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+const RULES=[
+ [['persiana','cerradura','bricolaje','tornillo','herramienta','pintura','enchufe','grifo'],p=>/Ferreter/.test(p.sub),'Para eso tienes estas ferreterías en Elgoibar. Suelen saber quién hace arreglos en casa:'],
+ [['partido','futbol','athletic','real sociedad','champions','liga'],p=>p.c==='bar','Estos bares tienen buen ambiente según sus reseñas. Pregúntales si ponen el partido:'],
+ [['piso','alquiler','alquilar','vivienda','comprar casa','casa en venta'],p=>/Inmobiliaria/.test(p.sub),'Estas inmobiliarias trabajan en Elgoibar. También puedes mirar pisos en Pisder:'],
+ [['coche','taller','rueda','neumatico','itv','averia','mecanico','aceite'],p=>/Taller|Concesionario/.test(p.sub),'Estos talleres tienen buenas reseñas:'],
+ [['gasolina','gasolinera','repostar','diesel'],p=>/Gasolinera/.test(p.sub),'Gasolineras en Elgoibar:'],
+ [['cenar','comer','menu','restaurante','cena','comida','chuleton','sidreria'],p=>p.c==='rest','Para comer o cenar, estos son los restaurantes mejor valorados:'],
+ [['pintxo','cana','tomar algo','vermut','copa','cerveza','txakoli'],p=>p.c==='bar','Para tomar algo, estos bares son de los más valorados:'],
+ [['cafe','desayuno','desayunar','merendar','terraza'],p=>/Cafeter/.test(p.sub),'Para un café o desayunar:'],
+ [['pan','pastel','tarta','dulce','croissant','cumpleanos'],p=>/Panader|Pasteler/.test(p.sub),'Panaderías y pastelerías del pueblo:'],
+ [['carne','chuleta','pescado','fruta','verdura','supermercado','hacer la compra'],p=>p.c==='alim','Para la compra tienes estos comercios:'],
+ [['pelo','corte','peluquer','tinte','mechas','barba','barber'],p=>/Peluquer|Barber/.test(p.sub),'Peluquerías y barberías con buenas reseñas:'],
+ [['unas','depilacion','estetica','facial','masaje'],p=>/Estética|Uñas|Masaje/.test(p.sub),'Centros de estética y masaje:'],
+ [['dentista','muela','diente','ortodoncia'],p=>/Dentista/.test(p.sub),'Dentistas en Elgoibar:'],
+ [['fisio','espalda','lesion','contractura','rodilla'],p=>/Fisioterapia|Osteopat/.test(p.sub),'Fisioterapeutas del pueblo:'],
+ [['farmacia','medicina','guardia'],p=>/Farmacia/.test(p.sub),'Farmacias de Elgoibar. Comprueba cuál está de guardia hoy antes de ir:'],
+ [['gimnasio','entrenar','gym','pilates','yoga'],p=>/Gimnasio|Polideportivo/.test(p.sub),'Para hacer deporte:'],
+ [['gafas','vista','lentillas','audifono'],p=>/Óptica/.test(p.sub),'Ópticas en Elgoibar:'],
+ [['perro','gato','mascota','veterinario','pienso'],p=>/mascota|Veterinaria|canina/i.test(p.sub),'Para tu mascota:'],
+ [['regalo','flores','ramo','joya','anillo'],p=>/regalos|Floristería|Joyería/.test(p.sub),'Para un regalo:'],
+ [['movil','telefono','ordenador','portatil','informatica','pantalla rota'],p=>/Telefonía|Informática/.test(p.sub),'Para el móvil o el ordenador:'],
+ [['ropa','vestido','camisa','zapato','zapatilla','moda','abrigo'],p=>/Moda|Zapater|Deportes/.test(p.sub),'Tiendas de ropa y calzado:'],
+ [['carnet','autoescuela','conducir'],p=>/Autoescuela/.test(p.sub),'Autoescuelas en Elgoibar:'],
+ [['hotel','dormir','alojamiento','habitacion'],p=>/Hotel/.test(p.sub),'Para dormir en Elgoibar:'],
+ [['limpieza','limpiar'],p=>/Limpieza/.test(p.sub),'Empresas de limpieza:'],
+ [['asesor','renta','impuestos','gestoria','autonomo'],p=>/Asesor/.test(p.sub),'Asesorías en Elgoibar:']];
+const score=p=>p.r*Math.log((p.v||0)+2);
+function aiAnswer(text){const tx=nrm(text);
+ for(const [kw,fn,intro] of RULES){if(kw.some(k=>tx.includes(k))){const L=PL.filter(fn).sort((a,b)=>score(b)-score(a)).slice(0,3);if(L.length)return{intro,list:L.map(p=>p.k),pisder:/Inmobiliaria/.test(L[0].sub)}}}
+ const tk=tx.split(/[^a-z0-9ñ]+/).filter(w=>w.length>3);
+ const L=PL.filter(p=>tk.some(w=>nrm(p.n+' '+p.sub).includes(w))).sort((a,b)=>score(b)-score(a)).slice(0,3);
+ if(L.length)return{intro:'Esto es lo que he encontrado en Elgoibar:',list:L.map(p=>p.k)};
+ return{intro:'No encuentro un negocio del pueblo para eso. Publica la pregunta y los vecinos te ayudan.',list:[]}}
+function miniBiz(k){const b=B[k];return `<button class="minib" data-biz="${k}">${av(b,'mav')}<div><b>${b.name}</b><small>${b.cat} · ${b.street}${b.rev?` · ★ ${b.rating}`:''}</small></div><span>Ver</span></button>`}
+function aiBox(text){const r=aiAnswer(text);return `<div class="aians"><div class="aihd"><span class="aidot">${ic('spark')}</span><b>Kalea IA</b><span class="aitag">Creado con IA</span></div><p>${r.intro}</p>${r.list.map(miniBiz).join('')}${r.pisder?'<a class="pisder" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener">Ver pisos en Pisder</a>':''}</div>`}
+const QS=[
+ {id:'q1',who:'Ane',time:'hace 25 min',q:'¿Alguien sabe quién arregla persianas en Elgoibar?',ans:[{who:'Mikel',txt:'Pregunta en la ferretería, suelen conocer a quién lo hace en el pueblo.',v:7},{who:'Itziar',txt:'A nosotros nos lo arregló un autónomo del pueblo, si quieres te paso el contacto por privado.',v:3}]},
+ {id:'q2',who:'Iker',time:'hace 1 h',q:'¿Dónde puedo ver el partido del sábado con buen ambiente?',ans:[{who:'Jon',txt:'En la zona de San Frantzisko suele haber ambiente los días de partido.',v:5}]},
+ {id:'q3',who:'Maite',time:'hace 3 h',q:'Busco piso de alquiler para una familia de cuatro',ans:[{who:'Aitor',txt:'Mira también en Pisder, salen pisos de la zona y te avisa por WhatsApp.',v:4}]}];
+const myQs=[],upv=new Set();let pendingQ='';
+function qCard(q){const all=q.ans.map((a,i)=>({...a,i,v:a.v+(upv.has(q.id+':'+i)?1:0)})).sort((a,b)=>b.v-a.v);
+ return `<article class="qcard"><div class="qh"><div class="qav">${q.who[0]}</div><div><b>${q.who}</b><small>${q.time}${q.mine?'':' <span class="ej">Ejemplo</span>'}</small></div></div><p class="qq">${q.q}</p>${aiBox(q.q)}
+ ${all.map((a,n)=>`<div class="qa"><div class="qav s">${a.who[0]}</div><div class="qb"><b>${a.who}</b>${n===0&&a.v>=5?'<span class="best">Mejor respuesta</span>':''}<p>${a.txt}</p></div><button class="upv ${upv.has(q.id+':'+a.i)?'on':''}" data-upv="${q.id}:${a.i}">${ic('heart')} ${a.v}</button></div>`).join('')}
+ <div class="rep"><input id="r-${q.id}" placeholder="Escribe tu respuesta"><button data-reply="${q.id}">Responder</button></div></article>`}
+function askCard(){const q=QS[0];return `<div class="sec"><h3>Pregunta al pueblo</h3><a href="#" data-tab="ask">Ver todas</a></div><div class="askc"><button class="askin" data-tab="ask">${ic('spark')}<span>¿Qué necesitas en Elgoibar?</span></button><button class="askq" data-tab="ask"><small>${q.who} preguntó <span class="ej">Ejemplo</span></small><b>${q.q}</b><span>Kalea IA y ${q.ans.length} vecinos han respondido</span></button></div>`}
+function askV(){
+ view.innerHTML=`<div class="top"><div class="place">Pregunta al pueblo</div></div><p class="asksub">Pregunta lo que quieras. La IA te responde al momento con negocios de Elgoibar y los vecinos te dan su opinión.</p>
+ <div class="askbox"><textarea id="aq" rows="2" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><button class="cta" id="ago">Preguntar</button></div>
+ <div class="chips">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños','Peluquería esta tarde'].map(x=>`<button class="chip" data-sug="${x}">${x}</button>`).join('')}</div>
+ <div id="ares"></div><div class="sec"><h3>Últimas preguntas</h3></div>${myQs.concat(QS).map(qCard).join('')}`;
+ const go=()=>{const v=$('#aq').value.trim();if(!v)return;$('#ares').innerHTML=`<div class="qcard mineq"><p class="qq">${v.replace(/</g,'&lt;')}</p>${aiBox(v)}<button class="big-cta" id="apub">Publicar para que respondan los vecinos</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`;
+  $('#apub').onclick=()=>need('Para publicar tu pregunta',()=>{myQs.unshift({id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true});points+=5;askV();toast('Pregunta publicada. Te avisamos cuando respondan',5)})};
+ $('#ago').onclick=go;
+ if(pendingQ){$('#aq').value=pendingQ;pendingQ='';go()}
+}
+
+function home(){view.innerHTML=topBar()+stories()+agenda()+askCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
@@ -203,7 +262,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish,town}[tab])();hookPub();view.scrollTop=0}
+function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV}[tab])();hookPub();view.scrollTop=0}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
@@ -292,10 +351,13 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
+ if(d.sug){pendingQ=d.sug;askV()}
+ else if(d.upv){const k=d.upv;need('Para votar respuestas',()=>{upv.has(k)?upv.delete(k):upv.add(k);askV()})}
+ else if(d.reply){const id=d.reply,inp=$('#r-'+id),txt=inp?inp.value.trim():'';if(!txt){inp&&inp.focus();return}need('Para responder',()=>{const q=myQs.concat(QS).find(x=>x.id===id);q.ans.push({who:(user.name||'Tú').split(' ')[0],txt:txt.replace(/</g,'&lt;'),v:0});points+=10;askV();toast('Respuesta publicada',10)})}
+ else if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
  else if(d.prole){prole=d.prole;publish();hookPub()}
  else if(d.ev)evSheet(d.ev);
  else if(d.news)newsSheet(d.news);
