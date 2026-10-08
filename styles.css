@@ -475,3 +475,9 @@ a.ghost{color:#262626;text-decoration:none}.off2{opacity:.35}
 .wcount{display:block;padding:0 16px 10px;font-size:12px;color:#737373}
 .wpub{margin:0 16px 12px!important;width:calc(100% - 32px)!important}
 .spin{width:26px;height:26px;margin:0 auto 8px;border:3px solid #efefef;border-top-color:#0095f6;border-radius:50%;animation:sp 1s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}
+
+.qpost .qtext{margin:0 14px;padding:22px 18px;border-radius:12px;background:linear-gradient(135deg,#f0f6ff,#f6f2ff);font-size:19px;font-weight:600;line-height:1.35;color:#262626}
+.qpost .qai{margin:10px 14px 0}
+.qav2{border-radius:50%;background:#efefef;display:grid;place-items:center;font-weight:700;color:#737373}
+.pqs{padding:8px 0 4px!important;margin:0!important}
+#pqai .aians{margin-top:10px}

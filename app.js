@@ -150,14 +150,14 @@ function qCard(q){const all=q.ans.map((a,i)=>({...a,i,v:a.v+(upv.has(q.id+':'+i)
  return `<article class="qcard"><div class="qh"><div class="qav">${q.who[0]}</div><div><b>${q.who}</b><small>${q.time}${q.mine?'':' <span class="ej">Ejemplo</span>'}</small></div></div><p class="qq">${q.q}</p>${aiBox(q.q)}
  ${all.map((a,n)=>`<div class="qa"><div class="qav s">${a.who[0]}</div><div class="qb"><b>${a.who}</b>${n===0&&a.v>=5?'<span class="best">Mejor respuesta</span>':''}<p>${a.txt}</p></div><button class="upv ${upv.has(q.id+':'+a.i)?'on':''}" data-upv="${q.id}:${a.i}">${ic('heart')} ${a.v}</button></div>`).join('')}
  <div class="rep"><input id="r-${q.id}" placeholder="Escribe tu respuesta"><button data-reply="${q.id}">Responder</button></div></article>`}
-function askCard(){const q=QS[0];return `<div class="sec"><h3>Pregunta al pueblo</h3><a href="#" data-tab="ask">Ver todas</a></div><div class="askc"><button class="askin" data-tab="ask">${ic('spark')}<span>¿Qué necesitas en Elgoibar?</span></button><button class="askq" data-tab="ask"><small>${q.who} preguntó <span class="ej">Ejemplo</span></small><b>${q.q}</b><span>Kalea IA y ${q.ans.length} vecinos han respondido</span></button></div>`}
+function askCard(){const q=QS[0];return `<div class="sec"><h3>Pregunta al pueblo</h3><a href="#" data-tab="ask">Ver todas</a></div><div class="askc"><button class="askin" data-tab="publish" data-pt2="ask">${ic('spark')}<span>¿Qué necesitas en Elgoibar?</span></button><button class="askq" data-tab="ask"><small>${q.who} preguntó <span class="ej">Ejemplo</span></small><b>${q.q}</b><span>Kalea IA y ${q.ans.length} vecinos han respondido</span></button></div>`}
 function askV(){
  view.innerHTML=`<div class="top"><div class="place">Pregunta al pueblo</div></div><p class="asksub">Pregunta lo que quieras. La IA te responde al momento con negocios de Elgoibar y los vecinos te dan su opinión.</p>
  <div class="askbox"><textarea id="aq" rows="2" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><button class="cta" id="ago">Preguntar</button></div>
  <div class="chips">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños','Peluquería esta tarde'].map(x=>`<button class="chip" data-sug="${x}">${x}</button>`).join('')}</div>
  <div id="ares"></div><div class="sec"><h3>Últimas preguntas</h3></div>${myQs.concat(QS).map(qCard).join('')}`;
  const go=()=>{const v=$('#aq').value.trim();if(!v)return;$('#ares').innerHTML=`<div class="qcard mineq"><p class="qq">${v.replace(/</g,'&lt;')}</p>${aiBox(v)}<button class="big-cta" id="apub">Publicar para que respondan los vecinos</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`;
-  $('#apub').onclick=()=>need('Para publicar tu pregunta',()=>{myQs.unshift({id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true});points+=5;askV();toast('Pregunta publicada. Te avisamos cuando respondan',5)})};
+  $('#apub').onclick=()=>publishQ(v)};
  $('#ago').onclick=go;
  if(pendingQ){$('#aq').value=pendingQ;pendingQ='';go()}
 }
@@ -204,6 +204,14 @@ function workV(){
  <div class="wbar">${zones}<button class="walert ${walert?'on':''}" data-walert="1">${ic('bell')} ${walert?'Aviso activado':'Avísame'}</button></div>
  ${wtab==='se'?`<button class="big-cta wpub" data-jobpub="1">Publicar una oferta de mi negocio</button>${JOBS.map(jobCard).join('')}`:lbList(wtab)}`}
 
+
+function askForm(){return `<div class="preview"><b>Nueva pregunta al pueblo</b><label>Qué necesitas</label><textarea class="field" id="pq" rows="3" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><div class="chips pqs">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños'].map(x=>`<button class="chip" data-pqs="${x}">${x}</button>`).join('')}</div><div id="pqai"></div><div class="reach">${ic('bell')} Sale en el inicio como una publicación y la ven tus vecinos</div><button class="big-cta" id="pubq">Publicar pregunta</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`}
+let pqT;function pqPrev(){const v=($('#pq')||{}).value||'';$('#pqai').innerHTML=v.trim().length>3?aiBox(v):''}
+function publishQ(v){need('Para publicar tu pregunta',()=>{const q={id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true};myQs.unshift(q);points+=5;tab='home';render();const el=document.getElementById('qp-'+q.id);if(el)el.scrollIntoView({block:'start'});toast('Pregunta publicada. Ya la ven tus vecinos',5)})}
+function qPost(q){const l=liked.has('q-'+q.id),n=q.ans.length;return `<article class="post qpost" id="qp-${q.id}"><div class="ph"><div class="av qav2">${q.who[0]}</div><div class="nm"><b>${q.who}${q.mine?'':' <span class="ej">Ejemplo</span>'}</b><small>${q.time} · Pregunta al pueblo</small></div><span style="color:var(--muted)">•••</span></div>
+ <div class="qtext">${q.q}</div><div class="qai">${aiBox(q.q)}</div>
+ <div class="pa"><button class="pill ${l?'liked':''}" data-like="q-${q.id}">${ic('heart')} ${(q.mine?0:12)+(l?1:0)}</button><button class="pill" data-tab="ask">${ic('chat')} ${n} ${n===1?'respuesta':'respuestas'}</button><button class="cta" data-tab="ask">${ic('chat')} Responder</button></div></article>`}
+
 function home(){view.innerHTML=topBar()+stories()+agenda()+askCard()+workCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
@@ -224,7 +232,7 @@ function newsSheet(id){const n=NEWS.find(x=>x.id===id);openSheet(`<div class="nk
 function feed(){
  if(scope==='provincia')return AIEV.map(aiPost).join('');
  const ev=AIEV.filter(e=>e.scope==='pueblo');const out=[];
- POSTS.forEach((p,i)=>{out.push(post(p));if(ev[i])out.push(aiPost(ev[i]))});return out.join('');
+ myQs.forEach(q=>out.push(qPost(q)));POSTS.forEach((p,i)=>{out.push(post(p));if(i===0)out.push(qPost(QS[0]));if(ev[i])out.push(aiPost(ev[i]))});return out.join('');
 }
 function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Creado con IA</span></b><small>Fuente: ${e.src}</small></div></div>
  <div class="evimg"><img class="pimg" src="${e.img}" alt=""><div class="evdate"><b>${e.day}</b><small>${e.mon}</small></div><span class="evscope">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div>
@@ -273,9 +281,9 @@ function pointsV(){
 
 let ptype='flash';
 function publish(){
- const types=[['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['story','story','Historia','24 horas en el inicio'],['post','img','Publicación','Foto con botón de reservar'],['offer','tag','Oferta','Descuento para vecinos']];
+ const types=[['ask','chat','Pregunta al pueblo','La IA y los vecinos te responden'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['story','story','Historia','24 horas en el inicio'],['post','img','Publicación','Foto con botón de reservar'],['offer','tag','Oferta','Descuento para vecinos']];
  view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>
- ${ptype==='plan'?planForm():`<div class="preview"><b>${ptype==='flash'?'Nuevo hueco de última hora':ptype==='story'?'Nueva historia':ptype==='post'?'Nueva publicación':'Nueva oferta'}</b>
+ ${ptype==='ask'?askForm():ptype==='plan'?planForm():`<div class="preview"><b>${ptype==='flash'?'Nuevo hueco de última hora':ptype==='story'?'Nueva historia':ptype==='post'?'Nueva publicación':'Nueva oferta'}</b>
  <label>Qué ofreces</label><input class="field" value="${ptype==='flash'?'Mesa para 4 esta noche':ptype==='offer'?'2x1 en pintxos los jueves':'Pintxo pote este jueves'}">
  ${ptype==='flash'?`<label>Hora</label><div class="opts"><span class="opt">20:30</span><span class="opt on">21:30</span><span class="opt">22:00</span></div><label>Descuento</label><div class="opts"><span class="opt">-10%</span><span class="opt on">-15%</span><span class="opt">-20%</span></div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
  <div class="reach">${ic('bell')} Avisaremos a 1.240 vecinos a menos de 1 km</div>
@@ -291,7 +299,7 @@ function planForm(){return `<div class="preview"><b>Nuevo plan en grupo</b>
  ${prole==='Ayuntamiento'?'<label>Aportación del ayuntamiento</label><input class="field" value="5 € por persona">':`<label class="chk"><input type="checkbox" ${prole==='Vecino'?'checked':''}> Pedir apoyo al ayuntamiento</label>`}
  <div class="reach">${ic('bell')} ${prole==='Vecino'?'Lo revisamos antes de publicarlo. ':''}Nadie paga hasta que se llegue al mínimo</div>
  <button class="big-cta" id="pubgo">Publicar plan</button></div>`}
-function hookPub(){const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar',()=>toast(ptype==='plan'?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos'))}
+function hookPub(){const pq=$('#pq');if(pq){pq.oninput=()=>{clearTimeout(pqT);pqT=setTimeout(pqPrev,350)};$('#pubq').onclick=()=>{const v=pq.value.trim();if(!v){pq.focus();return}publishQ(v)}}const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar',()=>toast(ptype==='plan'?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos'))}
 function walletMini(){const p=user?points:0;return `<button class="wmini" data-tab="points"><div><small>Puntos Kalea</small><b>${p.toLocaleString('es-ES')}</b><span>${user?`= ${(p/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar`:'Entra para empezar a sumar'}</span></div><span class="wgo">Ver ›</span></button>`}
 function me(){
  if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
@@ -395,10 +403,11 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.wt&&!d.tab){wtab=d.wt;if(wtab==='of'&&wzone==='online')wzone='comarca';workV()}
+ if(d.pqs){const pq=$('#pq');if(pq){pq.value=d.pqs;pqPrev()}}
+ else if(d.wt&&!d.tab){wtab=d.wt;if(wtab==='of'&&wzone==='online')wzone='comarca';workV()}
  else if(d.wz){wzone=d.wz;workV()}
  else if(d.walert){need('Para recibir avisos',()=>{walert=!walert;workV();toast(walert?'Te avisaremos cuando salga algo nuevo en tu zona':'Aviso desactivado')})}
  else if(d.lbretry){LB.err[d.lbretry]=0;workV()}
