@@ -39,8 +39,8 @@ const ic=(n,c='')=>`<svg viewBox="0 0 24 24" class="${c}">${I[n]}</svg>`;
 
 let lang='es';
 const T={
-es:{home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo'},
-eu:{home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
+es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo'},
+eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
 const t=k=>T[lang][k]||k;
 
 const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
@@ -95,8 +95,8 @@ const view=$('#view');
 let tab='home',liked=new Set(),cat='Todos',points=1240;
 
 function nav(){
- const tabs=[['home','home'],['explore','search'],['plus','plus'],['points','coin'],['profile','user']];
- $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
+ const tabs=[['home','home'],['explore','search'],['plus','plus'],['ask','chat'],['profile','user']];
+ $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
 function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
 function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>`}
@@ -216,7 +216,7 @@ function profile(k){
 }
 
 function pointsV(){
- view.innerHTML=`<div class="top"><div class="place">${t('points')}</div></div><div class="wallet"><small>Puntos Kalea</small><div class="pts">${(user?points:0).toLocaleString('es-ES')}</div><small>= ${((user?points:0)/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar</small><div class="qr">${ic('qr')}</div></div>
+ view.innerHTML=`<div class="top"><div class="ptop"><button class="ib" data-tab="profile" aria-label="Volver">${ic('back')}</button><div class="place">${t('points')}</div></div></div><div class="wallet"><small>Puntos Kalea</small><div class="pts">${(user?points:0).toLocaleString('es-ES')}</div><small>= ${((user?points:0)/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar</small><div class="qr">${ic('qr')}</div></div>
  ${user?'':`<div style="margin:0 18px 14px"><button class="gbtn" data-login="1">${GLOGO} Entra para empezar a sumar</button></div>`}<div class="sec"><h3>Cómo ganar puntos</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Reserva o pide cita</b><small>En cualquier negocio de Kalea</small></div><span class="v">+50</span></div>
  <div class="li"><div class="ic">${ic('bag')}</div><div class="t"><b>Compra en el comercio local</b><small>5 puntos por cada euro</small></div><span class="v">+5/€</span></div>
@@ -250,10 +250,12 @@ function planForm(){return `<div class="preview"><b>Nuevo plan en grupo</b>
  <div class="reach">${ic('bell')} ${prole==='Vecino'?'Lo revisamos antes de publicarlo. ':''}Nadie paga hasta que se llegue al mínimo</div>
  <button class="big-cta" id="pubgo">Publicar plan</button></div>`}
 function hookPub(){const b=$('#pubgo');if(b)b.onclick=()=>need('Para publicar',()=>toast(ptype==='plan'?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos'))}
+function walletMini(){const p=user?points:0;return `<button class="wmini" data-tab="points"><div><small>Puntos Kalea</small><b>${p.toLocaleString('es-ES')}</b><span>${user?`= ${(p/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar`:'Entra para empezar a sumar'}</span></div><span class="wgo">Ver ›</span></button>`}
 function me(){
- if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div><div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
+ if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
+ ${walletMini()}
  <div class="sec"><h3>Próximas</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Txarriduna · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
  <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>El Jose Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
