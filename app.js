@@ -1,5 +1,5 @@
 (()=>{
-const I={
+const I={book:'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 21V5M8 7h7"/>',store:'<path d="M4 9l1.5-5h13L20 9M4 9v11h16V9M4 9h16M9 20v-6h6v6"/>',
 home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',
 search:'<circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/>',
 plus:'<path d="M12 5v14M5 12h14"/>',
@@ -162,7 +162,49 @@ function askV(){
  if(pendingQ){$('#aq').value=pendingQ;pendingQ='';go()}
 }
 
-function home(){view.innerHTML=topBar()+stories()+agenda()+askCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+
+/* ===== Trabajo y formación ===== */
+const ZONE={elgoibar:['ELGOIBAR'],comarca:['ELGOIBAR','EIBAR','SORALUZE','PLACENCIA','MENDARO','DEBA','MUTRIKU','ERMUA','MALLABIA']};
+const LBURL={of:'https://apps.lanbide.euskadi.net/apps/OF_OFERTAS_ODE_JSON?jsonCallback=kaleaOf',cu:'https://apps.lanbide.euskadi.net/apps/FR_CURSOS_ODE_JSON?jsonCallBack=kaleaCu'};
+const LBPORTAL={of:'https://apps.lanbide.euskadi.net/apps/OF_BUSQUEDA_OFERTAS?LG=C&ML=OFEMEN1&MS=Ea',cu:'https://apps.lanbide.euskadi.net/apps/FR_BUSQUEDA_CURSOS?LG=C&ML=FORMEN1'};
+const LB={of:null,cu:null,err:{},ld:{}};let wtab='of',wzone='comarca',walert=false;
+const JOBS=[
+ {biz:'Bar de la plaza',puesto:'Camarero/a para fines de semana',det:'Viernes y sábado de 19:00 a 01:00. Se valora experiencia.',when:'hace 2 h',ej:1},
+ {biz:'Panadería del centro',puesto:'Dependiente/a de mañanas',det:'De lunes a viernes, de 7:00 a 13:00.',when:'ayer',ej:1},
+ {biz:'Taller mecánico',puesto:'Ayudante de mecánico',det:'Jornada completa. Se valora carnet B.',when:'hace 3 días',ej:1}];
+function firstArr(d,depth=0){if(Array.isArray(d))return d;if(d&&typeof d==='object'&&depth<3){for(const v of Object.values(d)){const a=firstArr(v,depth+1);if(a)return a}}return null}
+function lbLoad(k){if(LB[k]||LB.ld[k])return;LB.ld[k]=1;LB.err[k]=0;let ok=0;
+ const fin=()=>{if(tab==='work')workV()};
+ window[k==='of'?'kaleaOf':'kaleaCu']=d=>{ok=1;LB.ld[k]=0;LB[k]=firstArr(d)||[];fin()};
+ const sc=document.createElement('script');sc.src=LBURL[k]+'&_='+Date.now();
+ const fail=()=>{if(ok)return;LB.ld[k]=0;LB.err[k]=1;fin()};sc.onerror=fail;setTimeout(fail,12000);document.body.appendChild(sc)}
+const cap=x=>{x=(x||'').toLowerCase();return x.charAt(0).toUpperCase()+x.slice(1)};
+const pd=x=>{const m=(x||'').trim().match(/(\d+)\/(\d+)\/(\d+)/);return m?new Date(+m[3],m[2]-1,+m[1]).getTime():0};
+const inZone=m=>{const n=nrm(m||'').toUpperCase();return ZONE[wzone==='online'?'comarca':wzone].some(z=>n.includes(z))};
+function ofCard(o){const d=(o.desPuesto||'').replace(/<[^>]+>/g,'');return `<article class="wk"><div class="wkh"><span class="wkic">${ic('bag')}</span><div><b>${cap(o.desEmpleo)}</b><small>${cap(o.municipio)} · Publicada el ${(o.fecPub||'').trim()}</small></div></div>${d?`<p>${d.length>150?d.slice(0,150)+'…':d}</p>`:''}${o.disc==='S'?'<span class="wtag">Para personas con discapacidad</span>':''}<a class="wbtn" href="${o.url}" target="_blank" rel="noopener">Ver oferta en Lanbide</a></article>`}
+const COL={'0':'Para todos','1':'Para personas trabajando','2':'Para personas en paro','3':'Trabajadores agrarios','4':'Preferente personas en paro','5':'Preferente personas trabajando'};
+const MOD={'1':'Presencial','2':'Online','3':'Semipresencial'};
+function cuCard(c){const days=[['lunes','L'],['martes','M'],['miercoles','X'],['jueves','J'],['viernes','V'],['sabado','S'],['domingo','D']].filter(([k])=>c[k]==='1').map(x=>x[1]).join(' ');
+ const hm=c.hora_ini_m&&c.hora_ini_m.trim()?`${c.hora_ini_m}-${c.hora_fin_m}`:'',ht=c.hora_ini_t&&c.hora_ini_t.trim()?`${c.hora_ini_t}-${c.hora_fin_t}`:'';
+ return `<article class="wk"><div class="wkh"><span class="wkic g">${ic('book')}</span><div><b>${cap(c.titulo)}</b><small>${c.centro||''}${c.municipio?' · '+cap(c.municipio):''}</small></div></div>
+ <div class="wmeta"><span>${MOD[c.modalidad]||'Curso'}</span>${c.horas?`<span>${c.horas} h</span>`:''}${c.f_inicio?`<span>Del ${c.f_inicio.trim()} al ${(c.f_fin||'').trim()}</span>`:''}${days?`<span>${days}${hm||ht?' · '+[hm,ht].filter(Boolean).join(' y '):''}</span>`:''}</div>
+ <span class="wtag g">Subvencionado por Lanbide · ${COL[c.colectivo]||'Consulta requisitos'}</span><a class="wbtn" href="${c.url}" target="_blank" rel="noopener">Ver curso e inscribirme</a></article>`}
+function jobCard(j,i){return `<article class="wk"><div class="wkh"><span class="wkic o">${ic('store')}</span><div><b>${j.puesto}</b><small>${j.biz} · ${j.when}${j.ej?' <span class="ej">Ejemplo</span>':''}</small></div></div><p>${j.det}</p><button class="wbtn b" data-jobi="${i}">Me interesa</button></article>`}
+function lbList(k){
+ if(LB.err[k])return `<div class="wempty"><b>No he podido cargar Lanbide ahora mismo.</b><p>Puedes verlo directamente en su web o reintentarlo.</p><a class="wbtn" href="${LBPORTAL[k]}" target="_blank" rel="noopener">Abrir Lanbide</a><button class="wbtn b" data-lbretry="${k}">Reintentar</button></div>`;
+ if(!LB[k]){lbLoad(k);return '<div class="wempty"><div class="spin"></div><p>Cargando datos de Lanbide…</p></div>'}
+ let L=k==='of'?LB.of.filter(o=>inZone(o.municipio)).sort((a,b)=>pd(b.fecPub)-pd(a.fecPub)):LB.cu.filter(c=>wzone==='online'?c.modalidad==='2':inZone(c.municipio)).sort((a,b)=>pd(a.f_inicio)-pd(b.f_inicio));
+ if(!L.length)return `<div class="wempty"><b>Ahora mismo no hay ${k==='of'?'ofertas':'cursos'} en ${wzone==='elgoibar'?'Elgoibar':wzone==='online'?'modo online':'la comarca'}.</b><p>${wzone==='elgoibar'?'Prueba con la comarca.':'Activa el aviso y te decimos cuando salga algo.'}</p></div>`;
+ return `<small class="wcount">${L.length} ${k==='of'?'ofertas':'cursos'} · Fuente: Lanbide, datos abiertos de Euskadi</small>`+L.slice(0,40).map(k==='of'?ofCard:cuCard).join('')}
+function workCard(){return `<div class="sec"><h3>Trabajo y formación</h3><a href="#" data-tab="work">Ver todo</a></div><div class="wtiles"><button data-tab="work" data-wt="of"><span class="wkic">${ic('bag')}</span><b>Ofertas de empleo</b><small>Lanbide en tu zona</small></button><button data-tab="work" data-wt="cu"><span class="wkic g">${ic('book')}</span><b>Cursos subvencionados</b><small>Gratis con Lanbide</small></button><button data-tab="work" data-wt="se"><span class="wkic o">${ic('store')}</span><b>Se busca</b><small>Negocios del pueblo</small></button></div>`}
+function workV(){
+ const zones=wtab==='se'?'':`<div class="seg wz">${[['elgoibar','Elgoibar'],['comarca','Comarca']].concat(wtab==='cu'?[['online','Online']]:[]).map(([k,l])=>`<button class="${wzone===k?'on':''}" data-wz="${k}">${l}</button>`).join('')}</div>`;
+ view.innerHTML=`<div class="top"><div class="place">Trabajo y formación</div></div>
+ <div class="wtabs">${[['of','Ofertas'],['cu','Cursos'],['se','Se busca']].map(([k,l])=>`<button class="${wtab===k?'on':''}" data-wt="${k}">${l}</button>`).join('')}</div>
+ <div class="wbar">${zones}<button class="walert ${walert?'on':''}" data-walert="1">${ic('bell')} ${walert?'Aviso activado':'Avísame'}</button></div>
+ ${wtab==='se'?`<button class="big-cta wpub" data-jobpub="1">Publicar una oferta de mi negocio</button>${JOBS.map(jobCard).join('')}`:lbList(wtab)}`}
+
+function home(){view.innerHTML=topBar()+stories()+agenda()+askCard()+workCard()+plans()+townCard()+flash()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Creado con IA</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
@@ -264,7 +306,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV}[tab])();hookPub();view.scrollTop=0}
+function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
@@ -353,10 +395,16 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.sug){pendingQ=d.sug;askV()}
+ if(d.wt&&!d.tab){wtab=d.wt;if(wtab==='of'&&wzone==='online')wzone='comarca';workV()}
+ else if(d.wz){wzone=d.wz;workV()}
+ else if(d.walert){need('Para recibir avisos',()=>{walert=!walert;workV();toast(walert?'Te avisaremos cuando salga algo nuevo en tu zona':'Aviso desactivado')})}
+ else if(d.lbretry){LB.err[d.lbretry]=0;workV()}
+ else if(d.jobi){const j=JOBS[+d.jobi];need('Para enviar tu interés',()=>toast('Interés enviado a '+j.biz))}
+ else if(d.jobpub){need('Para publicar una oferta',()=>{openSheet(`<h3>Publicar oferta</h3><div class="sub">Gratis para negocios de Elgoibar</div><input class="field" id="jp" placeholder="Puesto (ej.: camarero/a fines de semana)"><input class="field" id="jb" placeholder="Nombre del negocio"><textarea class="field" id="jd" rows="3" placeholder="Horario, condiciones y requisitos"></textarea><button class="big-cta" id="jsend">Publicar</button>`);$('#jsend').onclick=()=>{const p=$('#jp').value.trim(),b=$('#jb').value.trim();if(!p||!b)return;const esc=x=>x.replace(/</g,'&lt;');JOBS.unshift({biz:esc(b),puesto:esc(p),det:esc($('#jd').value.trim()),when:'ahora'});closeSheet();wtab='se';tab='work';render();toast('Oferta publicada')}})}
+ else if(d.sug){pendingQ=d.sug;askV()}
  else if(d.upv){const k=d.upv;need('Para votar respuestas',()=>{upv.has(k)?upv.delete(k):upv.add(k);askV()})}
  else if(d.reply){const id=d.reply,inp=$('#r-'+id),txt=inp?inp.value.trim():'';if(!txt){inp&&inp.focus();return}need('Para responder',()=>{const q=myQs.concat(QS).find(x=>x.id===id);q.ans.push({who:(user.name||'Tú').split(' ')[0],txt:txt.replace(/</g,'&lt;'),v:0});points+=10;askV();toast('Respuesta publicada',10)})}
  else if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
@@ -369,7 +417,7 @@ document.addEventListener('click',e=>{
  else if(d.scope){scope=d.scope;home()}
  else if(d.ics)ics(d.ics);
  else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
- else if(d.tab){if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
+ else if(d.tab){if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
