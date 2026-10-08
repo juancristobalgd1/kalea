@@ -380,3 +380,34 @@ main{padding-bottom:80px}
 a.ghost{color:#262626;text-decoration:none}.off2{opacity:.35}
 .hours a{color:var(--blue);text-decoration:none}.muted{color:#737373}
 .note{font-size:12px;color:#737373;background:#f6f6f6;border-radius:10px;padding:8px 10px;margin:10px 0}
+
+/* Historias estilo Instagram */
+.story{background:#000;color:#fff;user-select:none;-webkit-user-select:none;touch-action:manipulation;overflow:hidden}
+.story img.bg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.sgrad{position:absolute;left:0;right:0;pointer-events:none;z-index:1}
+.sgrad.top{top:0;height:180px;background:linear-gradient(180deg,rgba(0,0,0,.6),rgba(0,0,0,0))}
+.sgrad.bot{bottom:0;height:340px;background:linear-gradient(0deg,rgba(0,0,0,.8),rgba(0,0,0,0))}
+.story .bars{display:flex;gap:4px;height:2.5px;background:none;top:52px;left:10px;right:10px;overflow:visible;border-radius:0;z-index:3;margin:0;align-items:stretch}
+.story .bars span{flex:1;background:rgba(255,255,255,.35);border-radius:2px;overflow:hidden;width:auto}
+.story .bars i{display:block;height:100%;width:0;background:#fff}
+.story .bars i.full{width:100%}
+.story .bars i.run{animation:sprog 5s linear forwards}
+.story.paused .bars i.run{animation-play-state:paused}
+@keyframes sprog{from{width:0}to{width:100%}}
+.story .sh{top:64px;left:12px;right:4px;z-index:3;color:#fff}
+.story .sav{width:34px;height:34px;border-radius:50%;object-fit:cover;border:1.5px solid rgba(255,255,255,.9);flex-shrink:0}
+.story .sn{display:flex;flex-direction:column;line-height:1.25}
+.story .sn b{font-size:14px;font-weight:600;color:#fff}
+.story .sn small{font-size:12px;color:rgba(255,255,255,.85);opacity:1}
+.sej{background:rgba(255,255,255,.22);border-radius:4px;padding:0 5px;font-size:10px;font-weight:600;margin-left:4px}
+.story .x{margin-left:auto;width:42px;height:42px;display:grid;place-items:center;color:#fff;font-size:0}
+.story .x svg{width:26px;height:26px}
+.tapl,.tapr{position:absolute;top:110px;bottom:150px;z-index:2}
+.tapl{left:0;width:32%}.tapr{right:0;width:68%}
+.story .cap{left:16px;right:16px;bottom:116px;color:#fff;font-size:21px;font-weight:700;line-height:1.25;text-shadow:0 1px 10px rgba(0,0,0,.5);z-index:3}
+.story .scta{display:flex;gap:10px;left:16px;right:16px;bottom:44px;z-index:3}
+.sbtn{flex:1;height:46px;border-radius:12px;font-weight:600;font-size:15px;display:flex;align-items:center;justify-content:center;gap:8px;color:#fff;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.sbtn.main{background:#fff;color:#000;border:0;flex:1.4}
+.sbtn svg{width:18px;height:18px}
+.ring{background:linear-gradient(45deg,#0095f6,#6a5cff)}
+.ring.seen{background:#dbdbdb}

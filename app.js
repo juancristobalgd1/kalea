@@ -43,13 +43,15 @@ es:{home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Hue
 eu:{home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
 const t=k=>T[lang][k]||k;
 
-const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',belleza:'cita',tienda:'pedir',salud:'cita'};
+const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
 const MENUS={
  bar:[['Pintxo del día','Ejemplo','2,50 €'],['Caña','Ejemplo','2,20 €'],['Txakoli (copa)','Ejemplo','2,50 €'],['Ración de croquetas','Ejemplo','8,00 €']],
  rest:[['Menú del día','Ejemplo','16,00 €'],['Chuletón a la brasa','Ejemplo','48,00 €'],['Pescado del día','Ejemplo','22,00 €'],['Postre casero','Ejemplo','6,00 €']],
  cafe:[['Café con leche','Ejemplo','1,60 €'],['Croissant','Ejemplo','1,40 €'],['Pan de masa madre','Ejemplo','3,90 €'],['Pastel vasco','Ejemplo','14,00 €']],
  belleza:[['Corte','Ejemplo','15,00 €'],['Corte y peinado','Ejemplo','28,00 €'],['Color','Ejemplo','55,00 €'],['Tratamiento','Ejemplo','20,00 €']],
  tienda:[['Pedido para recoger','Ejemplo','Gratis'],['Envío a domicilio en Elgoibar','Ejemplo','2,00 €']],
+ alim:[['Pedido para recoger','Ejemplo','Gratis'],['Envío a domicilio en Elgoibar','Ejemplo','2,00 €']],
+ serv:[['Pedir información','Ejemplo','Gratis'],['Pedir presupuesto','Ejemplo','Gratis'],['Cita','Ejemplo','Consultar']],
  salud:[['Primera consulta','Ejemplo','40,00 €'],['Sesión','Ejemplo','35,00 €'],['Bono 5 sesiones','Ejemplo','160,00 €']]};
 const B={};(window.PL||[]).forEach(p=>{B[p.k]={name:p.n,short:p.s,cat:p.sub,cg:p.c,img:p.ph,rating:p.r,rev:p.v,street:p.a,phone:p.t,maps:'https://maps.google.com/?cid='+p.m,web:p.w,action:ACTBY[p.c],menu:MENUS[p.c]}});
 const av=(b,cls)=>b.img?`<img class="${cls}" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer">`:`<div class="${cls} noimg">${b.name.replace(/^(Bar|Restaurante|Peluquería|Panadería|Farmacia|Cafetería) /,'')[0]}</div>`;
@@ -97,7 +99,7 @@ function nav(){
  $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
 function topBar(){return `<div class="top"><button class="place"><div><small>Tu pueblo</small>Elgoibar</div>${ic('down')}</button><div class="icons"><button class="ib" data-tab="explore">${ic('search')}</button><button class="ib" onclick="toast('3 huecos nuevos cerca de ti')">${ic('bell')}<i class="dot"></i></button></div></div>`}
-function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${i>3?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>`}
+function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt=""></div><span>${B[k].short}</span></button>`).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b);return `<article class="post"><div class="ph">${av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.name} <span class="ej">Ejemplo</span></b><small>${p.time} · ${b.street}</small></button><span style="color:var(--muted)">•••</span></div><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer"><div class="pa"><button class="pill ${l?'liked':''}" data-like="${p.b}">${ic('heart')} ${p.likes+(l?1:0)}</button><button class="pill" data-com="${POSTS.indexOf(p)}">${ic('chat')} ${p.com}</button><button class="cta" data-act="${p.b}">${ic(a[1])} ${t(a[0])}</button></div><p>${p.txt}</p></article>`}
@@ -131,11 +133,11 @@ function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','V
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=e.id+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Añadido a tu calendario')}
 
 let q='';
-const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud']];
+const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Alimentación','alim'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud'],['Servicios','serv']];
 function bizList(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0])[1],qq=q.trim().toLowerCase();
  const L=PL.filter(p=>(!cg||p.c===cg)&&(!qq||(p.n+' '+p.sub+' '+p.a).toLowerCase().includes(qq))).sort((a,b)=>(!!b.ph-!!a.ph)||(b.v-a.v));
  if(!L.length)return `<div class="empty">No hay resultados para "${q}"</div>`;
- return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${b.cat} · ${b.street}</small><small><span class="star">★ ${b.rating}</span> · ${b.rev} reseñas</small></div><span class="mini">${t(ACT[b.action][0])}</span></button>`}).join('')}
+ return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${b.cat} · ${b.street}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} reseñas`:'Sin reseñas todavía'}</small></div><span class="mini">${t(ACT[b.action][0])}</span></button>`}).join('')}
 function explore(){
  view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div id="bl">${bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
  <div class="sec"><h3>${t('board')}</h3></div>
@@ -146,7 +148,7 @@ function explore(){
 
 function profile(k){
  const b=B[k],a=ACT[b.action];
- view.innerHTML=`<div class="cover" style="${b.img?`background-image:url('${b.img}')`:'background:#efefef'}"><button class="back" data-tab="${tab}">${ic('back')}</button>${b.img?'<span class="gcred">Foto: Google Maps</span>':''}</div><div class="prof">${av(b,'big')}<h2>${b.name}</h2><div class="meta">${b.cat} · <span class="star">★ ${b.rating}</span> · ${b.rev} reseñas en Google</div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
+ view.innerHTML=`<div class="cover" style="${b.img?`background-image:url('${b.img}')`:'background:#efefef'}"><button class="back" data-tab="${tab}">${ic('back')}</button>${b.img?'<span class="gcred">Foto: Google Maps</span>':''}</div><div class="prof">${av(b,'big')}<h2>${b.name}</h2><div class="meta">${b.cat}${b.rev?` · <span class="star">★ ${b.rating}</span> · ${b.rev} reseñas en Google`:''}</div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
  <div class="acts"><button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button>${b.phone?`<a class="ghost" href="tel:+34${b.phone.replace(/\s/g,'')}" aria-label="Llamar">${ic('phone')}</a>`:`<span class="ghost off2">${ic('phone')}</span>`}<a class="ghost" href="${b.maps}" target="_blank" rel="noopener" aria-label="Cómo llegar">${ic('pin')}</a></div>
  <div class="tabs2"><button class="on" data-pt="info">Info</button><button data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button></div><div id="pt"></div></div>`;
  const pt=w=>{$('#pt').innerHTML=w==='info'?`<div class="hours"><b>Dirección</b><br>${b.street}, 20870 Elgoibar<br><br>${b.phone?`<b>Teléfono</b><br><a href="tel:+34${b.phone.replace(/\s/g,'')}">${b.phone}</a><br><br>`:''}${b.web?`<b>Web</b><br><a href="${b.web}" target="_blank" rel="noopener">${b.web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,40)}</a><br><br>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Ver horario y reseñas en Google Maps</a><br><br><small class="muted">Datos públicos de Google Maps. Cuando el negocio se una a Kalea podrá editar su página, carta, horarios y fotos.</small></div>`:`<div class="note">Ejemplo de cómo se vería su ${b.action==='cita'?'lista de servicios':'carta'}</div>`+b.menu.map(m=>`<div class="menu-i"><div>${m[0]}</div><b>${m[2]}</b></div>`).join('');
@@ -261,13 +263,33 @@ function action(k,pre){
  document.querySelectorAll('.sheet .opts').forEach(g=>g.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')}));
  $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{closeSheet();points+=50;toast((isC?'Cita confirmada en ':'Reserva confirmada en ')+b.name,50)});
 }
-function story(k){
- const b=B[k],a=ACT[b.action],caps={tantaka:'Ejemplo de historia: pintxo pote esta noche',txarriduna:'Ejemplo de historia: chuletón del día',pasteleria:'Ejemplo de historia: hornada nueva a las 18:00',meraki:'Ejemplo de historia: colores de otoño',josebarber:'Ejemplo de historia: me queda un hueco hoy',maala:'Ejemplo de historia: terraza abierta'};
- const s=$('#story');s.innerHTML=`<img class="bg" src="${b.img}" alt=""><div class="bars"><i id="sb"></i></div><div class="sh"><img class="av" src="${b.img}" alt=""><div><b>${b.name}</b><br><small>hace 1 h</small></div><button class="x" id="sx">×</button></div><div class="cap">${caps[k]||"Ejemplo de historia de "+b.name}</div><div class="scta"><button class="big-cta" id="sgo">${t(a[0])}</button></div>`;
- s.classList.add('on');requestAnimationFrame(()=>requestAnimationFrame(()=>$('#sb').classList.add('go')));
- const close=()=>{s.classList.remove('on');clearTimeout(s._t)};s._t=setTimeout(close,5000);
- $('#sx').onclick=close;$('#sgo').onclick=()=>{close();action(k)};
+const seenS=new Set();let stIdx=0;
+const CAPC={bar:'Pintxo pote esta tarde en la barra',rest:'Menú del día listo. Quedan mesas para hoy',cafe:'Recién salido del horno',alim:'Producto fresco de hoy',belleza:'Me queda un hueco esta tarde',tienda:'Novedades de otoño en tienda',salud:'Nuevo horario de tarde',serv:'Pide tu cita desde Kalea'};
+const CAPK={tantaka:'Pintxo pote esta noche',txarriduna:'Chuletón del día a la brasa',pasteleria:'Hornada nueva a las 18:00',meraki:'Colores de otoño',josebarber:'Me queda un hueco hoy a las 17:30',maala:'Terraza abierta con vistas al pueblo',bst:'Clase de grupo a las 19:00'};
+const XSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+function story(k){stIdx=Math.max(0,order.indexOf(k));showStory()}
+function closeStory(){const s=$('#story');s.classList.remove('on','paused');s.innerHTML='';document.querySelectorAll('[data-story]').forEach(el=>{const r=el.querySelector('.ring');if(r)r.classList.toggle('seen',seenS.has(el.dataset.story))})}
+function nextStory(){seenS.add(order[stIdx]);if(stIdx<order.length-1){stIdx++;showStory()}else closeStory()}
+function prevStory(){if(stIdx>0)stIdx--;showStory()}
+function showStory(){
+ const k=order[stIdx],b=B[k],a=ACT[b.action],s=$('#story');
+ s.classList.remove('paused');
+ s.innerHTML=`<img class="bg" src="${b.img}" alt="" referrerpolicy="no-referrer"><div class="sgrad top"></div><div class="sgrad bot"></div>
+ <div class="bars">${order.map((_,i)=>`<span><i class="${i<stIdx?'full':i===stIdx?'run':''}"></i></span>`).join('')}</div>
+ <div class="sh">${av(b,'sav')}<div class="sn"><b>${b.short}</b><small>hace ${stIdx+1} h <span class="sej">Ejemplo</span></small></div><button class="x" id="sx" aria-label="Cerrar">${XSVG}</button></div>
+ <div class="tapl" id="stl"></div><div class="tapr" id="str"></div>
+ <div class="cap">${CAPK[k]||CAPC[b.cg]}</div>
+ <div class="scta"><button class="sbtn main" id="sgo">${ic(a[1])} ${t(a[0])}</button><button class="sbtn" id="sprof">Ver perfil</button></div>`;
+ s.classList.add('on');
+ const nx=order[stIdx+1];if(nx&&B[nx].img){const im=new Image();im.referrerPolicy='no-referrer';im.src=B[nx].img}
+ s.querySelector('.bars i.run').addEventListener('animationend',nextStory);
+ $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};
+ [['#stl',prevStory],['#str',nextStory]].forEach(([sel,fn])=>{const el=$(sel);let t0=0;
+  el.onpointerdown=e=>{t0=Date.now();s.classList.add('paused')};
+  el.onpointerup=e=>{s.classList.remove('paused');if(Date.now()-t0<250)fn()};
+  el.onpointerleave=()=>s.classList.remove('paused')});
 }
+document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
  const el=e.target.closest('[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
