@@ -471,7 +471,7 @@ function action(k,pre){
  <label>Hora</label>${opts(isC?['10:00','12:30','16:00','17:30','19:00']:['13:30','14:00','20:30','21:30','22:00'],pre||(isC?'17:30':'21:30'),isC?{'17:30':'-20%'}:{'21:30':'-15%'})}
  <button class="big-cta" id="go">${isC?'Confirmar cita':'Confirmar reserva'}</button><div class="earn">${ic('coin')} +50 puntos al confirmar</div>`);
  document.querySelectorAll('.sheet .opts').forEach(g=>g.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')}));
- $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{closeSheet();points+=50;toast((isC?'Cita confirmada en ':'Reserva confirmada en ')+b.name,50)});
+ $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{points+=50;okDone(isC?'Cita confirmada':'Reserva confirmada',b.name,50)});
 }
 const seenS=new Set();let stIdx=0;
 const CAPC={bar:'Pintxo pote esta tarde en la barra',rest:'Menú del día listo. Quedan mesas para hoy',cafe:'Recién salido del horno',alim:'Producto fresco de hoy',belleza:'Me queda un hueco esta tarde',tienda:'Novedades de otoño en tienda',salud:'Nuevo horario de tarde',serv:'Pide tu cita desde Kalea'};
@@ -589,4 +589,17 @@ new MutationObserver(()=>{document.querySelectorAll('img:not(.ld)').forEach(i=>{
  sh.addEventListener('touchmove',e=>{if(y0===null)return;dy=e.touches[0].clientY-y0;if(dy>0){sh.classList.add('drag');sh.style.transform=`translateY(${dy}px)`;$('#scrim').style.opacity=Math.max(0,1-dy/400)}},{passive:true});
  sh.addEventListener('touchend',()=>{if(y0===null)return;y0=null;sh.classList.remove('drag');sh.style.transform='';$('#scrim').style.opacity='';if(dy>110)closeSheet()},{passive:true});
 })();
+
+// Confirmación con check animado
+function okDone(t1,t2,p){try{navigator.vibrate&&navigator.vibrate([12,60,12])}catch(e){}openSheet(`<div class="okv"><svg class="okc" viewBox="0 0 52 52"><circle cx="26" cy="26" r="23"/><path d="M15.5 27.5l7 7 14-15"/></svg><h3>${esc(t1)}</h3><p>${esc(t2)}</p>${p?`<span class="okp">+${p} puntos</span>`:''}</div>`);clearTimeout(window._okT);window._okT=setTimeout(closeSheet,2100)}
+// Selector con píldora que se desliza
+const SEGP={};
+function segInd(){document.querySelectorAll('.seg').forEach(g=>{const b0=g.querySelector('button');if(!b0)return;const key=Object.keys(b0.dataset)[0]||'seg';let i=g.querySelector('.segi');if(!i){i=document.createElement('span');i.className='segi';g.prepend(i);g.classList.add('hasi')}
+ const o=g.querySelector('button.on');if(!o){i.style.opacity=0;return}const pos=[o.offsetLeft,o.offsetWidth];if(i.dataset.p===pos.join())return;
+ const prev=SEGP[key];if(prev&&!i.dataset.p){i.style.transition='none';i.style.width=prev[1]+'px';i.style.transform=`translateX(${prev[0]}px)`;void i.offsetWidth;i.style.transition=''}
+ i.dataset.p=pos.join();SEGP[key]=pos;i.style.opacity=1;i.style.width=pos[1]+'px';i.style.transform=`translateX(${pos[0]}px)`})}
+// Números que cuentan hacia arriba
+function countUp(){document.querySelectorAll('.wmini b').forEach(el=>{if(el._cu)return;el._cu=1;const to=parseInt(el.textContent.replace(/\D/g,''))||0;if(to<10||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const t0=performance.now(),d=750;const f=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(to*e).toLocaleString('es-ES');if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
+let _mq=0;const _mo=()=>{if(_mq)return;_mq=requestAnimationFrame(()=>{_mq=0;segInd();countUp()})};
+new MutationObserver(_mo).observe(view,{childList:true,subtree:true});new MutationObserver(_mo).observe($('#sheet'),{childList:true,subtree:true});_mo();
 })();
