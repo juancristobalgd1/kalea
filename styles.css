@@ -848,3 +848,5 @@ button:active,.chip:active,.cta:active{opacity:1}
 html.dark .sgrp{background:#000;border-color:#262626}html.dark .srow{color:#f5f5f5;border-top-color:#262626}html.dark .srow:active{background:#121212}
 html.dark .tgl{background:#363636}html.dark .sopt{color:#f5f5f5;border-bottom-color:#262626}html.dark .rad{border-color:#555}
 html.dark .thc{color:#f5f5f5}html.dark .mk-light{border-color:#363636}
+.mk-auto{background:linear-gradient(90deg,#fff 50%,#000 50%)}.mk-auto i{background:rgba(128,128,128,.32)}
+html.dark .on>.rad{border-color:#0095f6}
