@@ -57,6 +57,7 @@ const B={};(window.PL||[]).forEach(p=>{B[p.k]={name:p.n,short:p.s,cat:p.sub,cg:p
 const CIC={bar:'glass',rest:'fork',cafe:'cup',alim:'bag',belleza:'scis',tienda:'tag',salud:'cross',serv:'wrench'};
 const noimg=(cls,cg)=>`<div class="${cls} noimg">${ic(CIC[cg]||'store')}</div>`;
 function imgFail(el,cls,cg){el.outerHTML=noimg(cls,cg)}
+function stWatch(){setTimeout(()=>document.querySelectorAll('.ring img').forEach(i=>{if(!i.complete||!i.naturalWidth)i.onerror&&i.onerror()}),6000)}
 const av=(b,cls)=>b.img?`<img class="${cls}" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this,'${cls}','${b.cg}')">`:noimg(cls,b.cg);
 const FLASH=[
  {b:'txarriduna',txt:'Mesa para 4 · hoy 21:30',off:'-15%',left:'quedan 2'},
@@ -91,7 +92,7 @@ function planCard(p){const j=joinedP.has(p.id),n=p.now+(j?1:0),ok=n>=p.min,pc=Ma
  return `<div class="plan"><div class="im" style="background-image:url(${p.img})"><span class="org o-${p.org}">${p.org}</span>${ok?'<span class="ok">Se hace</span>':''}</div><div class="bd"><b>${p.title}</b><small>${p.by}</small>
  <div class="prog"><span style="width:${pc}%"></span></div><div class="pn"><b>${n} de ${p.min}</b><span>${ok?'Mínimo conseguido':'Faltan '+(p.min-n)}</span></div>
  <div class="pm">${p.price} € por persona · ${p.until}</div>${p.cof?`<div class="cof">${ic('town')} ${p.cof}</div>`:''}
- <button class="cta wide ${j?'done':''}" data-plan="${p.id}">${j?ic('check')+' Apuntado':'Me apunto'}</button><small class="nocharge">${ok?'Se cobra al cerrar el plan':'Solo pagas si se llega al mínimo'}</small></div></div>`}
+ <i class="psp"></i><button class="cta wide ${j?'done':''}" data-plan="${p.id}">${j?ic('check')+' Apuntado':'Me apunto'}</button><small class="nocharge">${ok?'Se cobra al cerrar el plan':'Solo pagas si se llega al mínimo'}</small></div></div>`}
 function plans(){return `<div class="sec"><h3>Si somos tantos, se hace</h3><a href="#" data-tab="publish" data-pt2="plan">Crear plan</a></div><div class="plans">${PLANS.map(planCard).join('')}</div>`}
 let scope='pueblo';const going=new Set();
 const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag']};
@@ -253,12 +254,12 @@ function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
  view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div><span class="tag">Ejemplo</span></div>
  <div class="tsec"><h3>${ic('alert')} Avisos oficiales</h3>${NEWS.filter(n=>n.kind==='Aviso').map(n=>`<div class="tcard warn"><b>${n.title}</b><p>${n.txt}</p><small>Te llega como notificación a todos los vecinos</small></div>`).join('')}<div class="tcard"><b>Recogida de enseres</b><p>Jueves 15 de octubre. Avísanos desde la app y pasamos por tu portal.</p></div></div>
  <div class="tsec"><h3>${ic('vote')} Participa</h3><div class="tcard"><b>${POLL.q}</b>${POLL.o.map((o,i)=>{const v=o[1]+(voted===i?1:0),p=Math.round(v*100/tot);return `<button class="pollo ${voted===i?'on':''}" data-vote="${i}"><span class="bar" style="width:${voted!==null?p:0}%"></span><span class="lb">${o[0]}</span>${voted!==null?`<span class="pc">${p}%</span>`:''}</button>`}).join('')}<small>${voted!==null?'Gracias por votar · +20 puntos':'312 vecinos han votado · votar da 20 puntos'}</small></div></div>
- <div class="tsec"><h3>${ic('wrench')} Incidencias</h3><div class="tcard"><p>¿Una farola fundida, un bache, basura acumulada? Haz una foto y llega directa al ayuntamiento. Te avisamos cuando esté arreglado.</p><button class="cta wide" data-inc="1">${ic('wrench')} Avisar de una incidencia</button></div></div>
- <div class="tsec"><h3>${ic('coin')} Bonos del comercio local</h3><div class="tcard"><p>10 € para gastar en cualquier negocio de Kalea. Cada bono mueve dinero que se queda en el pueblo.</p><button class="cta wide ${bonoOk?'done':''}" data-bono="1">${bonoOk?ic('check')+' Bono activado':ic('coin')+' Pedir mi bono'}</button></div></div>
+ <div class="tsec"><h3>${ic('wrench')} Incidencias</h3><div class="tcard"><p>¿Una farola fundida, un bache, basura acumulada? Haz una foto y llega directa al ayuntamiento. Te avisamos cuando esté arreglado.</p><i class="psp"></i><button class="cta wide" data-inc="1">${ic('wrench')} Avisar de una incidencia</button></div></div>
+ <div class="tsec"><h3>${ic('coin')} Bonos del comercio local</h3><div class="tcard"><p>10 € para gastar en cualquier negocio de Kalea. Cada bono mueve dinero que se queda en el pueblo.</p><i class="psp"></i><button class="cta wide ${bonoOk?'done':''}" data-bono="1">${bonoOk?ic('check')+' Bono activado':ic('coin')+' Pedir mi bono'}</button></div></div>
  <div class="tsec"><h3>${ic('chart')} Panel para el ayuntamiento</h3><small class="demo">Datos de ejemplo de un mes</small>
  <div class="kpis"><div><b>2.140</b><small>vecinos activos</small></div><div><b>18.600 €</b><small>gastados en comercio local con bonos</small></div><div><b>1.230</b><small>asistentes a eventos</small></div><div><b>41 de 47</b><small>incidencias resueltas · 2,3 días de media</small></div></div>
  <div class="tcard"><b>Uso semanal de la app</b><div class="bars">${[38,52,47,61,70,66,88].map((h,i)=>`<div><span style="height:${h}%"></span><small>${'LMXJVSD'[i]}</small></div>`).join('')}</div><p>El ayuntamiento ve qué eventos funcionan, qué piden los vecinos y cuánto dinero se queda en el comercio del pueblo.</p></div></div>`}
-function incSheet(){openSheet(`<h3>Avisar de una incidencia</h3><p class="sub">Llega directa al ayuntamiento</p>${opts(['Farola','Bache','Basura','Ruido','Otro'],'Farola')}<button class="photo">${ic('cam')} Añadir foto</button><div class="loc">${ic('pin')} Ubicación: Calle Nagusia (aprox.)</div><button class="cta wide" id="incgo">Enviar al ayuntamiento</button>`);
+function incSheet(){openSheet(`<h3>Avisar de una incidencia</h3><p class="sub">Llega directa al ayuntamiento</p>${opts(['Farola','Bache','Basura','Ruido','Otro'],'Farola')}<button class="photo">${ic('cam')} Añadir foto</button><div class="loc">${ic('pin')} Ubicación: Calle Nagusia (aprox.)</div><i class="psp"></i><button class="cta wide" id="incgo">Enviar al ayuntamiento</button>`);
  $('#sheet').querySelectorAll('.opt').forEach(o=>o.onclick=()=>{$('#sheet').querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')});
  $('#incgo').onclick=()=>{closeSheet();points+=15;toast('Enviado. Te avisamos cuando esté arreglado',15)}}
 function evSheet(id){const e=AIEV.find(x=>x.id===id);openSheet(`<div class="post ai sheetpost">${aiPost(e).replace(/^<article class="post ai">|<\/article>$/g,'')}</div>`)}
@@ -373,7 +374,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
+function render(){setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}

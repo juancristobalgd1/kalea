@@ -32,7 +32,9 @@ out.sort(key=lambda x:(x['local'],x['ts']),reverse=True)
 json.dump({'items':out[:40]},open('news.json','w'),ensure_ascii=False)
 print('news',len(out),'local',sum(x['local'] for x in out))
 try:
-    raw=get('https://apps.lanbide.euskadi.net/apps/OF_OFERTAS_ODE_JSON',40).decode('utf-8','ignore')
+    b=get('https://apps.lanbide.euskadi.net/apps/OF_OFERTAS_ODE_JSON',40)
+    try: raw=b.decode('utf-8')
+    except UnicodeDecodeError: raw=b.decode('cp1252','replace')
     data=json.loads(raw[raw.index('['):raw.rindex(']')+1])
     Z=['ELGOIBAR','EIBAR','SORALUZE','PLACENCIA','MENDARO','DEBA','MUTRIKU','ERMUA','MALLABIA']
     of=[o for o in data if any(z in (o.get('municipio') or '').upper() for z in Z)]

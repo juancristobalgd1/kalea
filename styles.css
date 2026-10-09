@@ -641,3 +641,24 @@ button:active,.chip:active,.cta:active{opacity:1}
 .tabbar{height:calc(56px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
 .tab svg{width:26px;height:26px}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
+/* ===== Pulido 2 ===== */
+.ring img,.ring .noimg{background:#efefef;border:2.5px solid #fff}
+.ring .noimg svg{width:40%;height:40%}
+/* planes: botones alineados */
+.plan{display:flex;flex-direction:column}
+.plan .bd{flex:1;display:flex;flex-direction:column;padding:14px}
+.psp{flex:1;min-height:12px;display:block}
+.plan .cta.wide{margin:0!important;height:38px;border-radius:10px;font-size:14px}
+.plan .bd>small:last-child{margin-top:8px;text-align:center}
+/* tarjetas sin foto de la agenda */
+.ag.nw{justify-content:flex-start}
+.ag.nw b{font-size:15px;line-height:1.3}
+/* cabecera de post */
+.ph{gap:10px}
+.ph .av,.ph .ring2{flex-shrink:0}
+/* listas de noticias */
+.nlist{border:0;padding:4px 16px;margin:14px 0 20px}
+.nlist a{padding:13px 0}
+.nlist a:active{background:#fafafa}
+/* foco y selección */
+::selection{background:#cfe6ff}
