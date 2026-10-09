@@ -113,7 +113,7 @@ const VER=`<svg class="ver" viewBox="0 0 24 24" aria-label="En Kalea"><circle cx
 const saved=new Set();try{JSON.parse(localStorage.getItem('kalea_saved')||'[]').forEach(x=>saved.add(x))}catch(e){}
 const ALAB={reservar:'Reservar mesa',cita:'Pedir cita',pedir:'Hacer un pedido'};
 function dbl(k){need('Para dar me gusta',()=>{liked.add(k);const h=document.querySelector(`[data-heart="${k}"]`);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}setTimeout(()=>{if(tab==='home')refreshHome()},650)})}
-function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b),sv=saved.has(p.b),st=order.includes(p.b),i=POSTS.indexOf(p);return `<article class="post igp"><div class="ph">${st?`<button class="avr ${seenS.has(p.b)?'seen':''}" data-story="${p.b}" aria-label="Ver historia">${av(b,'av')}</button>`:av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.short||b.name}${ONK.has(p.b)?VER:''}</b><small>${b.street}</small></button><button class="more" data-biz="${p.b}" aria-label="Ver perfil">•••</button></div><div class="pimw" ondblclick="dbl('${p.b}')"><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nopic')"><span class="bigheart" data-heart="${p.b}">${ic('heart')}</span></div><button class="shopbar" data-act="${p.b}"><span>${ic(a[1])} ${ALAB[b.action]||t(a[0])}</span>${ic('chev')}</button><div class="pa igpa"><button class="ib2 ${l?'liked':''}" data-like="${p.b}" aria-label="Me gusta">${ic('heart')}</button><button class="ib2" data-com="${i}" aria-label="Comentar">${ic('chat')}</button><button class="ib2" data-share="${p.b}" aria-label="Compartir">${ic('send')}</button><button class="ib2 save ${sv?'on':''}" data-save="${p.b}" aria-label="Guardar">${ic('bookmark')}</button></div><div class="likes">${(p.likes+(l?1:0)).toLocaleString('es-ES')} Me gusta</div><p class="cap"><b>${b.short||b.name}</b> ${p.txt} <span class="ej">Ejemplo</span></p>${p.com?`<button class="vcom" data-com="${i}">Ver los ${p.com} comentarios</button>`:''}<div class="ptime">${p.time}</div></article>`}
+function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b),sv=saved.has(p.b),st=order.includes(p.b),i=POSTS.indexOf(p);return `<article class="post igp"><div class="ph">${st?`<button class="avr ${seenS.has(p.b)?'seen':''}" data-story="${p.b}" aria-label="Ver historia">${av(b,'av')}</button>`:av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.short||b.name}${ONK.has(p.b)?VER:''}</b><small>${b.street}</small></button><button class="more" data-biz="${p.b}" aria-label="Ver perfil">•••</button></div><div class="pimw" ondblclick="dbl('${p.b}')"><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nopic')"><span class="bigheart" data-heart="${p.b}">${ic('heart')}</span></div><button class="shopbar" data-act="${p.b}"><span>${ic(a[1])} ${ALAB[b.action]||t(a[0])}</span>${ic('chev')}</button><div class="pa igpa"><button class="ib2 ${l?'liked':''}" data-like="${p.b}" aria-label="Me gusta">${ic('heart')}</button><button class="ib2" data-com="${p.b}" data-cmt="${esc(b.short||b.name)}" aria-label="Comentar">${ic('chat')}</button><button class="ib2" data-share="${p.b}" aria-label="Compartir">${ic('send')}</button><button class="ib2 save ${sv?'on':''}" data-save="${p.b}" aria-label="Guardar">${ic('bookmark')}</button></div><div class="likes">${(p.likes+(l?1:0)).toLocaleString('es-ES')} Me gusta</div><p class="cap"><b>${b.short||b.name}</b> ${p.txt} <span class="ej">Ejemplo</span></p>${cmPrev(p.b,b.short||b.name)}<div class="ptime">${p.time}</div></article>`}
 
 /* ===== Pregunta al pueblo ===== */
 const nrm=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -234,7 +234,7 @@ function loadNews(){if(EUNEWS)return;EUNEWS=[];fetch('news.json?_='+Date.now()).
 function newsPost(n){const l=liked.has('n-'+n.u);return `<article class="post ai npost"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Noticias de Euskadi · ${ago(n.ts)}</small></div></div>
  ${n.img?`<img class="pimg nimg" src="${esc(n.img)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}
  <div class="evbody">${n.local?'<span class="near">Cerca de ti</span>':''}<h4>${esc(n.t)}</h4>${n.d?`<p>${esc(n.d)}</p>`:''}<small class="nsrc">Fuente: ${esc(n.s)}</small></div>
- <div class="pa"><button class="pill ${l?'liked':''}" data-like="n-${esc(n.u)}">${ic('heart')}${l?' 1':''}</button><a class="cta nlink" href="${esc(n.u)}" target="_blank" rel="noopener">Leer en ${esc(n.s)}</a></div></article>`}
+ <div class="pa"><button class="pill ${l?'liked':''}" data-like="n-${esc(n.u)}">${ic('heart')}${l?' 1':''}</button><button class="pill" data-com="n-${esc(n.u)}" data-cmt="Noticia">${ic('chat')} ${cmList('n-'+n.u).length}</button><a class="cta nlink" href="${esc(n.u)}" target="_blank" rel="noopener">Leer en ${esc(n.s)}</a></div></article>`}
 function lbPost(o){const d=(o.desPuesto||'').replace(/<[^>]+>/g,'');return `<article class="post ai"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Empleo en tu zona · Fuente: Lanbide</small></div></div>
  <div class="qtext jtext"><small>Oferta de empleo · ${esc(cap(o.municipio))}</small>Se busca ${esc(cap(o.desEmpleo))}</div><div class="evbody">${d?`<p>${esc(d.length>180?d.slice(0,180)+'…':d)}</p>`:''}<small class="nsrc">Publicada el ${esc((o.fecPub||'').trim())} en Lanbide</small></div>
  <div class="pa"><a class="pill" href="${esc(o.url)}" target="_blank" rel="noopener">${ic('bag')} Ver oferta</a><button class="cta" data-tab="work" data-wt="of">Ofertas y cursos</button></div></article>`}
@@ -376,8 +376,8 @@ function me(){
 
 function render(){setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
-function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
-function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}
+function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
+function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on')}
 function toast(m,p){const e=$('#toast');e.innerHTML=ic('check')+' '+m+(p?`<span>+${p}</span>`:'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600)}
 
 const CFG=window.KALEA_CONFIG||{};
@@ -401,13 +401,34 @@ function renderGoogle(){
 function done(u){user=u;try{localStorage.setItem('kalea_user',JSON.stringify(u))}catch(e){}closeSheet();toast('Hola, '+u.name.split(' ')[0]);const cb=pending;pending=null;if(cb)setTimeout(cb,380);else if(tab==='profile'||tab==='points')render()}
 function logout(){user=null;try{localStorage.removeItem('kalea_user')}catch(e){}if(window.google&&google.accounts)google.accounts.id.disableAutoSelect();render();toast('Sesión cerrada')}
 const COMMENTS={itsasoa:[['Ane','El jueves ahí estamos'],['Iker','Las gildas, las mejores del pueblo']],goxo:[['Maite','Los de chocolate también, porfa']],ile:[['Leire','Me encantó el color']],etxea:[['Jon','La Elgoibar está brutal'],['Nerea','¿Reparto a Azkue también?']]};
-function commentSheet(i){
- const p=POSTS[i],cs=COMMENTS[p.b]||[];
- openSheet(`<h3>Comentarios</h3><div class="sub">${B[p.b].name}</div><div id="cl">${cs.map(c=>`<div class="cm"><b>${c[0]}</b> ${c[1]}</div>`).join('')}</div>
- <div class="cbox"><input class="field" id="ci" placeholder="Escribe un comentario..."><button class="send" id="cs">Enviar</button></div>`);
- const send=()=>{const v=$('#ci').value.trim();if(!v){$('#ci').focus();return}need('Para comentar',()=>{(COMMENTS[p.b]=COMMENTS[p.b]||[]).push([user.name.split(' ')[0],v]);p.com++;closeSheet();toast('Comentario publicado');if(tab==='home')home()})};
- $('#cs').onclick=send;
-}
+let MYCM={};try{MYCM=JSON.parse(localStorage.getItem('kalea_cm')||'{}')}catch(e){}
+const cmLiked=new Set();
+const CMN=['Ane','Iker','Maite','Jon','Nerea','Leire','Unai','Amaia','Mikel','Itziar','Asier','Garazi','Aitor','June'];
+const CMT=['Qué buena pinta','Mañana me paso sin falta','¿Hasta qué hora abrís hoy?','Siempre de 10, eskerrik asko','Me lo apunto para el finde','¿Hay que reservar antes o se puede ir directamente?','El trato, de lo mejor del pueblo','Ondo pasa!','Ayer estuve y genial','Muy recomendable','¡Qué ganas!','Lo comparto con la cuadrilla','Zorionak por el trabajo','¿Esto vale también el sábado?'];
+const CMH=['12 min','40 min','1 h','2 h','3 h','5 h','8 h','1 d'];
+function hsh(k){let h=0;for(const c of String(k))h=(h*31+c.charCodeAt(0))>>>0;return h}
+function cmList(k){const base=(typeof COMMENTS!=='undefined'&&COMMENTS[k])?COMMENTS[k].map((c,j)=>({n:c[0],t:c[1],h:CMH[(j+2)%CMH.length],id:k+'s'+j})):[];
+ if(!base.length){const h=hsh(k),n=2+h%4;for(let j=0;j<n;j++){const x=(h>>>(j*3))+j*7;base.push({n:CMN[x%CMN.length],t:CMT[(x>>>2)%CMT.length],h:CMH[Math.min(CMH.length-1,j+(h%3))],id:k+'s'+j})}}
+ return base.concat((MYCM[k]||[]).map((c,j)=>({n:c[0],t:c[1],h:'Ahora',id:k+'u'+j,me:1})))}
+function cmAv(n){return `<span class="cav">${esc((n||'?')[0].toUpperCase())}</span>`}
+function cmPrev(k,title){const l=cmList(k),last=l.slice(-2);return `<div class="cprev">${l.length>2?`<button class="vcom" data-com="${esc(k)}" data-cmt="${esc(title)}">Ver los ${l.length} comentarios</button>`:''}${last.map(c=>`<p><b>${esc(c.n)}</b> ${esc(c.t)}</p>`).join('')}<button class="cadd" data-com="${esc(k)}" data-cmt="${esc(title)}" data-cfoc="1">${user?cmAv(user.name):'<span class="cav">'+ic('user')+'</span>'}<span>Añade un comentario...</span></button></div>`}
+function cmRow(c){const l=cmLiked.has(c.id);return `<div class="crow">${cmAv(c.n)}<div class="cbd"><div><b>${esc(c.n)}</b><small>${c.h}</small></div><p>${esc(c.t)}</p><button class="crep" data-crep="${esc(c.n)}">Responder</button></div><button class="clk ${l?'on':''}" data-clk="${esc(c.id)}" aria-label="Me gusta">${ic('heart')}</button></div>`}
+function cmSheet(k,title,foc){
+ const draw=()=>{const l=cmList(k);$('#cl').innerHTML=l.map(cmRow).join('')};
+ openSheet(`<div class="chead"><h3>Comentarios</h3>${title?`<div class="sub">${esc(title)}</div>`:''}</div><div id="cl" class="clist"></div>
+ <div class="cbar">${user?cmAv(user.name):'<span class="cav">'+ic('user')+'</span>'}<input id="ci" placeholder="Añade un comentario..." autocomplete="off" enterkeyhint="send"><button id="cs" class="cpub" disabled>Publicar</button></div>`);
+ $('#sheet').classList.add('csheet');draw();
+ const ci=$('#ci'),cs=$('#cs');
+ ci.oninput=()=>{cs.disabled=!ci.value.trim()};
+ const send=()=>{const v=ci.value.trim();if(!v)return;need('Para comentar',()=>{(MYCM[k]=MYCM[k]||[]).push([user.name.split(' ')[0],v]);try{localStorage.setItem('kalea_cm',JSON.stringify(MYCM))}catch(e){}
+  if(!$('#cl')){cmSheet(k,title);return}
+  ci.value='';cs.disabled=true;draw();const cl=$('#cl');cl.lastElementChild&&cl.lastElementChild.classList.add('cnew');cl.lastElementChild&&cl.lastElementChild.scrollIntoView({block:'nearest',behavior:'smooth'});if(tab==='home')home()})};
+ cs.onclick=send;ci.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();send()}};
+ $('#cl').onclick=e=>{const lk=e.target.closest('[data-clk]'),rp=e.target.closest('[data-crep]');
+  if(lk){e.stopPropagation();const id=lk.dataset.clk;cmLiked.has(id)?cmLiked.delete(id):cmLiked.add(id);lk.classList.toggle('on');lk.classList.remove('pop');void lk.offsetWidth;lk.classList.add('pop')}
+  if(rp){e.stopPropagation();ci.value='@'+rp.dataset.crep+' ';cs.disabled=false;ci.focus()}};
+ if(foc)setTimeout(()=>ci.focus(),350)}
+function commentSheet(i){const p=POSTS[i];cmSheet(p.b,B[p.b].name)}
 function rateSheet(k){
  let r=0;
  openSheet(`<h3>Valorar ${B[k].name}</h3><div class="sub">Tu opinión ayuda a otros vecinos</div><div class="stars">${[1,2,3,4,5].map(n=>`<button data-r="${n}">★</button>`).join('')}</div><textarea class="field" rows="3" placeholder="Cuéntanos qué tal (opcional)"></textarea><button class="big-cta" id="rs">Publicar valoración</button><div class="earn">${ic('coin')} +20 puntos</div>`);
@@ -498,7 +519,7 @@ document.addEventListener('click',e=>{
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
- else if(d.com)commentSheet(+d.com);
+ else if(d.com)cmSheet(d.com,d.cmt||'',!!d.cfoc);
  else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
  else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
  else if(d.logout)logout();
