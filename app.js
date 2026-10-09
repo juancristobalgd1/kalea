@@ -559,7 +559,6 @@ render();
 addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
-})();
 
 let _bip=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();_bip=e});
 addEventListener('appinstalled',()=>{_bip=null;toast('Kalea instalada en tu móvil')});
@@ -589,4 +588,5 @@ new MutationObserver(()=>{document.querySelectorAll('img:not(.ld)').forEach(i=>{
  sh.addEventListener('touchstart',e=>{const r=sh.getBoundingClientRect(),y=e.touches[0].clientY;y0=(y-r.top<60||sh.scrollTop<=0)&&!e.target.closest('input,textarea,select,.cl')?y:null;dy=0},{passive:true});
  sh.addEventListener('touchmove',e=>{if(y0===null)return;dy=e.touches[0].clientY-y0;if(dy>0){sh.classList.add('drag');sh.style.transform=`translateY(${dy}px)`;$('#scrim').style.opacity=Math.max(0,1-dy/400)}},{passive:true});
  sh.addEventListener('touchend',()=>{if(y0===null)return;y0=null;sh.classList.remove('drag');sh.style.transform='';$('#scrim').style.opacity='';if(dy>110)closeSheet()},{passive:true});
+})();
 })();
