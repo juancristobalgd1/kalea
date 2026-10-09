@@ -342,7 +342,7 @@ function publish(){
  ${ptype==='flash'?`<label>Hora</label><div class="opts">${['20:30','21:30','22:00'].map(h=>`<span class="opt">${h}</span>`).join('')}</div><label>Descuento</label><div class="opts">${['-10%','-15%','-20%'].map(h=>`<span class="opt">${h}</span>`).join('')}</div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
  <div class="reach">${ic('bell')} ${reach}</div>
  <button class="big-cta stick" id="pubgo">Publicar</button></div>`;
- view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><div class="seg pubas"><button class="${pubAs==='vecino'?'on':''}" data-pubas="vecino">Soy vecino</button><button class="${pubAs==='negocio'?'on':''}" data-pubas="negocio">Tengo un negocio</button></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>${form||'<p class="pickhint">Elige qué quieres publicar</p>'}`;
+ view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><p class="psub">Elige qué quieres publicar</p><div class="seg pubas"><button class="${pubAs==='vecino'?'on':''}" data-pubas="vecino">Soy vecino</button><button class="${pubAs==='negocio'?'on':''}" data-pubas="negocio">Tengo un negocio</button></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>${form||''}`;
  if(ptype){const f=view.querySelector('.preview');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),30)}
 }
 

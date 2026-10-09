@@ -712,3 +712,13 @@ button:active,.chip:active,.cta:active{opacity:1}
 .biz small .onk{margin-right:4px}
 .qcard{margin:0;border:0;border-radius:0;padding:16px;border-bottom:1px solid #efefef}
 .qcard.mineq{margin:0 16px 14px;border:1px solid #dbdbdb;border-radius:14px}
+
+/* Pulido 4: publicar y perfil */
+.psub{margin:-4px 18px 12px;color:var(--muted);font-size:14px}
+.seg.pubas{display:flex;margin:0 18px 14px}.seg.pubas button{flex:1;padding:9px 12px;font-size:13px}
+.pub button{display:flex;flex-direction:column;align-items:flex-start;justify-content:flex-start;min-height:128px;border-radius:14px}
+.pub .ic{color:#262626}
+.wmini{background:#fff!important;color:#262626!important;border:1px solid #dbdbdb;box-shadow:none}
+.wmini small{opacity:1;color:var(--muted)}.wmini span{opacity:1;color:var(--muted)}
+.wmini b{font-size:28px;letter-spacing:-.5px}
+.wmini .wgo{color:var(--blue);opacity:1}
