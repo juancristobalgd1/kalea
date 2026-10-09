@@ -218,3 +218,63 @@ html.dark .ptr{background:#262626}
 html.dark .okp,html.dark .inst .ic{background:#0b2236;color:#4cb5f9}
 html.dark .bpi .lnk{color:#e0f1ff}
 html.dark .pimw.nopic,html.dark .noimg{background:#121212}
+
+/* Revisión modo oscuro */
+html.dark{--gold:#363636;--gold2:#363636;--blue:#0095f6}
+html.dark .chip{background:#121212;border-color:#262626;color:#f5f5f5}
+html.dark .chip.on{background:#f5f5f5;color:#000;border-color:#f5f5f5}
+html.dark .aitag,html.dark .aisub,html.dark .nk,html.dark .tag,html.dark .web,html.dark .evtip{background:#262626;color:#e0e0e0;border:0}
+html.dark .seg{background:#262626}
+html.dark .seg .on{background:#3a3a3a;color:#fff;box-shadow:none}
+html.dark .seg.hasi button{background:transparent!important;color:#a8a8a8}html.dark .seg.hasi button.on{color:#fff}
+html.dark .segi{background:#3a3a3a}
+html.dark .gbtn{background:#121212;color:#f5f5f5;border-color:#363636}
+html.dark .guest,html.dark .inst,html.dark .wmini,html.dark .list,html.dark .card,html.dark .post.ai{border-color:#262626}
+html.dark .sec a,html.dark .ver,html.dark .mini,html.dark .hours a,html.dark .askq span,html.dark .minib span,html.dark .pisder,html.dark .rep button,html.dark .cpub,html.dark .wmini .wgo,html.dark .walert,html.dark .askin svg,html.dark .toast span{color:#4cb5f9}
+html.dark .onk,html.dark .wtag,html.dark .near,html.dark .okp,html.dark .wkic,html.dark .inst .ic{background:#0b2236;color:#7cc4ff}
+html.dark .opt.on,html.dark .pub button.on,html.dark .pollo.on,html.dark .viewsw button.on{background:#0b2236;color:#7cc4ff;border-color:#0095f6}
+html.dark .toast{background:#262626;color:#fff;border:1px solid #363636}
+html.dark .walert.on{background:#0095f6;color:#fff}
+html.dark .spin{border-color:#262626;border-top-color:#0095f6}
+html.dark .ring img,html.dark .ring .noimg{border-color:#000;background:#262626}
+html.dark .avr .av,html.dark .bpav .bpimg,html.dark .prof .big.noimg{border-color:#000}
+html.dark .plus{color:#f5f5f5}
+html.dark .tabbar button{color:#a8a8a8}html.dark .tabbar button.on{color:#fff}
+html.dark .sheet{background:#121212;border-top:1px solid #262626}
+html.dark .sheet .opt,html.dark .sheet .sopt{border-color:#262626}
+html.dark .scrim.on{background:rgba(0,0,0,.6)}
+html.dark img{filter:brightness(.92)}
+html.dark .story img{filter:none}
+html.dark .li .ic{color:#f5f5f5}
+html.dark .demo{color:#f5f5f5}
+html.dark .pub .ic{color:#f5f5f5}
+html.dark .li .v{color:#f5f5f5}
+html.dark .sec a{color:#f5f5f5}
+html.dark .tq svg{color:#f5f5f5}
+html.dark .nk{color:#f5f5f5}
+html.dark .opt.on{color:#f5f5f5}
+html.dark .townc .ic{color:#f5f5f5}
+html.dark .muni .ic{color:#f5f5f5}
+html.dark .kpis b{color:#f5f5f5}
+html.dark .photo{color:#f5f5f5}
+html.dark .board .k{color:#f5f5f5}
+html.dark .mini{color:#f5f5f5}
+html.dark .tag{color:#f5f5f5}
+html.dark .menu-i b{color:#f5f5f5}
+html.dark .aisub{color:#f5f5f5}
+html.dark .aisrc{color:#f5f5f5}
+html.dark .wallet .qr{color:#f5f5f5}
+html.dark .earn{color:#f5f5f5}
+html.dark .date small{color:#f5f5f5}
+html.dark .stars button.on{color:#f5f5f5}
+html.dark .ag .d{color:#f5f5f5}
+html.dark .evdate small{color:#f5f5f5}
+html.dark .evtip{color:#f5f5f5}
+html.dark .star{color:#f5f5f5}
+html.dark .ver{color:#f5f5f5}
+html.dark .aitag{color:#f5f5f5}
+html.dark .web{color:#f5f5f5}
+html.dark .guest .ava{color:#f5f5f5}
+html.dark .tsec h3 svg{color:#f5f5f5}
+html.dark .evmeta svg{color:#f5f5f5}
+html.dark .aih svg{color:#f5f5f5}
