@@ -113,7 +113,7 @@ function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><di
 const VER=`<svg class="ver" viewBox="0 0 24 24" aria-label="En Kalea"><circle cx="12" cy="12" r="10" fill="#0095f6"/><path d="m7.5 12.3 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 const saved=new Set();try{JSON.parse(localStorage.getItem('kalea_saved')||'[]').forEach(x=>saved.add(x))}catch(e){}
 const ALAB={reservar:'Reservar mesa',cita:'Pedir cita',pedir:'Hacer un pedido'};
-function dbl(k){need('Para dar me gusta',()=>{liked.add(k);const h=document.querySelector(`[data-heart="${k}"]`);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}setTimeout(()=>{if(tab==='home')refreshHome()},650)})}
+function dbl(k){need('Para dar me gusta',()=>{if(!liked.has(k))setLike(k,true);const h=document.querySelector(`[data-heart="${k}"]`);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}})}
 function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b),sv=saved.has(p.b),st=order.includes(p.b),i=POSTS.indexOf(p);return `<article class="post igp"><div class="ph">${st?`<button class="avr ${seenS.has(p.b)?'seen':''}" data-story="${p.b}" aria-label="Ver historia">${av(b,'av')}</button>`:av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.short||b.name}${ONK.has(p.b)?VER:''}</b><small>${b.street}</small></button><button class="more" data-biz="${p.b}" aria-label="Ver perfil">•••</button></div><div class="pimw" ondblclick="dbl('${p.b}')"><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nopic')"><span class="bigheart" data-heart="${p.b}">${ic('heart')}</span></div><button class="shopbar" data-act="${p.b}"><span>${ic(a[1])} ${ALAB[b.action]||t(a[0])}</span>${ic('chev')}</button><div class="pa igpa"><button class="ib2 ${l?'liked':''}" data-like="${p.b}" aria-label="Me gusta">${ic('heart')}</button><button class="ib2" data-com="${p.b}" data-cmt="${esc(b.short||b.name)}" aria-label="Comentar">${ic('chat')}</button><button class="ib2" data-share="${p.b}" aria-label="Compartir">${ic('send')}</button><button class="ib2 save ${sv?'on':''}" data-save="${p.b}" aria-label="Guardar">${ic('bookmark')}</button></div><div class="likes">${(p.likes+(l?1:0)).toLocaleString('es-ES')} Me gusta</div><p class="cap"><b>${b.short||b.name}</b> ${p.txt} <span class="ej">Ejemplo</span></p>${cmPrev(p.b,b.short||b.name)}<div class="ptime">${p.time}</div></article>`}
 
 /* ===== Pregunta al pueblo ===== */
@@ -305,14 +305,14 @@ function explore(){
 }
 
 const follows=new Set();try{JSON.parse(localStorage.getItem('kalea_follow')||'[]').forEach(x=>follows.add(x))}catch(e){}
-function profile(k){
+function profile(k,noPush){
  const b=B[k],a=ACT[b.action],on=ONK.has(k),ps=POSTS.filter(p=>p.b===k),st=order.includes(k),fo=follows.has(k),bio=CAPK[k]||CAPC[b.cg],mn=b.action==='cita'?'Servicios':'Carta';
  const tiles=[...ps.map(p=>({img:b.img,txt:p.txt,i:POSTS.indexOf(p)})),{txt:bio},...(b.menu||[]).slice(0,5).map(m=>({txt:m[0],pr:m[2]}))];
  const nf=f=>(180+hsh(k)%1400+(f?1:0)).toLocaleString('es-ES');
  const main=on?`<button data-act="${k}">${ic(a[1])} ${t(a[0])}</button>`:b.phone?`<a href="${tel(b)}">${ic('phone')} Llamar</a>`:`<a href="${b.maps}" target="_blank" rel="noopener">${ic('pin')} Cómo llegar</a>`;
  const avh=st?`<button class="bpav ${seenS.has(k)?'seen':''}" data-story="${k}" aria-label="Ver historia">${av(b,'bpimg')}</button>`:`<div class="bpav none">${av(b,'bpimg')}</div>`;
  const hl=[['menu','book',mn],['maps','clock','Horario'],['maps','pin','Ubicación'],['maps','star','Reseñas']];
- view.innerHTML=`<div class="bptop"><button class="ib" data-tab="${tab}" aria-label="Volver">${ic('back')}</button><b>${esc(b.short||b.name)}${on?VER:''}</b><button class="ib" data-share="${k}" aria-label="Compartir">${ic('send')}</button></div>
+ view.innerHTML=`<div class="bptop"><button class="ib" id="bpback" aria-label="Volver">${ic('back')}</button><b>${esc(b.short||b.name)}${on?VER:''}</b><button class="ib" data-share="${k}" aria-label="Compartir">${ic('send')}</button></div>
  <div class="bph">${avh}<div class="bpst"><div><b>${tiles.length}</b><small>publicaciones</small></div><div><b id="bpfn">${nf(fo)}</b><small>seguidores</small></div><div><b>${b.rating?'★ '+b.rating:'Nuevo'}</b><small>${b.rev?b.rev+(b.rev==1?' reseña':' reseñas'):'en Kalea'}</small></div></div></div>
  <div class="bpi"><h1>${esc(b.name)}</h1><div class="cat">${esc(b.cat)} · ${esc(b.street)}</div><p>${esc(bio)} <span class="ej">Ejemplo</span></p><span class="lnk">${ic('globe')} kalea.app/elgoibar/${k}</span>${on?'':`<div class="notk">Este negocio todavía no está en Kalea. Puedes llamar o ver cómo llegar.</div>`}</div>
  <div class="bpb"><button class="pri ${fo?'on':''}" id="bpf">${fo?'Siguiendo':'Seguir'}</button>${b.phone?`<a href="${tel(b)}">Llamar</a>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Cómo llegar</a></div>
@@ -327,6 +327,8 @@ function profile(k){
  view.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{pt(x.dataset.pt);if(x.closest('.bphl')){const tb=$('.bptabs');if(tb)tb.scrollIntoView({behavior:'smooth',block:'start'})}});
  $('#bpf').onclick=()=>need('Para seguir a '+b.name,()=>{follows.has(k)?follows.delete(k):follows.add(k);try{localStorage.setItem('kalea_follow',JSON.stringify([...follows]))}catch(e){}const f=follows.has(k),btn=$('#bpf');if(btn){btn.classList.toggle('on',f);btn.textContent=f?'Siguiendo':'Seguir';$('#bpfn').textContent=nf(f)}toast(f?'Sigues a '+b.name:'Has dejado de seguir a '+b.name)});
  pt('grid');view.scrollTop=0;
+ $('#bpback').onclick=()=>{if(history.state&&history.state.k)history.back();else render()};
+ if(!noPush&&location.hash!=='#'+k)history.pushState({k},'','#'+k);
 }
 
 function pointsV(){
@@ -390,7 +392,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
+function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on')}
@@ -487,11 +489,11 @@ function showStory(){
  <div class="sh">${av(b,'sav')}<div class="sn"><b>${b.short}</b><small>hace ${stIdx+1} h <span class="sej">Ejemplo</span></small></div><button class="x" id="sx" aria-label="Cerrar">${XSVG}</button></div>
  <div class="tapl" id="stl"></div><div class="tapr" id="str"></div>
  <div class="cap">${CAPK[k]||CAPC[b.cg]}</div>
- <div class="scta"><button class="sbtn main" id="sgo">${ic(a[1])} ${t(a[0])}</button><button class="sbtn" id="sprof">Ver perfil</button></div>`;
+ <div class="scta"><button class="sbtn main" id="sgo">${ic(a[1])} ${t(a[0])}</button><button class="sbtn" id="sprof">Ver perfil</button><button class="sbtn sic ${liked.has(k)?'on':''}" id="slike" aria-label="Me gusta">${ic('heart')}</button></div>`;
  s.classList.add('on');
  const nx=order[stIdx+1];if(nx&&B[nx].img){const im=new Image();im.referrerPolicy='no-referrer';im.src=B[nx].img}
  s.querySelector('.bars i.run').addEventListener('animationend',nextStory);
- $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};
+ $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};$('#slike').onclick=()=>{if(!user){closeStory();return need('Para dar me gusta',()=>setLike(k,true))}const on=!liked.has(k);setLike(k,on);const h=$('#slike');h.classList.toggle('on',on);h.classList.remove('pop');void h.offsetWidth;if(on)h.classList.add('pop')};
  [['#stl',prevStory],['#str',nextStory]].forEach(([sel,fn])=>{const el=$(sel);let t0=0;
   el.onpointerdown=e=>{t0=Date.now();window._stMv=false;s.classList.add('paused')};
   el.onpointerup=e=>{s.classList.remove('paused');if(Date.now()-t0<250&&!window._stMv)fn()};
@@ -539,7 +541,7 @@ document.addEventListener('click',e=>{
  else if(d.tab){closeSheet();if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
- else if(d.like){const k=d.like;need('Para dar me gusta',()=>{liked.has(k)?liked.delete(k):liked.add(k);if(tab==='home')home()})}
+ else if(d.like){const k=d.like;need('Para dar me gusta',()=>setLike(k,!liked.has(k)))}
  else if(d.com)cmSheet(d.com,d.cmt||'',!!d.cfoc);
  else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
  else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
@@ -552,6 +554,8 @@ document.addEventListener('click',e=>{
 });
 $('#scrim').onclick=closeSheet;
 render();
+(()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
+addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
 })();
@@ -563,3 +567,14 @@ document.addEventListener('click',e=>{if(!e.target.closest('[data-inst]'))return
  if(_bip){_bip.prompt();_bip.userChoice.finally(()=>{_bip=null})}
  else{const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);openSheet(`<h3>Instalar Kalea</h3><div class="isteps">${ios?'<p><b>1.</b> Toca el botón Compartir de Safari (el cuadrado con la flecha).</p><p><b>2.</b> Elige «Añadir a pantalla de inicio».</p><p><b>3.</b> Toca «Añadir».</p>':'<p><b>1.</b> Abre el menú del navegador (los tres puntos).</p><p><b>2.</b> Toca «Instalar aplicación» o «Añadir a pantalla de inicio».</p><p><b>3.</b> Confirma y tendrás Kalea con su icono.</p>'}</div>`)}});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+
+function setLike(k,on){if(on)liked.add(k);else liked.delete(k);try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
+ document.querySelectorAll(`[data-like="${k}"]`).forEach(b=>{if(b.classList.contains('liked')===on)return;b.classList.toggle('liked',on);b.classList.remove('pop');void b.offsetWidth;if(on)b.classList.add('pop');const L=b.closest('article')&&b.closest('article').querySelector('.likes');if(L){const n=parseInt(L.textContent.replace(/\D/g,''))||0;L.textContent=Math.max(0,n+(on?1:-1)).toLocaleString('es-ES')+' Me gusta'}})}
+
+(()=>{let y0=null,dy=0;const ind=document.createElement('div');ind.className='ptr';ind.innerHTML='<i></i>';$('#screen').appendChild(ind);
+ view.addEventListener('touchstart',e=>{y0=(tab==='home'&&view.scrollTop<=0&&!$('#story').classList.contains('on'))?e.touches[0].clientY:null;dy=0},{passive:true});
+ view.addEventListener('touchmove',e=>{if(y0===null)return;dy=e.touches[0].clientY-y0;if(dy<=0){ind.style.transform='';return}const d=Math.min(90,dy*.5);ind.classList.add('show');ind.style.transform=`translate(-50%,${d}px) rotate(${dy*2}deg)`},{passive:true});
+ view.addEventListener('touchend',()=>{if(y0===null)return;y0=null;if(dy*.5>=60){ind.classList.add('spin');ind.style.transform='translate(-50%,60px)';try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}
+  Promise.resolve(typeof loadNews==='function'?loadNews():null).catch(()=>{}).then(()=>setTimeout(()=>{refreshHome();ind.classList.remove('spin','show');ind.style.transform='';toast('Todo al día')},700))}
+  else{ind.classList.remove('show');ind.style.transform=''}},{passive:true});
+})();

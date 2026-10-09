@@ -770,3 +770,14 @@ button:active,.chip:active,.cta:active{opacity:1}
 .isteps p{margin:10px 0;font-size:15px;line-height:1.45}
 
 #pt{padding-bottom:76px}
+
+/* Me gusta con rebote */
+@keyframes lpop{0%{transform:scale(1)}35%{transform:scale(1.28)}100%{transform:scale(1)}}
+.ib2.pop svg,.sbtn.pop svg{animation:lpop .38s var(--ease)}
+/* Corazón en historias */
+.sbtn.sic{flex:0 0 48px;padding:0;display:grid;place-items:center}.sbtn.sic svg{width:24px;height:24px}
+.sbtn.sic.on svg{fill:#ff3040;stroke:#ff3040}
+/* Tirar para actualizar */
+.ptr{position:absolute;left:50%;top:calc(env(safe-area-inset-top) + 4px);z-index:7;width:36px;height:36px;border-radius:50%;background:#fff;box-shadow:0 2px 10px rgba(0,0,0,.12);display:grid;place-items:center;opacity:0;transform:translate(-50%,0);transition:opacity .15s;pointer-events:none}
+.ptr.show{opacity:1}.ptr i{width:16px;height:16px;border-radius:50%;border:2.5px solid #dbdbdb;border-top-color:#262626}
+.ptr.spin i{animation:ptrs .7s linear infinite}@keyframes ptrs{to{transform:rotate(360deg)}}
