@@ -36,7 +36,7 @@ star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.
 ver:'<path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1L2.8 15.5 4 12.5 2.8 9.5l2.8-1.6.8-3.1 3.2.3z" fill="currentColor" stroke="none"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="#ffffff" stroke-width="2.2"/>'
 };
 const ic=(n,c='')=>`<svg viewBox="0 0 24 24" class="${c}">${I[n]}</svg>`;
-Object.assign(I,{grid:'<path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'});
+Object.assign(I,{gear:'<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',bellx:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4M12 17v.01"/>',out:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',lng:'<path d="M4 5h8M8 3v2M5.5 5c.8 3.5 3 6 6.5 7.5M10.5 5c-.8 3.5-3 6-6 7.5M13 21l4-9 4 9M14.5 17.5h5"/>',grid:'<path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'});
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
@@ -377,8 +377,9 @@ function hookPub(){const pq=$('#pq');if(pq){pq.oninput=()=>{clearTimeout(pqT);pq
 function walletMini(){const p=user?points:0;return `<button class="wmini" data-tab="points"><div><small>Puntos Kalea</small><b>${p.toLocaleString('es-ES')}</b><span>${user?`= ${(p/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar`:'Entra para empezar a sumar'}</span></div><span class="wgo">Ver ›</span></button>`}
 let alerts={flash:true,job:true,plan:true,ask:true};try{Object.assign(alerts,JSON.parse(localStorage.getItem('kalea_alerts')||'{}'))}catch(e){}
 function me(){
- if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
- view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
+ setTimeout(()=>{const g=$('#gear');if(g)g.onclick=()=>settingsV()},0);
+ if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
+ view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
  ${walletMini()}${instRow()}
  <div class="sec"><h3>Próximas</h3></div><div class="list">
@@ -556,7 +557,7 @@ $('#scrim').onclick=closeSheet;
 const _h0=decodeURIComponent(location.hash.slice(1));
 render();
 (()=>{const k=_h0;if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
-addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
+addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(k==='ajustes')settingsV(1);else if(k==='apariencia')appearV(1);else if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
 
@@ -602,4 +603,41 @@ function segInd(){document.querySelectorAll('.seg').forEach(g=>{const b0=g.query
 function countUp(){document.querySelectorAll('.wmini b').forEach(el=>{if(el._cu)return;el._cu=1;const to=parseInt(el.textContent.replace(/\D/g,''))||0;if(to<10||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const t0=performance.now(),d=750;const f=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(to*e).toLocaleString('es-ES');if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
 let _mq=0;const _mo=()=>{if(_mq)return;_mq=requestAnimationFrame(()=>{_mq=0;segInd();countUp()})};
 new MutationObserver(_mo).observe(view,{childList:true,subtree:true});new MutationObserver(_mo).observe($('#sheet'),{childList:true,subtree:true});_mo();
+
+// ---------- Ajustes y apariencia ----------
+const THN={light:'Claro',dark:'Oscuro',auto:'Automático'};
+function curTheme(){try{return localStorage.getItem('kalea_theme')||'light'}catch(e){return 'light'}}
+function applyTheme(anim){const t=curTheme(),dk=t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches),h=document.documentElement;
+ if(anim){h.classList.add('theming');clearTimeout(window._thT);window._thT=setTimeout(()=>h.classList.remove('theming'),450)}
+ h.classList.toggle('dark',dk);const m=document.querySelector('meta[name=theme-color]');if(m)m.content=dk?'#000000':'#ffffff'}
+try{matchMedia('(prefers-color-scheme: dark)').addEventListener('change',()=>{if(curTheme()==='auto')applyTheme(1)})}catch(e){}
+applyTheme();
+function setBack(){const b=$('#stback');if(b)b.onclick=()=>{if(history.state&&history.state.s)history.back();else{tab='profile';render()}}}
+function sRow(id,icn,title,val,extra){return `<button class="srow" id="${id}"><span class="sic">${ic(icn)}</span><span class="st2">${title}</span>${val?`<span class="sval">${val}</span>`:''}${extra||'<span class="sch">'+ic('chev')+'</span>'}</button>`}
+function settingsV(noPush){
+ const nt=(()=>{try{return localStorage.getItem('kalea_push')==='1'}catch(e){return false}})();
+ view.innerHTML=`<div class="bptop"><button class="ib" id="stback" aria-label="Volver">${ic('back')}</button><b>Ajustes</b><span class="ib" style="visibility:hidden"></span></div>
+ <div class="sgrp"><small>Tu app</small>${sRow('s-ap','moon','Apariencia',THN[curTheme()])}${sRow('s-ln','lng','Idioma',lang==='eu'?'Euskara':'Castellano')}${sRow('s-nt','bellx','Notificaciones','',`<span class="tgl ${nt?'on':''}"><i></i></span>`)}</div>
+ <div class="sgrp"><small>Más</small>${instRow()?sRow('s-in','dl','Instalar Kalea'):''}${sRow('s-pv','shield','Privacidad y datos')}${sRow('s-hp','help','Ayuda')}${sRow('s-ab','info','Acerca de Kalea','Versión de prueba')}</div>
+ ${user?`<div class="sgrp">${sRow('s-lo','out','Cerrar sesión','','')}</div>`:''}`;
+ setBack();
+ $('#s-ap').onclick=()=>appearV();
+ $('#s-ln').onclick=()=>{openSheet(`<h3>Idioma</h3><div class="sopts">${[['es','Castellano'],['eu','Euskara']].map(o=>`<button class="sopt ${lang===o[0]?'on':''}" data-sl="${o[0]}">${o[1]}<span class="rad"></span></button>`).join('')}</div>`);document.querySelectorAll('[data-sl]').forEach(b=>b.onclick=()=>{lang=b.dataset.sl;try{localStorage.setItem('kalea_lang',lang)}catch(e){}closeSheet();settingsV(1);nav()})};
+ $('#s-nt').onclick=()=>{const on=!(localStorage.getItem('kalea_push')==='1');try{localStorage.setItem('kalea_push',on?'1':'0')}catch(e){}$('#s-nt .tgl').classList.toggle('on',on);try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}if(on&&window.Notification&&Notification.permission==='default')Notification.requestPermission().catch(()=>{});toast(on?'Te avisaremos de huecos y ofertas':'Notificaciones desactivadas')};
+ const si=$('#s-in');if(si)si.dataset.inst='1';
+ $('#s-pv').onclick=()=>openSheet(`<h3>Privacidad y datos</h3><div class="isteps"><p>Puedes mirar Kalea sin cuenta. Solo pedimos entrar con Google para reservar, pedir, comentar o sumar puntos.</p><p>Tus guardados, me gusta y ajustes se quedan en este móvil.</p></div>`);
+ $('#s-hp').onclick=()=>openSheet(`<h3>Ayuda</h3><div class="isteps"><p><b>Reservar o pedir:</b> abre un negocio y toca el botón azul.</p><p><b>Puntos:</b> sumas con cada reserva y los gastas en comercios de Elgoibar.</p><p><b>Instalar:</b> desde Ajustes, Instalar Kalea.</p></div>`);
+ $('#s-ab').onclick=()=>openSheet(`<h3>Kalea</h3><div class="isteps"><p>La red social local de Elgoibar. Versión de prueba con negocios de ejemplo.</p></div>`);
+ const lo=$('#s-lo');if(lo)lo.dataset.logout='1';
+ if(!noPush&&location.hash!=='#ajustes')history.pushState({s:1},'','#ajustes');view.scrollTop=0;
+}
+function appearV(noPush){
+ const c=curTheme(),mock=k=>`<span class="mk mk-${k}"><i></i><i></i><i></i></span>`;
+ view.innerHTML=`<div class="bptop"><button class="ib" id="stback" aria-label="Volver">${ic('back')}</button><b>Apariencia</b><span class="ib" style="visibility:hidden"></span></div>
+ <div class="thp">${['light','dark','auto'].map(k=>`<button class="thc ${c===k?'on':''}" data-th="${k}">${mock(k)}<span class="thl">${THN[k]}</span><span class="rad"></span></button>`).join('')}</div>
+ <p class="thn">En Automático, Kalea usa el mismo modo que tu móvil.</p>`;
+ setBack();
+ document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{try{localStorage.setItem('kalea_theme',b.dataset.th)}catch(e){}applyTheme(1);try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('on',x===b))});
+ if(!noPush&&location.hash!=='#apariencia')history.pushState({s:1},'','#apariencia');view.scrollTop=0;
+}
 })();
