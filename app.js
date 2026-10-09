@@ -408,7 +408,7 @@ const CMT=['Qué buena pinta','Mañana me paso sin falta','¿Hasta qué hora abr
 const CMH=['12 min','40 min','1 h','2 h','3 h','5 h','8 h','1 d'];
 function hsh(k){let h=0;for(const c of String(k))h=(h*31+c.charCodeAt(0))>>>0;return h}
 function cmList(k){const base=(typeof COMMENTS!=='undefined'&&COMMENTS[k])?COMMENTS[k].map((c,j)=>({n:c[0],t:c[1],h:CMH[(j+2)%CMH.length],id:k+'s'+j})):[];
- if(!base.length){const h=hsh(k),n=2+h%4;for(let j=0;j<n;j++){const x=(h>>>(j*3))+j*7;base.push({n:CMN[x%CMN.length],t:CMT[(x>>>2)%CMT.length],h:CMH[Math.min(CMH.length-1,j+(h%3))],id:k+'s'+j})}}
+ if(!base.length){const h=hsh(k),n=2+h%4;for(let j=0;j<n;j++){base.push({n:CMN[(h+j*5)%CMN.length],t:CMT[(h*7+j*3)%CMT.length],h:CMH[Math.min(CMH.length-1,j+(h%3))],id:k+'s'+j})}}
  return base.concat((MYCM[k]||[]).map((c,j)=>({n:c[0],t:c[1],h:'Ahora',id:k+'u'+j,me:1})))}
 function cmAv(n){return `<span class="cav">${esc((n||'?')[0].toUpperCase())}</span>`}
 function cmPrev(k,title){const l=cmList(k),last=l.slice(-2);return `<div class="cprev">${l.length>2?`<button class="vcom" data-com="${esc(k)}" data-cmt="${esc(title)}">Ver los ${l.length} comentarios</button>`:''}${last.map(c=>`<p><b>${esc(c.n)}</b> ${esc(c.t)}</p>`).join('')}<button class="cadd" data-com="${esc(k)}" data-cmt="${esc(title)}" data-cfoc="1">${user?cmAv(user.name):'<span class="cav">'+ic('user')+'</span>'}<span>Añade un comentario...</span></button></div>`}
