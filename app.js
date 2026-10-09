@@ -230,7 +230,7 @@ function qPost(q){const l=liked.has('q-'+q.id),n=q.ans.length;return `<article c
 let EUNEWS=null;
 const esc=x=>String(x||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 const ago=ts=>{if(!ts)return '';const m=Math.max(1,Math.round((Date.now()/1000-ts)/60));return m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`};
-function refreshHome(){if(tab!=='home')return;const y=view.scrollTop;home();view.scrollTop=y}
+function refreshHome(){if(tab!=='home'||$('.bptop'))return;const y=view.scrollTop;home();view.scrollTop=y}
 function loadNews(){if(EUNEWS)return;EUNEWS=[];fetch('news.json?_='+Date.now()).then(r=>r.json()).then(d=>{EUNEWS=(d.items||[]).filter(n=>!/violad|viola[rd]|asesin|apuñal|homicid|cad[aá]ver|fallec|muere|muerto|suicid|agresi[oó]n sexual|abuso|pederast|droga|detenid|tiroteo/i.test(n.t+' '+(n.d||'')));refreshHome()}).catch(()=>{})}
 function newsPost(n){const l=liked.has('n-'+n.u);return `<article class="post ai npost"><div class="ph"><div class="av aiav">${ic('spark')}</div><div class="nm"><b>Kalea IA <span class="aitag">${ic('spark')} Automático</span></b><small>Noticias de Euskadi · ${ago(n.ts)}</small></div></div>
  ${n.img?`<img class="pimg nimg" src="${esc(n.img)}" alt="" referrerpolicy="no-referrer" loading="lazy" onerror="this.remove()">`:''}
@@ -550,11 +550,12 @@ document.addEventListener('click',e=>{
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
  else if(d.ptype){ptype=d.ptype;publish();hookPub()}
- else if(d.lang){lang=d.lang;try{localStorage.setItem('kalea_lang',lang)}catch(e){}closeSheet();render()}
+ else if(d.lang){const pk=history.state&&history.state.k;lang=d.lang;try{localStorage.setItem('kalea_lang',lang)}catch(e){}closeSheet();if(pk&&B[pk])profile(pk,1);else render()}
 });
 $('#scrim').onclick=closeSheet;
+const _h0=decodeURIComponent(location.hash.slice(1));
 render();
-(()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
+(()=>{const k=_h0;if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
 addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
