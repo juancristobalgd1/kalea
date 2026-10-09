@@ -722,3 +722,5 @@ button:active,.chip:active,.cta:active{opacity:1}
 .wmini small{opacity:1;color:var(--muted)}.wmini span{opacity:1;color:var(--muted)}
 .wmini b{font-size:28px;letter-spacing:-.5px}
 .wmini .wgo{color:var(--blue);opacity:1}
+.psub{margin:2px 18px 14px}
+.lang{background:#efefef;border:0}.lang .on{background:#fff!important;color:#262626!important;box-shadow:0 1px 3px rgba(0,0,0,.12)}
