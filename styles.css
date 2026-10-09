@@ -665,3 +665,7 @@ button:active,.chip:active,.cta:active{opacity:1}
 /* Preguntas: texto plano, coherente con el resto de publicaciones */
 .qpost .qtext:not(.jtext){background:none;border:0;border-radius:0;padding:4px 16px 0;margin:0;font-size:16px;font-weight:600;line-height:1.4;letter-spacing:-.1px;color:#262626}
 .qpost .qai{margin-top:12px}
+/* Historias: barras y cabecera pegadas arriba, como en Instagram */
+.story .bars{top:calc(env(safe-area-inset-top) + 8px)}
+.story .sh{top:calc(env(safe-area-inset-top) + 18px)}
+.story:before{content:'';position:absolute;left:0;right:0;top:0;height:120px;background:linear-gradient(rgba(0,0,0,.35),transparent);z-index:2;pointer-events:none}
