@@ -36,6 +36,7 @@ star:'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1-4.4-4.3 6.
 ver:'<path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-.3L12 22l-2.4-2.1-3.2.3-.8-3.1L2.8 15.5 4 12.5 2.8 9.5l2.8-1.6.8-3.1 3.2.3z" fill="currentColor" stroke="none"/><path d="M8.5 12l2.5 2.5 4.5-5" stroke="#ffffff" stroke-width="2.2"/>'
 };
 const ic=(n,c='')=>`<svg viewBox="0 0 24 24" class="${c}">${I[n]}</svg>`;
+Object.assign(I,{grid:'<path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'});
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
@@ -303,14 +304,29 @@ function explore(){
  const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=exMode==='map'?exMap():bizList()};
 }
 
+const follows=new Set();try{JSON.parse(localStorage.getItem('kalea_follow')||'[]').forEach(x=>follows.add(x))}catch(e){}
 function profile(k){
- const b=B[k],a=ACT[b.action];
- view.innerHTML=`<div class="cover" style="${b.img?`background-image:url('${b.img}')`:'background:#efefef'}"><button class="back" data-tab="${tab}">${ic('back')}</button>${b.img?'<span class="gcred">Foto: Google Maps</span>':''}</div><div class="prof">${av(b,'big')}<h2>${b.name}</h2><div class="meta">${b.cat}${b.rev?` · <span class="star">★ ${b.rating}</span> · ${b.rev} reseñas en Google`:''}</div><span class="web">${ic('globe')} kalea.app/elgoibar/${k}</span>
- ${ONK.has(k)?'':`<div class="notk">Este negocio todavía no está en Kalea. Puedes llamar o ver cómo llegar.</div>`}<div class="acts">${ONK.has(k)?`<button class="cta" data-act="${k}">${ic(a[1])} ${t(a[0])}</button>`:b.phone?`<a class="cta" href="${tel(b)}">${ic('phone')} Llamar</a>`:`<a class="cta" href="${b.maps}" target="_blank" rel="noopener">${ic('pin')} Cómo llegar</a>`}${b.phone?`<a class="ghost" href="tel:+34${b.phone.replace(/\s/g,'')}" aria-label="Llamar">${ic('phone')}</a>`:`<span class="ghost off2">${ic('phone')}</span>`}<a class="ghost" href="${b.maps}" target="_blank" rel="noopener" aria-label="Cómo llegar">${ic('pin')}</a></div>
- <div class="tabs2"><button class="on" data-pt="info">Info</button><button data-pt="menu">${b.action==='cita'?'Servicios':'Carta'}</button></div><div id="pt"></div></div>`;
- const pt=w=>{$('#pt').innerHTML=w==='info'?`<div class="hours"><b>Dirección</b><br>${b.street}, 20870 Elgoibar<br><br>${b.phone?`<b>Teléfono</b><br><a href="tel:+34${b.phone.replace(/\s/g,'')}">${b.phone}</a><br><br>`:''}${b.web?`<b>Web</b><br><a href="${b.web}" target="_blank" rel="noopener">${b.web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,40)}</a><br><br>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Ver horario y reseñas en Google Maps</a><br><br><small class="muted">Datos públicos de Google Maps. Cuando el negocio se una a Kalea podrá editar su página, carta, horarios y fotos.</small></div>`:`<div class="note">Ejemplo de cómo se vería su ${b.action==='cita'?'lista de servicios':'carta'}</div>`+b.menu.map(m=>`<div class="menu-i"><div>${m[0]}</div><b>${m[2]}</b></div>`).join('');
-  document.querySelectorAll('[data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w))};
- document.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>pt(x.dataset.pt));pt('info');view.scrollTop=0;
+ const b=B[k],a=ACT[b.action],on=ONK.has(k),ps=POSTS.filter(p=>p.b===k),st=order.includes(k),fo=follows.has(k),bio=CAPK[k]||CAPC[b.cg],mn=b.action==='cita'?'Servicios':'Carta';
+ const tiles=[...ps.map(p=>({img:b.img,txt:p.txt,i:POSTS.indexOf(p)})),{txt:bio},...(b.menu||[]).slice(0,5).map(m=>({txt:m[0],pr:m[2]}))];
+ const nf=f=>(180+hsh(k)%1400+(f?1:0)).toLocaleString('es-ES');
+ const main=on?`<button data-act="${k}">${ic(a[1])} ${t(a[0])}</button>`:b.phone?`<a href="${tel(b)}">${ic('phone')} Llamar</a>`:`<a href="${b.maps}" target="_blank" rel="noopener">${ic('pin')} Cómo llegar</a>`;
+ const avh=st?`<button class="bpav ${seenS.has(k)?'seen':''}" data-story="${k}" aria-label="Ver historia">${av(b,'bpimg')}</button>`:`<div class="bpav none">${av(b,'bpimg')}</div>`;
+ const hl=[['menu','book',mn],['maps','clock','Horario'],['maps','pin','Ubicación'],['maps','star','Reseñas']];
+ view.innerHTML=`<div class="bptop"><button class="ib" data-tab="${tab}" aria-label="Volver">${ic('back')}</button><b>${esc(b.short||b.name)}${on?VER:''}</b><button class="ib" data-share="${k}" aria-label="Compartir">${ic('send')}</button></div>
+ <div class="bph">${avh}<div class="bpst"><div><b>${tiles.length}</b><small>publicaciones</small></div><div><b id="bpfn">${nf(fo)}</b><small>seguidores</small></div><div><b>${b.rating?'★ '+b.rating:'Nuevo'}</b><small>${b.rev?b.rev+(b.rev==1?' reseña':' reseñas'):'en Kalea'}</small></div></div></div>
+ <div class="bpi"><h1>${esc(b.name)}</h1><div class="cat">${esc(b.cat)} · ${esc(b.street)}</div><p>${esc(bio)} <span class="ej">Ejemplo</span></p><span class="lnk">${ic('globe')} kalea.app/elgoibar/${k}</span>${on?'':`<div class="notk">Este negocio todavía no está en Kalea. Puedes llamar o ver cómo llegar.</div>`}</div>
+ <div class="bpb"><button class="pri ${fo?'on':''}" id="bpf">${fo?'Siguiendo':'Seguir'}</button>${b.phone?`<a href="${tel(b)}">Llamar</a>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Cómo llegar</a></div>
+ <div class="bphl">${hl.map(h=>h[0]==='menu'?`<button data-pt="menu"><i><span>${ic(h[1])}</span></i>${h[2]}</button>`:`<a href="${b.maps}" target="_blank" rel="noopener"><i><span>${ic(h[1])}</span></i>${h[2]}</a>`).join('')}</div>
+ <div class="bptabs"><button class="on" data-pt="grid" aria-label="Publicaciones">${ic('grid')}</button><button data-pt="info" aria-label="Información">${ic('info')}</button><button data-pt="menu" aria-label="${mn}">${ic('book')}</button></div><div id="pt"></div>
+ <div class="pcta">${main}</div>`;
+ const pt=w=>{const el=$('#pt');
+  if(w==='grid')el.innerHTML=`<div class="bpgrid">${tiles.map(x=>x.img&&x.i!=null?`<button class="gt" data-gpost="${x.i}"><img src="${x.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('tx');this.remove()"><span>${esc(x.txt)}</span></button>`:`<div class="gt tx"><span>${esc(x.txt)}${x.pr?`<b>${esc(x.pr)}</b>`:''}</span></div>`).join('')}</div>`;
+  else el.innerHTML=w==='info'?`<div class="hours"><b>Dirección</b><br>${b.street}, 20870 Elgoibar<br><br>${b.phone?`<b>Teléfono</b><br><a href="tel:+34${b.phone.replace(/\s/g,'')}">${b.phone}</a><br><br>`:''}${b.web?`<b>Web</b><br><a href="${b.web}" target="_blank" rel="noopener">${b.web.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'').slice(0,40)}</a><br><br>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Ver horario y reseñas en Google Maps</a><br><br><small class="muted">Datos públicos de Google Maps. Cuando el negocio se una a Kalea podrá editar su página, carta, horarios y fotos.</small></div>`:`<div class="note">Ejemplo de cómo se vería su ${b.action==='cita'?'lista de servicios':'carta'}</div>`+b.menu.map(m=>`<div class="menu-i"><div>${m[0]}</div><b>${m[2]}</b></div>`).join('');
+  document.querySelectorAll('.bptabs [data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w));
+  el.querySelectorAll('[data-gpost]').forEach(x=>x.onclick=()=>openSheet(`<div class="gpsheet">${post(POSTS[+x.dataset.gpost])}</div>`))};
+ view.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{pt(x.dataset.pt);if(x.closest('.bphl')){const tb=$('.bptabs');if(tb)tb.scrollIntoView({behavior:'smooth',block:'start'})}});
+ $('#bpf').onclick=()=>need('Para seguir a '+b.name,()=>{follows.has(k)?follows.delete(k):follows.add(k);try{localStorage.setItem('kalea_follow',JSON.stringify([...follows]))}catch(e){}const f=follows.has(k),btn=$('#bpf');if(btn){btn.classList.toggle('on',f);btn.textContent=f?'Siguiendo':'Seguir';$('#bpfn').textContent=nf(f)}toast(f?'Sigues a '+b.name:'Has dejado de seguir a '+b.name)});
+ pt('grid');view.scrollTop=0;
 }
 
 function pointsV(){
@@ -359,10 +375,10 @@ function hookPub(){const pq=$('#pq');if(pq){pq.oninput=()=>{clearTimeout(pqT);pq
 function walletMini(){const p=user?points:0;return `<button class="wmini" data-tab="points"><div><small>Puntos Kalea</small><b>${p.toLocaleString('es-ES')}</b><span>${user?`= ${(p/100).toFixed(2).replace('.',',')} € para gastar en Elgoibar`:'Entra para empezar a sumar'}</span></div><span class="wgo">Ver ›</span></button>`}
 let alerts={flash:true,job:true,plan:true,ask:true};try{Object.assign(alerts,JSON.parse(localStorage.getItem('kalea_alerts')||'{}'))}catch(e){}
 function me(){
- if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
+ if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="lang"><button class="${lang==='es'?'on':''}" data-lang="es">ES</button><button class="${lang==='eu'?'on':''}" data-lang="eu">EU</button></div></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
- ${walletMini()}
+ ${walletMini()}${instRow()}
  <div class="sec"><h3>Próximas</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Txarriduna · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
  <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>El Jose Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
@@ -477,10 +493,15 @@ function showStory(){
  s.querySelector('.bars i.run').addEventListener('animationend',nextStory);
  $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};
  [['#stl',prevStory],['#str',nextStory]].forEach(([sel,fn])=>{const el=$(sel);let t0=0;
-  el.onpointerdown=e=>{t0=Date.now();s.classList.add('paused')};
-  el.onpointerup=e=>{s.classList.remove('paused');if(Date.now()-t0<250)fn()};
+  el.onpointerdown=e=>{t0=Date.now();window._stMv=false;s.classList.add('paused')};
+  el.onpointerup=e=>{s.classList.remove('paused');if(Date.now()-t0<250&&!window._stMv)fn()};
   el.onpointerleave=()=>s.classList.remove('paused')});
 }
+(()=>{const s=$('#story');if(!s)return;let x0=0,y0=0;
+ s.addEventListener('touchstart',e=>{const t=e.touches[0];x0=t.clientX;y0=t.clientY;window._stMv=false},{passive:true});
+ s.addEventListener('touchmove',e=>{const t=e.touches[0],dx=t.clientX-x0,dy=t.clientY-y0;if(Math.abs(dx)>10||Math.abs(dy)>10)window._stMv=true;if(dy>10&&dy>Math.abs(dx)){s.classList.add('drag','paused');s.style.transform=`translateY(${dy}px) scale(${Math.max(.85,1-dy/1500)})`;s.style.borderRadius='18px'}},{passive:true});
+ s.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;s.classList.remove('drag');s.style.transform='';s.style.borderRadius='';s.classList.remove('paused');if(!window._stMv)return;if(dy>110&&dy>Math.abs(dx))closeStory();else if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy))(dx<0?nextStory:prevStory)()},{passive:true});
+})();
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
@@ -534,3 +555,11 @@ render();
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
 })();
+
+let _bip=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();_bip=e});
+addEventListener('appinstalled',()=>{_bip=null;toast('Kalea instalada en tu móvil')});
+function instRow(){if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return '';return `<button class="inst" data-inst="1"><div class="ic">${ic('dl')}</div><div class="t"><b>Instalar Kalea</b><small>Ábrela desde tu pantalla de inicio, como una app</small></div><span class="v">›</span></button>`}
+document.addEventListener('click',e=>{if(!e.target.closest('[data-inst]'))return;
+ if(_bip){_bip.prompt();_bip.userChoice.finally(()=>{_bip=null})}
+ else{const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);openSheet(`<h3>Instalar Kalea</h3><div class="isteps">${ios?'<p><b>1.</b> Toca el botón Compartir de Safari (el cuadrado con la flecha).</p><p><b>2.</b> Elige «Añadir a pantalla de inicio».</p><p><b>3.</b> Toca «Añadir».</p>':'<p><b>1.</b> Abre el menú del navegador (los tres puntos).</p><p><b>2.</b> Toca «Instalar aplicación» o «Añadir a pantalla de inicio».</p><p><b>3.</b> Confirma y tendrás Kalea con su icono.</p>'}</div>`)}});
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
