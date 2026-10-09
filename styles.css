@@ -662,3 +662,6 @@ button:active,.chip:active,.cta:active{opacity:1}
 .nlist a:active{background:#fafafa}
 /* foco y selección */
 ::selection{background:#cfe6ff}
+/* Preguntas: texto plano, coherente con el resto de publicaciones */
+.qpost .qtext:not(.jtext){background:none;border:0;border-radius:0;padding:4px 16px 0;margin:0;font-size:16px;font-weight:600;line-height:1.4;letter-spacing:-.1px;color:#262626}
+.qpost .qai{margin-top:12px}
