@@ -278,3 +278,12 @@ html.dark .guest .ava{color:#f5f5f5}
 html.dark .tsec h3 svg{color:#f5f5f5}
 html.dark .evmeta svg{color:#f5f5f5}
 html.dark .aih svg{color:#f5f5f5}
+/* Pregunta, respuesta IA y empleo en oscuro: tonos neutros */
+html.dark .qpost .qtext{background:#121212;color:#f5f5f5;border:1px solid #262626}
+html.dark .aians{background:#121212;border:1px solid #262626}
+html.dark .aians *{border-color:#262626!important}
+html.dark .aians p{color:#e0e0e0}
+html.dark .aians .ic,html.dark .aians .li .ic{background:#262626;color:#e0e0e0}
+html.dark .aians small{color:#a8a8a8}
+html.dark .jtext{background:#121212;border:1px solid #262626;color:#f5f5f5}
+html.dark .jtext small{color:#4ade80}
