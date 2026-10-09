@@ -768,3 +768,5 @@ button:active,.chip:active,.cta:active{opacity:1}
 .inst .ic{width:38px;height:38px;border-radius:50%;background:#eef7ff;color:var(--blue);display:grid;place-items:center}.inst .ic svg{width:20px;height:20px}
 .inst .t{flex:1}.inst b{display:block;font-size:14.5px}.inst small{color:var(--muted);font-size:13px}.inst .v{color:var(--muted);font-size:20px}
 .isteps p{margin:10px 0;font-size:15px;line-height:1.45}
+
+#pt{padding-bottom:76px}
