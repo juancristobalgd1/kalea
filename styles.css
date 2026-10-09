@@ -704,3 +704,11 @@ button:active,.chip:active,.cta:active{opacity:1}
 #view .cprev p{padding:0!important;margin:3px 0!important;min-height:0;font-size:14px;line-height:1.4}
 #view .cprev .vcom{padding:2px 0 2px!important;margin:0!important}
 #view .cadd{padding:8px 0 2px!important}
+
+/* Pulido 3 */
+.ag{display:flex;flex-direction:column}.ag .im{flex:0 0 132px}
+.ag .bd b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.biz .mini{min-width:88px;text-align:center;box-sizing:border-box}
+.biz small .onk{margin-right:4px}
+.qcard{margin:0;border:0;border-radius:0;padding:16px;border-bottom:1px solid #efefef}
+.qcard.mineq{margin:0 16px 14px;border:1px solid #dbdbdb;border-radius:14px}

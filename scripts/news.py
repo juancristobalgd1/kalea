@@ -28,6 +28,8 @@ for src,u in FEEDS:
         except Exception: ts=0
         txt=clean(desc); low=(title+' '+txt).lower()
         out.append({'t':title,'u':link,'s':src,'ts':ts,'img':img,'d':txt[:220],'local':any(w in low for w in LOCAL)})
+BAD=re.compile(r'violad|asesin|apuñal|homicid|cad[aá]ver|fallec|muere|muerto|suicid|agresi[oó]n sexual|abuso|pederast|detenid|tiroteo',re.I)
+out=[x for x in out if not BAD.search(x['t']+' '+x['d'])]
 out.sort(key=lambda x:(x['local'],x['ts']),reverse=True)
 json.dump({'items':out[:40]},open('news.json','w'),ensure_ascii=False)
 print('news',len(out),'local',sum(x['local'] for x in out))
