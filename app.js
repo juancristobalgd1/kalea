@@ -373,7 +373,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0}
+function render(){nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on');$('#scrim').classList.remove('on')}

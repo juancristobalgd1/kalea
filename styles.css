@@ -566,3 +566,78 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 #view{scroll-behavior:smooth}
 .toast{border-radius:10px;background:#262626;color:#fff;font-weight:500}
 @media(min-width:520px){body.app{background:#fafafa}.app .device{background:#fff;border-left:1px solid var(--line);border-right:1px solid var(--line)}}
+/* ===== Diseño senior: espaciado, tipografía, movimiento ===== */
+:root{--ease:cubic-bezier(.2,.9,.25,1);--sp:20px}
+body,button,input,textarea{font-feature-settings:"ss01","cv11";text-rendering:optimizeLegibility}
+/* separación entre publicaciones */
+#view .post{margin:0;padding-bottom:18px;border-bottom:1px solid #efefef}
+#view .post+.post,#view .post+.sec,#view .sec+.post,#view .post+.townc,#view .townc+.post,#view .flash+.post,#view .plans+.post,#view .post+.nlist{margin-top:14px}
+#view .post .ph{padding-top:14px}
+.ptime{padding-bottom:4px}
+.post .evbody,.post .qtext,.post .jtext{margin-top:2px}
+/* cabeceras de sección */
+.sec{padding:30px 16px 14px}
+.sec h3{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.sec a{font-size:14px;font-weight:600}
+/* barra superior fija con desenfoque */
+#view>.top{position:sticky;top:0;z-index:5;background:rgba(255,255,255,.88);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px);padding:10px 16px 8px}
+.wm{font-size:27px;letter-spacing:-1.1px}
+.demobar{margin:6px 16px 14px;font-size:12.5px;padding:9px 12px;border-radius:12px;background:#f7f7f7;border:0}
+/* historias */
+.stories{gap:16px;padding:4px 16px 18px}
+.st{width:70px;transition:transform .2s var(--ease)}
+.ring{width:68px;height:68px;padding:2.5px}
+.st span{font-size:12px;letter-spacing:-.1px;margin-top:2px}
+/* huecos de última hora: tarjetas más altas */
+.flash{gap:12px;padding:0 16px 6px;scroll-snap-type:x mandatory}
+.fc{width:252px;border-radius:16px;scroll-snap-align:start;transition:transform .2s var(--ease)}
+.fc .im{height:188px}
+.fc .im:after{content:'';position:absolute;inset:auto 0 0 0;height:55%;background:linear-gradient(transparent,rgba(0,0,0,.45))}
+.fc .off{top:12px;left:12px;background:#ff3040;font-size:13px;font-weight:700;padding:5px 10px;border-radius:8px;z-index:1}
+.fc .left{bottom:12px;right:auto;left:12px;font-size:12.5px;font-weight:600;background:rgba(255,255,255,.95);color:#262626;padding:5px 10px;border-radius:8px;z-index:1}
+.fc .ejf{z-index:1}
+.fc .bd{padding:12px 14px 14px}
+.fc b{font-size:15px;line-height:1.3;letter-spacing:-.2px}
+.fc small{display:block;margin-top:3px}
+/* agenda y planes coherentes */
+.agenda{gap:12px;padding:0 16px 6px;scroll-snap-type:x mandatory}
+.ag{flex-basis:188px;border-radius:16px;scroll-snap-align:start;transition:transform .2s var(--ease)}
+.ag .im{height:132px}
+.ag .bd{padding:11px 12px 13px}.ag b{font-size:14px;letter-spacing:-.2px}
+.plans{gap:12px;padding:0 16px 6px;scroll-snap-type:x mandatory}
+.plan{border-radius:16px;scroll-snap-align:start}
+.plan .im{height:140px}
+.townc{margin:14px 16px 4px;border-radius:16px;padding:16px}
+/* tipografía de publicaciones */
+.ph b{font-size:14px;font-weight:600;letter-spacing:-.1px}
+.post p,.post p.cap{font-size:14.5px;line-height:1.5}
+.evbody h4{font-size:18px;letter-spacing:-.3px;line-height:1.3}
+.qpost .qtext,.jtext{font-size:20px;letter-spacing:-.3px}
+/* imágenes: carga suave con brillo */
+.pimw,.fc .im,.ag .im,.plan .im{background-color:#efefef}
+.pimw{background-image:linear-gradient(100deg,#efefef 30%,#f7f7f7 50%,#efefef 70%);background-size:200% 100%;animation:shim 1.4s linear infinite}
+.pimw img{animation:none}
+@keyframes shim{to{background-position:-200% 0}}
+/* microinteracciones */
+button:active,.chip:active,.cta:active{opacity:1}
+.fc:active,.ag:active,.plan:active,.biz:active,.st:active,.pub button:active,.notr:active{transform:scale(.97)}
+.cta,.big-cta,.shopbar,.chip,.ib2{transition:transform .15s var(--ease),background-color .2s,opacity .2s}
+.cta:active,.big-cta:active,.ib2:active{transform:scale(.92)}
+.shopbar:active{background:#f0f0f0}
+.tab svg,.plus svg{transition:transform .25s var(--ease)}
+.tab:active svg,.plus:active svg{transform:scale(.85)}
+.tab.on svg{animation:tabpop .35s var(--ease)}
+@keyframes tabpop{0%{transform:scale(.8)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+/* transición entre pantallas */
+#view.vin>*{animation:vin .32s var(--ease) both}
+#view.vin>*:nth-child(2){animation-delay:.03s}#view.vin>*:nth-child(3){animation-delay:.06s}#view.vin>*:nth-child(4){animation-delay:.09s}#view.vin>*:nth-child(n+5){animation-delay:.12s}
+@keyframes vin{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+#view.vin>.top{animation:none}
+/* hojas y avisos */
+.sheet{transition:transform .42s var(--ease);border-radius:20px 20px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom))}
+.scrim{transition:opacity .3s}
+.toast{transition:transform .35s var(--ease),opacity .25s;border-radius:12px;padding:13px 16px;box-shadow:0 8px 28px rgba(0,0,0,.18)}
+/* barra inferior */
+.tabbar{height:calc(56px + env(safe-area-inset-bottom));padding-bottom:env(safe-area-inset-bottom);background:rgba(255,255,255,.94);backdrop-filter:saturate(180%) blur(18px);-webkit-backdrop-filter:saturate(180%) blur(18px)}
+.tab svg{width:26px;height:26px}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
