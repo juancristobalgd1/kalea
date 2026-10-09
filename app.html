@@ -7,7 +7,7 @@
 <title>Kalea · Elgoibar</title>
 <meta name="description" content="Kalea: la red social local de Elgoibar. Historias de los negocios, reservas, citas, pedidos a domicilio, huecos de última hora y puntos del pueblo.">
 <meta name="theme-color" content="#ffffff">
-<script>try{var t=localStorage.getItem('kalea_theme')||'light';if(t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
+<script>try{var q=new URLSearchParams(location.search);if(q.get('tema'))localStorage.setItem('kalea_theme',q.get('tema'));if(q.get('idioma'))localStorage.setItem('kalea_lang',q.get('idioma'));var t=localStorage.getItem('kalea_theme')||'light';if(t==='dark'||(t==='auto'&&matchMedia('(prefers-color-scheme: dark)').matches))document.documentElement.classList.add('dark')}catch(e){}</script>
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-180.png">
 <link rel="icon" href="icons/icon-192.png">
@@ -16,8 +16,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
-<link rel="stylesheet" href="styles.css?v=44">
-<link rel="stylesheet" href="dark.css?v=44">
+<link rel="stylesheet" href="styles.css?v=45">
+<link rel="stylesheet" href="dark.css?v=45">
 </head>
 <body class="app">
 <div class="stage">
@@ -34,6 +34,6 @@
 </div>
 <script src="config.js?v=19"></script>
 <script src="places.js?v=21"></script>
-<script src="app.js?v=44"></script>
+<script src="app.js?v=45"></script>
 </body>
 </html>

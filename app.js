@@ -100,7 +100,7 @@ const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag'
 
 const $=s=>document.querySelector(s);
 const view=$('#view');
-let tab='home',liked=new Set(),cat='Todos',points=1240;
+let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'}catch(e){return 'home'}})(),liked=new Set(),cat='Todos',points=1240;
 
 function nav(){
  const tabs=[['home','home'],['explore','search'],['plus','plus'],['ask','chat'],['profile','user']];
