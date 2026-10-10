@@ -539,7 +539,7 @@ document.addEventListener('click',e=>{
  else if(d.scope){scope=d.scope;home()}
  else if(d.ics)ics(d.ics);
  else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
- else if(d.tab){try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}if(d.tab===tab&&!d.wt&&!d.pt2&&!$('.bptop')&&!$('#sheet').classList.contains('on')&&view.scrollTop>0){view.scrollTo({top:0,behavior:'smooth'});return}closeSheet();if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render()}
+ else if(d.tab){try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}if(d.tab===tab&&!d.wt&&!d.pt2&&!$('.bptop')&&!$('#sheet').classList.contains('on')&&view.scrollTop>0){view.scrollTo({top:0,behavior:'smooth'});bounceTab(d.tab);return}closeSheet();if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render();bounceTab(d.tab)}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
  else if(d.like){const k=d.like;need('Para dar me gusta',()=>setLike(k,!liked.has(k)))}
@@ -637,7 +637,19 @@ function appearV(noPush){
  <div class="thp">${['light','dark','auto'].map(k=>`<button class="thc ${c===k?'on':''}" data-th="${k}">${mock(k)}<span class="thl">${THN[k]}</span><span class="rad"></span></button>`).join('')}</div>
  <p class="thn">En Automático, Kalea usa el mismo modo que tu móvil.</p>`;
  setBack();
- document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{try{localStorage.setItem('kalea_theme',b.dataset.th)}catch(e){}applyTheme(1);try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('on',x===b))});
+ document.querySelectorAll('[data-th]').forEach(b=>b.onclick=(ev)=>{try{localStorage.setItem('kalea_theme',b.dataset.th)}catch(e){}themeReveal(ev.clientX,ev.clientY);try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('on',x===b))});
  if(!noPush&&location.hash!=='#apariencia')history.pushState({s:1},'','#apariencia');view.scrollTop=0;
 }
+
+// ---------- Microinteracciones 4 ----------
+function bounceTab(k){setTimeout(()=>{const b=document.querySelector(`#tabbar [data-tab="${k}"]`);if(!b)return;b.classList.remove('bnc');void b.offsetWidth;b.classList.add('bnc')},0)}
+function themeReveal(x,y){const h=document.documentElement;
+ if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches){applyTheme(1);return}
+ const vt=document.startViewTransition(()=>applyTheme(0));
+ vt.ready.then(()=>{const r=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));h.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${r}px at ${x}px ${y}px)`]},{duration:520,easing:'cubic-bezier(.2,.9,.25,1)',pseudoElement:'::view-transition-new(root)'})}).catch(()=>{})}
+// historias: se abren desde el avatar tocado
+document.addEventListener('pointerdown',e=>{const a=e.target.closest&&e.target.closest('[data-story]');if(a){const r=a.getBoundingClientRect();window._stO={x:r.left+r.width/2,y:r.top+r.height/2}}else window._stO=null},true);
+const _story0=story;story=function(k){_story0(k);const st=document.querySelector('.story');const o=window._stO;if(!st||!o)return;const pr=(st.parentElement||document.body).getBoundingClientRect();st.style.transformOrigin=`${o.x-pr.left}px ${o.y-pr.top}px`;st.classList.remove('zin');void st.offsetWidth;st.classList.add('zin');setTimeout(()=>{st.classList.remove('zin');st.style.transformOrigin=''},380);window._stO=null};
+// la barra de arriba se esconde al bajar y vuelve al subir
+let _ly=0;view.addEventListener('scroll',()=>{const tp=view.querySelector(':scope>.top');const y=view.scrollTop,dy=y-_ly;_ly=y;if(!tp)return;if(tab!=='home'||y<90){tp.classList.remove('hid');return}if(dy>6)tp.classList.add('hid');else if(dy<-6)tp.classList.remove('hid')},{passive:true});
 })();

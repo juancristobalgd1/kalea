@@ -850,3 +850,18 @@ html.dark .tgl{background:#363636}html.dark .sopt{color:#f5f5f5;border-bottom-co
 html.dark .thc{color:#f5f5f5}html.dark .mk-light{border-color:#363636}
 .mk-auto{background:linear-gradient(90deg,#fff 50%,#000 50%)}.mk-auto i{background:rgba(128,128,128,.32)}
 html.dark .on>.rad{border-color:#0095f6}
+
+/* Microinteracciones 4 */
+#tabbar button.bnc svg{animation:tbn .42s var(--ease)}
+@keyframes tbn{0%{transform:scale(1)}35%{transform:scale(.78)}70%{transform:scale(1.14)}100%{transform:scale(1)}}
+::view-transition-old(root),::view-transition-new(root){animation:none;mix-blend-mode:normal}
+::view-transition-old(root){z-index:1}::view-transition-new(root){z-index:2}
+.story.on.zin{animation:stzoom .34s var(--ease)}
+@keyframes stzoom{from{transform:scale(.14);opacity:.4;border-radius:50%}to{transform:none;opacity:1;border-radius:0}}
+[data-story] .ring{transition:transform .14s var(--ease)}[data-story]:active .ring{transform:scale(.9)}
+#view>.top{transition:transform .28s var(--ease),background .2s}#view>.top.hid{transform:translateY(-110%)}
+.fc,.ag,.srow,.thc,.bpb button,.gbtn,.pcta button,.wmini,.inst,.li,.bphl button,.cta,.walert,.sopt{transition:transform .14s var(--ease),background-color .2s,opacity .2s}
+.fc:active,.ag:active,.wmini:active,.inst:active,.li:active{transform:scale(.975)}
+.bpb button:active,.gbtn:active,.pcta button:active,.cta:active,.walert:active,.bphl button:active{transform:scale(.95)}
+.srow:active,.sopt:active{transform:scale(.99)}
+@media (prefers-reduced-motion:reduce){#tabbar button.bnc svg,.story.on.zin{animation:none}}
