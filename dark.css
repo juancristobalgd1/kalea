@@ -290,3 +290,9 @@ html.dark .jtext small{color:#4ade80}
 html.dark .qpost .qtext{background:transparent;border:0;padding:6px 16px 2px;font-size:18px}
 html.dark .post a,html.dark .post a:visited{color:#4cb5f9}
 html.dark .post a.cta,html.dark .post a.cta:visited{color:#fff}
+
+/* Liga de kuadrillas en oscuro */
+html.dark .lgban,html.dark .kcard,html.dark .kbsel{background:#121212;border-color:#363636}
+html.dark .kme{background:#0b2236}html.dark .kst b,html.dark .kinv{color:#f5f5f5}
+html.dark .kinv,html.dark .kav,html.dark .lgbi,html.dark .kstep .ib{border-color:#363636}
+html.dark .kbsel.on{background:#0095f6;border-color:#0095f6;color:#fff}html.dark .lgc,html.dark .kpos b,html.dark .kn.top,html.dark .kprev b{color:#4cb5f9}

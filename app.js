@@ -104,7 +104,7 @@ let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'
 
 function nav(){
  const tabs=[['home','home'],['explore','search'],['plus','plus'],['ask','chat'],['profile','user']];
- $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
+ $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')||(k==='home'&&tab==='liga')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
 function topBar(){return `<div class="top"><div class="brand"><span class="wm">Kalea</span><span class="bloc">${ic('pin')} Elgoibar</span></div><div class="icons"><button class="ib" data-notif="1" aria-label="Avisos">${ic('bell')}${notifRead?'':'<i class="dot"></i>'}</button></div></div>`}
 function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this,'stfb','${B[k].cg}')"></div><span>${B[k].short}</span></button>`).join('')}</div>`}
@@ -248,7 +248,7 @@ function demoBar(){return `<div class="demobar">Versión de prueba. Los negocios
 function notifSheet(){notifRead=true;const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z)))[0];const p=PLANS[1];
  const it=[[ 'bolt',`${B[FLASH[0].b].name}: ${FLASH[0].txt}`,'Hueco de última hora · ejemplo',`data-flash="0"`],lb?['bag',`Nueva oferta en ${cap(lb.municipio)}: ${cap(lb.desEmpleo)}`,'Lanbide',`data-tab="work" data-wt="of"`]:null,['user',`${p.title}: faltan ${Math.max(0,p.min-p.now)} para que se haga`,'Plan en grupo · ejemplo',`data-tab="home"`],['chat','Ane ha recibido 2 respuestas en su pregunta','Pregunta al pueblo · ejemplo',`data-tab="ask"`]].filter(Boolean);
  openSheet(`<h3>Avisos</h3><div class="nots">${it.map(x=>`<button class="notr" ${x[3]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div></button>`).join('')}</div><button class="big-cta ghostcta" data-tab="profile">Elegir qué avisos recibo</button>`);if(tab==='home')refreshHome()}
-function home(){view.innerHTML=topBar()+stories()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function home(){view.innerHTML=topBar()+stories()+ligaBanner()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Automático</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
@@ -381,7 +381,7 @@ function me(){
  if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
  view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
- ${walletMini()}${instRow()}
+ ${walletMini()}${ligaBanner()}${instRow()}
  <div class="sec"><h3>Próximas</h3></div><div class="list">
  <div class="li"><div class="ic">${ic('cal')}</div><div class="t"><b>Txarriduna · mesa para 4</b><small>Sábado a las 21:30</small></div></div>
  <div class="li"><div class="ic">${ic('scis')}</div><div class="t"><b>El Jose Barber · corte y barba</b><small>Martes a las 17:30</small></div></div>
@@ -393,7 +393,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
+function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV,liga:ligaV}[tab])();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on')}
@@ -603,6 +603,55 @@ function segInd(){document.querySelectorAll('.seg').forEach(g=>{const b0=g.query
 function countUp(){document.querySelectorAll('.wmini b').forEach(el=>{if(el._cu)return;el._cu=1;const to=parseInt(el.textContent.replace(/\D/g,''))||0;if(to<10||matchMedia('(prefers-reduced-motion: reduce)').matches)return;const t0=performance.now(),d=750;const f=t=>{const k=Math.min(1,(t-t0)/d),e=1-Math.pow(1-k,3);el.textContent=Math.round(to*e).toLocaleString('es-ES');if(k<1)requestAnimationFrame(f)};el.textContent='0';requestAnimationFrame(f)})}
 let _mq=0;const _mo=()=>{if(_mq)return;_mq=requestAnimationFrame(()=>{_mq=0;segInd();countUp()})};
 new MutationObserver(_mo).observe(view,{childList:true,subtree:true});new MutationObserver(_mo).observe($('#sheet'),{childList:true,subtree:true});_mo();
+
+
+// ---------- Liga de kuadrillas ----------
+const LIGA=[{id:'azken',n:'Azken Txanda',m:8,pts:412,tr:2},{id:'txori',n:'Txoriburuak',m:12,pts:388,tr:-1},{id:'gaztelu',n:'Gaztelu Taldea',m:6,pts:351,tr:1},{id:'mus',n:'Mus eta Gehiago',m:5,pts:297,tr:0},{id:'sanba',n:'Sanbartolo',m:10,pts:264,tr:-2},{id:'lonja',n:'La Lonja 22',m:7,pts:231,tr:3},{id:'kale',n:'Kale Nagusia',m:9,pts:186,tr:0}];
+const KNAMES=['Ane','Mikel','Iker','Leire','Unai','Nerea','Jon','Maialen','Aitor','Irati','Julen','Amaia','Gorka','Ainhoa','Eneko','Uxue','Asier','Olatz','Xabi','June'];
+let kua=null;try{kua=JSON.parse(localStorage.getItem('kalea_kua')||'null')}catch(e){}
+const kSave=()=>{try{localStorage.setItem('kalea_kua',JSON.stringify(kua))}catch(e){}};
+const kPts=(n,m,nuevo)=>Math.round(n*(n/m)*10*(nuevo?1.5:1));
+const kBars=()=>Object.keys(B).filter(k=>['bar','rest','cafe'].includes(B[k].cg)).slice(0,10);
+function kRank(){const all=LIGA.map(x=>({...x}));if(kua)all.push({id:'me',n:kua.n,m:kua.m,pts:kua.pts,tr:kua.tr||0,me:1});return all.sort((a,b)=>b.pts-a.pts)}
+function ligaBanner(){const r=kRank(),p=kua?r.findIndex(x=>x.me)+1:0;
+ return `<button class="lgban" data-tab="liga"><span class="lgi">${ic('star')}</span><span class="lgt"><b>Liga de kuadrillas</b><small>${kua?`${esc(kua.n)} va ${p}ª con ${kua.pts} puntos`:`${r.length} kuadrillas compiten esta temporada`}</small></span><span class="lgc">${kua?'Ver':'Unirse'} ›</span></button>`}
+function kAvs(){if(!kua)return '';let h='';for(let i=0;i<kua.m;i++){const on=i<kua.app;h+=`<span class="kav ${on?'on':''}" title="${on?KNAMES[i%20]:'Aún no está en Kalea'}">${on?KNAMES[i%20][0]:'+'}</span>`}return h}
+function ligaV(){
+ const r=kRank(),me=r.findIndex(x=>x.me),bars=kBars(),falt=kua?kua.m-kua.app:0;
+ view.innerHTML=`<div class="bptop"><button class="ib" data-tab="home" aria-label="Volver">${ic('back')}</button><b>Liga de kuadrillas</b><button class="ib" data-lg="how" aria-label="Cómo funciona">${ic('help')}</button></div>
+ <div class="lghero"><small>Temporada de otoño · termina el 30 de noviembre</small><b>La kuadrilla que más sale por Elgoibar se lleva una cena para todos</b><span class="ejl">Ejemplo</span></div>
+ ${kua?`<div class="kcard"><div class="kh"><div><small>Tu kuadrilla</small><b>${esc(kua.n)}</b></div><div class="kpos"><b>${me+1}ª</b><small>${kua.pts} pts</small></div></div>
+ <div class="kavs">${kAvs()}</div><p class="kst">${falt?`Tenéis <b>${kua.app} de ${kua.m}</b> en Kalea. Cada uno que falta son puntos que no sumáis.`:'Estáis todos en Kalea. Así cada visita vale el máximo.'}</p>
+ <button class="cta wide" data-lg="scan">${ic('qr')} Escanear el QR del bar</button>${falt?`<button class="kinv" data-lg="inv">Invitar a los ${falt} que faltan</button>`:''}</div>`
+ :`<div class="kcard knew"><b>Crea tu kuadrilla</b><p>Juntaos en Kalea, id a los bares del pueblo y escanead el QR en la barra. Cuantos más vayáis, más puntos.</p><button class="cta wide" data-lg="new">Crear kuadrilla</button></div>`}
+ <div class="sec"><h3>Clasificación</h3><small class="aisub">Esta semana</small></div>
+ <div class="list lgrank">${r.map((x,i)=>`<div class="li ${x.me?'kme':''}"><span class="kn ${i<3?'top':''}">${i+1}</span><div class="t"><b>${esc(x.n)}</b><small>${x.m} personas</small></div><span class="ktr ${x.tr>0?'up':x.tr<0?'dn':''}">${x.tr>0?'▲'+x.tr:x.tr<0?'▼'+(-x.tr):'='}</span><span class="v">${x.pts}</span></div>`).join('')}</div>
+ ${kua&&kua.vis&&kua.vis.length?`<div class="sec"><h3>Vuestras visitas</h3></div><div class="list">${kua.vis.slice(0,6).map(v=>`<div class="li"><div class="ic">${ic('pin')}</div><div class="t"><b>${esc(B[v.b]?B[v.b].short||B[v.b].name:v.b)}</b><small>${v.n} de ${kua.m} · ${ago(v.ts)}${v.nu?' · sitio nuevo':''}</small></div><span class="v">+${v.p}</span></div>`).join('')}</div>`:''}
+ <div class="sec"><h3>Cómo se puntúa</h3></div><div class="list">
+ <div class="li"><div class="ic">${ic('user')}</div><div class="t"><b>Cuantos más, mejor</b><small>6 de 6 suman 60 puntos; 6 de 12 suman 30</small></div></div>
+ <div class="li"><div class="ic">${ic('pin')}</div><div class="t"><b>Sitio nuevo, +50%</b><small>Primera visita de la kuadrilla a ese local</small></div></div>
+ <div class="li"><div class="ic">${ic('qr')}</div><div class="t"><b>QR que cambia cada 30 segundos</b><small>En la pantalla del bar. Una foto no sirve</small></div></div>
+ <div class="li"><div class="ic">${ic('check')}</div><div class="t"><b>Una vez por local y día</b><small>Cada persona escanea con su móvil. Pagáis como siempre</small></div></div></div>
+ <div class="sec"><h3>Bares que participan</h3></div><div class="lgbars">${bars.map(k=>`<button class="lgb" data-biz="${k}">${av(B[k],'lgbi')}<span>${esc(B[k].short||B[k].name)}</span></button>`).join('')}</div><div style="height:24px"></div>`}
+function kNew(){need('Para crear tu kuadrilla',()=>{let m=6;
+ openSheet(`<h3>Crea tu kuadrilla</h3><div class="sub">Luego invitas al resto desde aquí</div><input class="field" id="kn" maxlength="28" placeholder="Nombre (ej.: Azken Txanda)"><div class="kstep"><span>¿Cuántos sois?</span><button class="ib" id="km-">−</button><b id="kmv">6</b><button class="ib" id="km+">+</button></div><button class="cta wide" id="kgo">Crear</button>`);
+ const up=d=>{m=Math.max(2,Math.min(20,m+d));$('#kmv').textContent=m};$('#km-').onclick=()=>up(-1);$('#km+').onclick=()=>up(1);
+ $('#kgo').onclick=()=>{const n=($('#kn').value||'').trim();if(!n){$('#kn').focus();return}kua={n,m,app:1,pts:0,tr:0,vis:[]};kSave();ligaV();okDone('Kuadrilla creada','Ahora invita a los demás: cada uno que entra suma en cada visita.')}})}
+function kScan(){const bars=kBars();let b=null,n=Math.min(kua.app,kua.m);
+ openSheet(`<h3>Escanear QR</h3><div class="kcam"><i class="kscanl"></i><span>${ic('qr')}</span></div><div class="sub">Demo: elige el bar donde estáis</div><div class="kbars">${bars.map(k=>`<button class="kbsel" data-kb="${k}">${esc(B[k].short||B[k].name)}</button>`).join('')}</div>
+ <div class="kstep"><span>¿Cuántos habéis escaneado?</span><button class="ib" id="kc-">−</button><b id="kcv">${n}</b><button class="ib" id="kc+">+</button></div><small class="kmax">Solo puntúan los que tienen Kalea (${kua.app} de ${kua.m})</small><div class="kprev" id="kpv"></div><button class="cta wide" id="ksc" disabled>Sumar puntos</button>`);
+ const pv=()=>{const nu=b&&!kua.vis.some(v=>v.b===b);$('#kpv').innerHTML=b?`${n} de ${kua.m} = <b>+${kPts(n,kua.m,nu)} puntos</b>${nu?' · sitio nuevo':''}`:'';$('#ksc').disabled=!b};
+ document.querySelectorAll('[data-kb]').forEach(x=>x.onclick=()=>{b=x.dataset.kb;document.querySelectorAll('[data-kb]').forEach(y=>y.classList.toggle('on',y===x));pv()});
+ const up=d=>{n=Math.max(1,Math.min(kua.app,n+d));$('#kcv').textContent=n;pv()};$('#kc-').onclick=()=>up(-1);$('#kc+').onclick=()=>up(1);
+ $('#ksc').onclick=()=>{const today=new Date().toDateString();if(kua.vis.some(v=>v.b===b&&new Date(v.ts*1000).toDateString()===today)){toast('Hoy ya habéis puntuado aquí');return}
+  const before=kRank().findIndex(x=>x.me),nu=!kua.vis.some(v=>v.b===b),p=kPts(n,kua.m,nu);kua.pts+=p;kua.vis.unshift({b,n,p,nu:nu?1:0,ts:Math.floor(Date.now()/1000)});const after=kRank().findIndex(x=>x.me);kua.tr=(kua.tr||0)+(before-after);kSave();ligaV();
+  okDone(after<before?`¡Subís al puesto ${after+1}!`:'Visita registrada',`${n} de ${kua.m} en ${B[b].short||B[b].name}${n<kua.m?'. Con todos habríais sumado '+kPts(kua.m,kua.m,nu):''}`,p)}}
+function kInv(){const url=location.origin+location.pathname+'?tab=liga',txt=`Únete a ${kua.n} en Kalea. Cada uno que falta son puntos que perdemos en la liga de kuadrillas de Elgoibar`;
+ if(navigator.share)navigator.share({title:'Kalea',text:txt,url}).then(()=>kJoinDemo()).catch(()=>{});else{try{navigator.clipboard.writeText(txt+' '+url)}catch(e){}toast('Enlace copiado, pásalo por el grupo');kJoinDemo()}}
+function kJoinDemo(){if(kua.app>=kua.m)return;setTimeout(()=>{kua.app++;kSave();if(tab==='liga')ligaV();toast(KNAMES[(kua.app-1)%20]+' se ha unido a '+kua.n)},2500)}
+document.addEventListener('click',e=>{const el=e.target.closest('[data-lg]');if(!el)return;e.preventDefault();e.stopPropagation();const a=el.dataset.lg;
+ if(a==='new')kNew();else if(a==='scan')need('Para escanear',kScan);else if(a==='inv')kInv();
+ else if(a==='how')openSheet(`<h3>Cómo funciona la liga</h3><div class="isteps"><p><b>1.</b> Crea tu kuadrilla e invita a los demás.</p><p><b>2.</b> Cuando vayáis a un bar o tienda del pueblo, cada uno escanea el QR de la barra.</p><p><b>3.</b> Cada visita suma según cuántos vais y qué parte de la kuadrilla sois. Un sitio nuevo da un 50% más.</p><p><b>4.</b> Al final de la temporada, la primera kuadrilla gana el premio de los bares.</p></div>`)},true);
 
 // ---------- Ajustes y apariencia ----------
 const THN={light:'Claro',dark:'Oscuro',auto:'Automático'};
