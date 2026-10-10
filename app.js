@@ -102,6 +102,14 @@ const $=s=>document.querySelector(s);
 const view=$('#view');
 let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'}catch(e){return 'home'}})(),liked=new Set(),cat='Todos',points=1240;
 
+// Datos de la liga (antes del primer render)
+const LIGA=[{id:'azken',n:'Azken Txanda',m:8,pts:412,tr:2},{id:'txori',n:'Txoriburuak',m:12,pts:388,tr:-1},{id:'gaztelu',n:'Gaztelu Taldea',m:6,pts:351,tr:1},{id:'mus',n:'Mus eta Gehiago',m:5,pts:297,tr:0},{id:'sanba',n:'Sanbartolo',m:10,pts:264,tr:-2},{id:'lonja',n:'La Lonja 22',m:7,pts:231,tr:3},{id:'kale',n:'Kale Nagusia',m:9,pts:186,tr:0}];
+const KNAMES=['Ane','Mikel','Iker','Leire','Unai','Nerea','Jon','Maialen','Aitor','Irati','Julen','Amaia','Gorka','Ainhoa','Eneko','Uxue','Asier','Olatz','Xabi','June'];
+let kua=null;try{kua=JSON.parse(localStorage.getItem('kalea_kua')||'null')}catch(e){}
+const kSave=()=>{try{localStorage.setItem('kalea_kua',JSON.stringify(kua))}catch(e){}};
+const kPts=(n,m,nuevo)=>Math.round(n*(n/m)*10*(nuevo?1.5:1));
+const kBars=()=>Object.keys(B).filter(k=>['bar','rest','cafe'].includes(B[k].cg)).slice(0,10);
+
 function nav(){
  const tabs=[['home','home'],['explore','search'],['plus','plus'],['ask','chat'],['profile','user']];
  $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')||(k==='home'&&tab==='liga')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
@@ -606,12 +614,6 @@ new MutationObserver(_mo).observe(view,{childList:true,subtree:true});new Mutati
 
 
 // ---------- Liga de kuadrillas ----------
-const LIGA=[{id:'azken',n:'Azken Txanda',m:8,pts:412,tr:2},{id:'txori',n:'Txoriburuak',m:12,pts:388,tr:-1},{id:'gaztelu',n:'Gaztelu Taldea',m:6,pts:351,tr:1},{id:'mus',n:'Mus eta Gehiago',m:5,pts:297,tr:0},{id:'sanba',n:'Sanbartolo',m:10,pts:264,tr:-2},{id:'lonja',n:'La Lonja 22',m:7,pts:231,tr:3},{id:'kale',n:'Kale Nagusia',m:9,pts:186,tr:0}];
-const KNAMES=['Ane','Mikel','Iker','Leire','Unai','Nerea','Jon','Maialen','Aitor','Irati','Julen','Amaia','Gorka','Ainhoa','Eneko','Uxue','Asier','Olatz','Xabi','June'];
-let kua=null;try{kua=JSON.parse(localStorage.getItem('kalea_kua')||'null')}catch(e){}
-const kSave=()=>{try{localStorage.setItem('kalea_kua',JSON.stringify(kua))}catch(e){}};
-const kPts=(n,m,nuevo)=>Math.round(n*(n/m)*10*(nuevo?1.5:1));
-const kBars=()=>Object.keys(B).filter(k=>['bar','rest','cafe'].includes(B[k].cg)).slice(0,10);
 function kRank(){const all=LIGA.map(x=>({...x}));if(kua)all.push({id:'me',n:kua.n,m:kua.m,pts:kua.pts,tr:kua.tr||0,me:1});return all.sort((a,b)=>b.pts-a.pts)}
 function ligaBanner(){const r=kRank(),p=kua?r.findIndex(x=>x.me)+1:0;
  return `<button class="lgban" data-tab="liga"><span class="lgi">${ic('star')}</span><span class="lgt"><b>Liga de kuadrillas</b><small>${kua?`${esc(kua.n)} va ${p}ª con ${kua.pts} puntos`:`${r.length} kuadrillas compiten esta temporada`}</small></span><span class="lgc">${kua?'Ver':'Unirse'} ›</span></button>`}
