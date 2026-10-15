@@ -254,6 +254,8 @@ function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa e
 function notiRow(x){return `<button class="nrow" ${x[4]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div><small class="nt">${x[3]}</small></button>`}
 function noti(){
  notifRead=true;
+ try{return _noti()}catch(e){return "<div style='padding:20px;font-size:12px'>ERR noti: "+e.message+"</div>"}}
+function _noti(){
  const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z)))[0];const p=PLANS[1];
  const av=NEWS.find(n=>n.kind==='Aviso');
  const it=[
