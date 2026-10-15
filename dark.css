@@ -291,3 +291,7 @@ html.dark .qpost .qtext{background:transparent;border:0;padding:6px 16px 2px;fon
 html.dark .post a,html.dark .post a:visited{color:#4cb5f9}
 html.dark .post a.cta,html.dark .post a.cta:visited{color:#fff}
 
+
+html.dark .gcard{background:#121212;border-color:#262626}
+html.dark .gcard>small,html.dark .gsrc{color:#a8a8a8}
+html.dark .gcard .gpr,html.dark .gcard .gdir{color:#4d9ff7}

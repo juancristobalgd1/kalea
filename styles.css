@@ -866,3 +866,15 @@ html.dark .on>.rad{border-color:#0095f6}
 .srow:active,.sopt:active{transform:scale(.99)}
 @media (prefers-reduced-motion:reduce){#tabbar button.bnc svg,.story.on.zin{animation:none}}
 
+
+/* Gasolineras */
+.gchips{display:flex;gap:8px;flex-wrap:wrap;align-items:center;padding:4px 14px 2px}
+.gchips .gsep{flex:1}
+.gsrc{padding:8px 14px 10px;font-size:11px;color:#8e8e8e}
+.gasl{display:flex;flex-direction:column;gap:10px;padding:0 14px 30px}
+.gcard{display:block;background:#fff;border:1px solid #dbdbdb;border-radius:14px;padding:12px;text-decoration:none;color:inherit}
+.gcard .gt1{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.gcard .gpr{font-size:17px;font-weight:800;color:#0095f6;white-space:nowrap}
+.gcard>small{display:block;color:#737373;margin-top:2px}
+.gcard .g2{display:flex;align-items:center;gap:4px;margin-top:4px}
+.gcard .gdir{display:inline-block;margin-top:8px;font-weight:600;font-size:13px;color:#0095f6}

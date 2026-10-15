@@ -40,8 +40,8 @@ Object.assign(I,{gear:'<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
-es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo'},
-eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi'}};
+es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible'},
+eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa'}};
 const t=k=>T[lang][k]||k;
 
 const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
@@ -290,6 +290,41 @@ function aiPost(e){const g=going.has(e.id),l=liked.has('ai-'+e.id);return `<arti
 function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Kalea//ES','BEGIN:VEVENT','UID:'+e.id+'@kalea','DTSTART;TZID=Europe/Madrid:'+e.s,'DTEND;TZID=Europe/Madrid:'+e.e,'SUMMARY:'+e.title,'LOCATION:'+e.where,'DESCRIPTION:'+e.txt,'END:VEVENT','END:VCALENDAR'].join('\r\n');
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type:'text/calendar'}));a.download=e.id+'.ics';document.body.appendChild(a);a.click();a.remove();toast('Añadido a tu calendario')}
 
+
+// ---------- Gasolineras: precios oficiales del Ministerio ----------
+let GAS=null,gasF='pgo',gasPos=null,gasGeo=0;
+function gasDist(o){const a=gasPos[0],b=gasPos[1],R=6371,x=Math.sin((o.lat-a)*Math.PI/360)**2+Math.cos(a*Math.PI/180)*Math.cos(o.lat*Math.PI/180)*Math.sin((o.lng-b)*Math.PI/360)**2;return 2*R*Math.asin(Math.sqrt(x))}
+function gasCard(e){const p=e[gasF],d=gasDist(e),h24=/24\s*h/i.test(e.hor||'');
+ return `<a class="gcard" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">
+ <div class="gt1"><b>${esc(e.n||'Gasolinera')}</b><span class="gpr">${p!=null?p.toFixed(3).replace('.',',')+' €':''}</span></div>
+ <small>${esc(e.dir)}, ${esc(e.mun)}</small>
+ <small class="g2">${ic('pin')} ${d<1?Math.round(d*1000)+' m':d.toFixed(1).replace('.',',')+' km'} · ${h24?t('g24'):esc(e.hor||'')}</small>
+ <span class="gdir">${t('gdir')} ›</span></a>`}
+function gasPaint(){
+ const el=$('#gasb');if(!el)return;
+ const withP=GAS.est.filter(e=>e[gasF]!=null);
+ if(!withP.length){el.innerHTML=`<div class="empty">${t('gnodata')}</div>`;return}
+ const L=[...withP].sort(gasS==='near'?(a,b)=>gasDist(a)-gasDist(b):(a,b)=>a[gasF]-b[gasF]);
+ const fuelName=gasF==='pgo'?(lang==='eu'?'Diesel':'Diésel'):gasF==='p95'?(lang==='eu'?'95':'Gasolina 95'):(lang==='eu'?'98':'Gasolina 98');
+ el.innerHTML=`<div class="gchips">
+ <button class="chip ${gasF==='pgo'?'on':''}" data-gf="pgo">${lang==='eu'?'Diesel':'Diésel'}</button>
+ <button class="chip ${gasF==='p95'?'on':''}" data-gf="p95">95</button>
+ <button class="chip ${gasF==='p98'?'on':''}" data-gf="p98">98</button>
+ <span class="gsep"></span>
+ <button class="chip ${gasS==='cheap'?'on':''}" data-gs="cheap">${t('gcheap')}</button>
+ <button class="chip ${gasS==='near'?'on':''}" data-gs="near">${t('gnear')}</button></div>
+ <div class="gsrc">${t('gact')}: ${esc(GAS.fecha)} · Precios oficiales del Ministerio</div>
+ <div class="gasl">${L.map(gasCard).join('')}</div>`;
+ el.querySelectorAll('[data-gf]').forEach(b=>b.onclick=()=>{gasF=b.dataset.gf;gasPaint()});
+ el.querySelectorAll('[data-gs]').forEach(b=>b.onclick=()=>{gasS=b.dataset.gs;gasPaint()});
+}
+function gasV(){
+ history.pushState({s:1},'','#gasolineras');
+ view.innerHTML=`<div class="bptop"><button class="ib" id="gbk" aria-label="Volver">${ic('back')}</button><b>${t('gas')}</b><span class="ib" style="visibility:hidden"></span></div><div id="gasb"><div class="note">Cargando precios...</div></div>`;
+ $('#gbk').onclick=()=>{tab='explore';render()};
+ if(!GAS){fetch('gas.json?v=1').then(r=>r.json()).then(j=>{GAS=j;if($('#gasb'))gasPaint()}).catch(()=>{const el=$('#gasb');if(el)el.innerHTML='<div class="empty">No he podido cargar los precios ahora mismo</div>'});return}
+ gasPaint();
+}
 let q='',exMode='list';
 function exMap(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0]);const term=(q.trim()||(cg[1]?cg[0]:'comercios y bares'))+' Elgoibar';return `<div class="mapw"><iframe title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(term)}&output=embed"></iframe><small>En el mapa ves el horario, si está abierto ahora y la distancia.</small></div>`}
 const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Alimentación','alim'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud'],['Servicios','serv']];
@@ -301,6 +336,7 @@ function explore(){
  view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div class="viewsw"><button class="${exMode==='list'?'on':''}" data-exm="list">${ic('list')} Lista</button><button class="${exMode==='map'?'on':''}" data-exm="map">${ic('map')} Mapa</button></div><div id="bl">${exMode==='map'?exMap():bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
  <div class="sec"><h3>${t('board')}</h3></div>
  <button class="board" data-tab="work" data-wt="of"><div class="k">${ic('work')} Trabajo y formación</div><b>Ofertas de Lanbide, cursos gratis y Se busca</b><small>Elgoibar y comarca</small></button>
+ <button class="board" data-gas="1"><div class="k">${ic('pin')} ${t('gas')}</div><b>95, 98 y diésel al día</b><small>Precios oficiales, de cerca a lejos</small></button>
  <a class="board" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener"><div class="k">${ic('house')} Pisos · con Pisder</div><b>Pisos en alquiler y venta</b><small>Se abre en Pisder</small></a>`;
  const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=exMode==='map'?exMap():bizList()};
 }
@@ -509,7 +545,7 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-share],[data-save],[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-logout]');if(!el)return;
+ const el=e.target.closest('[data-share],[data-save],[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-gas]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
  if(d.save){const k=d.save;saved.has(k)?saved.delete(k):saved.add(k);try{localStorage.setItem('kalea_saved',JSON.stringify([...saved]))}catch(e){}el.classList.toggle('on',saved.has(k));el.classList.remove('pop');void el.offsetWidth;if(saved.has(k)){el.classList.add('pop');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}}toast(saved.has(k)?'Guardado en tu perfil':'Quitado de guardados');return}
@@ -548,6 +584,7 @@ document.addEventListener('click',e=>{
  else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
  else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
  else if(d.logout)logout();
+ else if(d.gas){gasV()}
  else if(d.story)story(d.story);
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
@@ -559,11 +596,13 @@ const _h0=decodeURIComponent(location.hash.slice(1));
 render();
 (()=>{const k=_h0;if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
 addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(k==='ajustes')settingsV(1);else if(k==='apariencia')appearV(1);else if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
+try{if(new URLSearchParams(location.search).get('vista')==='gas')gasV()}catch(e){}
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
 
 let _bip=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();_bip=e});
 addEventListener('appinstalled',()=>{_bip=null;toast('Kalea instalada en tu móvil')});
+try{navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{gasPos=[p.coords.latitude,p.coords.longitude];gasGeo=1;if(GAS&&$('#gasb'))gasPaint()},()=>{},{timeout:5000,maximumAge:600000})}catch(e){}
 function instRow(){if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return '';return `<button class="inst" data-inst="1"><div class="ic">${ic('dl')}</div><div class="t"><b>Instalar Kalea</b><small>Ábrela desde tu pantalla de inicio, como una app</small></div><span class="v">›</span></button>`}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-inst]'))return;
  if(_bip){_bip.prompt();_bip.userChoice.finally(()=>{_bip=null})}
