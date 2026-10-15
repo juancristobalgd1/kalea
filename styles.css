@@ -881,3 +881,5 @@ html.dark .on>.rad{border-color:#0095f6}
 .gcard>small{display:block;color:#737373;margin-top:2px}
 .gcard .g2{display:flex;align-items:center;gap:4px;margin-top:4px}
 .gcard .gdir{display:inline-block;margin-top:8px;font-weight:600;font-size:13px;color:#0095f6}
+.sheet .preview{margin:0;padding:0;border:0;background:none}
+.sheet .reach{margin-top:12px}

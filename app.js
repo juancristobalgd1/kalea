@@ -221,7 +221,7 @@ function workV(){
 
 function askForm(){return `<div class="preview"><b>Nueva pregunta al pueblo</b><label>Qué necesitas</label><textarea class="field" id="pq" rows="3" placeholder="Ej.: ¿quién me arregla una persiana?"></textarea><div class="chips pqs">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños'].map(x=>`<button class="chip" data-pqs="${x}">${x}</button>`).join('')}</div><div id="pqai"></div><div class="reach">${ic('bell')} Sale en el inicio como una publicación y la ven tus vecinos</div><button class="big-cta stick" id="pubq">Publicar pregunta</button><small class="nocharge">Ganas 5 puntos por preguntar y 10 por cada respuesta útil</small></div>`}
 let pqT;function pqPrev(){const v=($('#pq')||{}).value||'';$('#pqai').innerHTML=v.trim().length>3?aiBox(v):''}
-function publishQ(v){need('Para publicar tu pregunta',()=>{const q={id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true};myQs.unshift(q);points+=5;tab='home';render();const el=document.getElementById('qp-'+q.id);if(el)el.scrollIntoView({block:'start'});toast('Pregunta publicada. Ya la ven tus vecinos',5)})}
+function publishQ(v){need('Para publicar tu pregunta',()=>{closeSheet();const q={id:'m'+Date.now(),who:(user.name||'Tú').split(' ')[0],time:'ahora',q:v.replace(/</g,'&lt;'),ans:[],mine:true};myQs.unshift(q);points+=5;tab='home';render();const el=document.getElementById('qp-'+q.id);if(el)el.scrollIntoView({block:'start'});toast('Pregunta publicada. Ya la ven tus vecinos',5)})}
 function qPost(q){const l=liked.has('q-'+q.id),n=q.ans.length;return `<article class="post qpost" id="qp-${q.id}"><div class="ph"><div class="av qav2">${q.who[0]}</div><div class="nm"><b>${q.who}${q.mine?'':' <span class="ej">Ejemplo</span>'}</b><small>${q.time} · Pregunta al pueblo</small></div><span style="color:var(--muted)">•••</span></div>
  <div class="qtext">${q.q}</div><div class="qai">${aiBox(q.q)}</div>
  <div class="pa"><button class="pill ${l?'liked':''}" data-like="q-${q.id}">${ic('heart')} ${(q.mine?0:12)+(l?1:0)}</button><button class="pill" data-tab="ask">${ic('chat')} ${n} ${n===1?'respuesta':'respuestas'}</button><button class="cta" data-tab="ask">${ic('chat')} Responder</button></div></article>`}
@@ -395,25 +395,27 @@ function pointsV(){
  <div class="li"><div class="ic">${ic('coin')}</div><div class="t"><b>Canjeado en El Jose Barber</b><small>Lunes</small></div><span class="v" style="color:var(--muted)">-500</span></div></div>`;
 }
 
-let ptype=null,pubAs='vecino';
+let ptype=null,pubAs='vecino',pubSheetOn=false;
+function pubForm(pt){
+ const head={photo:'Nueva publicación',story:'Nueva historia',flash:'Nuevo hueco de última hora',offer:'Nueva oferta',post:'Nueva publicación con reserva'};
+ const ph={photo:'¿Qué quieres contar?',story:'Texto de tu historia (opcional)',flash:'Ej.: mesa para 4 esta noche',offer:'Ej.: 2x1 en pintxos los jueves',post:'Ej.: pintxo pote este jueves'};
+ const reach=pubAs==='vecino'?'Lo verán los vecinos de Elgoibar en el inicio':'Avisaremos a los vecinos que siguen tu negocio';
+ if(pt==='ask')return askForm();
+ if(pt==='plan')return planForm();
+ if(pt==='job')return `<div class="preview"><b>Nueva oferta de trabajo</b><p class="pvsub">Sale en el inicio y en Trabajo y formación. Es gratis.</p><button class="big-cta" data-jobpub="1">Escribir la oferta</button></div>`;
+ return `<div class="preview"><b>${head[pt]}</b>
+ <label>${pt==='photo'||pt==='story'?'Texto':'Qué ofreces'}</label><textarea class="field" rows="3" placeholder="${ph[pt]}"></textarea>
+ ${pt==='flash'?`<label>Hora</label><div class="opts">${['20:30','21:30','22:00'].map(h=>`<span class="opt">${h}</span>`).join('')}</div><label>Descuento</label><div class="opts">${['-10%','-15%','-20%'].map(h=>`<span class="opt">${h}</span>`).join('')}</div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
+ <div class="reach">${ic('bell')} ${reach}</div>
+ <button class="big-cta" id="pubgo">Publicar</button></div>`;
+}
+function openPubSheet(){if(!ptype)return;pubSheetOn=true;openSheet(pubForm(ptype));const b=$('#pubgo');if(b)b.onclick=()=>{const wasPlan=ptype==='plan';need('Para publicar',()=>{closeSheet();toast(wasPlan?'Plan publicado. Te avisamos con cada vecino que se apunte':'Publicado. Ya lo ven tus vecinos')})};const pq=$('#pq');if(pq){pq.oninput=()=>{clearTimeout(pqT);pqT=setTimeout(pqPrev,350)};$('#pubq').onclick=()=>{const v=pq.value.trim();if(!v){pq.focus();return}publishQ(v)}}}
 function publish(){
  const V=[['ask','chat','Pregunta al pueblo','La IA y los vecinos te responden'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['photo','img','Foto o texto','Comparte algo con el pueblo'],['story','story','Historia','24 horas en el inicio']];
  const N=[['flash','bolt','Hueco de última hora','Llena una mesa o cita libre'],['offer','tag','Oferta','Descuento para vecinos'],['post','img','Publicación','Foto con botón de reservar'],['story','story','Historia','24 horas en el inicio'],['plan','user','Plan en grupo','Si se llega al mínimo, se hace'],['job','store','Se busca','Oferta de trabajo gratis']];
  const types=pubAs==='vecino'?V:N;if(ptype&&!types.some(x=>x[0]===ptype))ptype=null;
- const head={photo:'Nueva publicación',story:'Nueva historia',flash:'Nuevo hueco de última hora',offer:'Nueva oferta',post:'Nueva publicación con reserva'};
- const ph={photo:'¿Qué quieres contar?',story:'Texto de tu historia (opcional)',flash:'Ej.: mesa para 4 esta noche',offer:'Ej.: 2x1 en pintxos los jueves',post:'Ej.: pintxo pote este jueves'};
- const reach=pubAs==='vecino'?'Lo verán los vecinos de Elgoibar en el inicio':'Avisaremos a los vecinos que siguen tu negocio';
- let form='';
- if(ptype==='ask')form=askForm();else if(ptype==='plan')form=planForm();else if(ptype==='job')form=`<div class="preview"><b>Nueva oferta de trabajo</b><p class="pvsub">Sale en el inicio y en Trabajo y formación. Es gratis.</p><button class="big-cta stick" data-jobpub="1">Escribir la oferta</button></div>`;
- else if(ptype)form=`<div class="preview"><b>${head[ptype]}</b>
- <label>${ptype==='photo'||ptype==='story'?'Texto':'Qué ofreces'}</label><textarea class="field" rows="3" placeholder="${ph[ptype]}"></textarea>
- ${ptype==='flash'?`<label>Hora</label><div class="opts">${['20:30','21:30','22:00'].map(h=>`<span class="opt">${h}</span>`).join('')}</div><label>Descuento</label><div class="opts">${['-10%','-15%','-20%'].map(h=>`<span class="opt">${h}</span>`).join('')}</div>`:`<label>Foto o vídeo</label><div class="opts"><span class="opt">${ic('img')} Subir</span></div>`}
- <div class="reach">${ic('bell')} ${reach}</div>
- <button class="big-cta stick" id="pubgo">Publicar</button></div>`;
- view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><p class="psub">Elige qué quieres publicar</p><div class="seg pubas"><button class="${pubAs==='vecino'?'on':''}" data-pubas="vecino">Soy vecino</button><button class="${pubAs==='negocio'?'on':''}" data-pubas="negocio">Tengo un negocio</button></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>${form||''}`;
- if(ptype){const f=view.querySelector('.preview');if(f)setTimeout(()=>f.scrollIntoView({behavior:'smooth',block:'start'}),30)}
+ view.innerHTML=`<div class="top"><div class="place">Publicar</div></div><p class="psub">Elige qué quieres publicar</p><div class="seg pubas"><button class="${pubAs==='vecino'?'on':''}" data-pubas="vecino">Soy vecino</button><button class="${pubAs==='negocio'?'on':''}" data-pubas="negocio">Tengo un negocio</button></div><div class="pub">${types.map(x=>`<button class="${ptype===x[0]?'on':''}" data-ptype="${x[0]}"><div class="ic">${ic(x[1])}</div><b>${x[2]}</b><small>${x[3]}</small></button>`).join('')}</div>`;
 }
-
 let prole='Vecino';
 function planForm(){return `<div class="preview"><b>Nuevo plan en grupo</b>
  <label>Publicas como</label><div class="opts">${['Vecino','Negocio','Ayuntamiento'].map(r=>`<button class="opt ${prole===r?'on':''}" data-prole="${r}">${r}</button>`).join('')}</div>
@@ -446,7 +448,7 @@ function me(){
 function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab]||home)();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
-function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on')}
+function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on');if(pubSheetOn){pubSheetOn=false;ptype=null;if(tab==='publish')publish()}}
 function toast(m,p){const e=$('#toast');e.innerHTML=ic('check')+' '+m+(p?`<span>+${p}</span>`:'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600)}
 
 const CFG=window.KALEA_CONFIG||{};
@@ -580,7 +582,7 @@ document.addEventListener('click',e=>{
  else if(d.upv){const k=d.upv;need('Para votar respuestas',()=>{upv.has(k)?upv.delete(k):upv.add(k);askV()})}
  else if(d.reply){const id=d.reply,inp=$('#r-'+id),txt=inp?inp.value.trim():'';if(!txt){inp&&inp.focus();return}need('Para responder',()=>{const q=myQs.concat(QS).find(x=>x.id===id);q.ans.push({who:(user.name||'Tú').split(' ')[0],txt:txt.replace(/</g,'&lt;'),v:0});points+=10;askV();toast('Respuesta publicada',10)})}
  else if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
- else if(d.prole){prole=d.prole;publish();hookPub()}
+ else if(d.prole){prole=d.prole;openPubSheet()}
  else if(d.ev)evSheet(d.ev);
  else if(d.news)newsSheet(d.news);
  else if(d.vote!==undefined){const i=+d.vote;need('Para votar',()=>{if(voted===null){voted=i;points+=20;toast('Voto enviado al ayuntamiento',20)}town()})}
@@ -601,7 +603,7 @@ document.addEventListener('click',e=>{
  else if(d.story)story(d.story);
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
- else if(d.ptype){ptype=d.ptype;publish();hookPub()}
+ else if(d.ptype){ptype=d.ptype;document.querySelectorAll('.pub button').forEach(x=>x.classList.toggle('on',x.dataset.ptype===d.ptype));openPubSheet()}
  else if(d.lang){const pk=history.state&&history.state.k;lang=d.lang;try{localStorage.setItem('kalea_lang',lang)}catch(e){}closeSheet();if(pk&&B[pk])profile(pk,1);else render()}
 });
 $('#scrim').onclick=closeSheet;
