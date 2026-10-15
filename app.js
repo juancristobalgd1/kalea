@@ -294,17 +294,17 @@ function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','V
 // ---------- Gasolineras: precios oficiales del Ministerio ----------
 let GAS=null,gasF='pgo',gasS='cheap',gasPos=null,gasGeo=0;
 function gasDist(o){const a=gasPos[0],b=gasPos[1],R=6371,x=Math.sin((o.lat-a)*Math.PI/360)**2+Math.cos(a*Math.PI/180)*Math.cos(o.lat*Math.PI/180)*Math.sin((o.lng-b)*Math.PI/360)**2;return 2*R*Math.asin(Math.sqrt(x))}
-function gasCard(e){const p=e[gasF],d=gasDist(e),h24=/24\s*h/i.test(e.hor||'');
+function gasCard(e){const p=e[gasF],d=gasPos?gasDist(e):null,h24=/24\s*h/i.test(e.hor||'');
  return `<a class="gcard" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">
  <div class="gt1"><b>${esc(e.n||'Gasolinera')}</b><span class="gpr">${p!=null?p.toFixed(3).replace('.',',')+' €':''}</span></div>
  <small>${esc(e.dir)}, ${esc(e.mun)}</small>
- <small class="g2">${ic('pin')} ${d<1?Math.round(d*1000)+' m':d.toFixed(1).replace('.',',')+' km'} · ${h24?t('g24'):esc(e.hor||'')}</small>
+ <small class="g2">${d!=null?ic('pin')+' '+(d<1?Math.round(d*1000)+' m':d.toFixed(1).replace('.',',')+' km')+' · ':''}${h24?t('g24'):esc(e.hor||'')}</small>
  <span class="gdir">${t('gdir')} ›</span></a>`}
 function gasPaint(){
  const el=$('#gasb');if(!el)return;
  const withP=GAS.est.filter(e=>e[gasF]!=null);
  if(!withP.length){el.innerHTML=`<div class="empty">${t('gnodata')}</div>`;return}
- const L=[...withP].sort(gasS==='near'?(a,b)=>gasDist(a)-gasDist(b):(a,b)=>a[gasF]-b[gasF]);
+ const L=[...withP].sort((gasS==='near'&&gasPos)?(a,b)=>gasDist(a)-gasDist(b):(a,b)=>a[gasF]-b[gasF]);
  const fuelName=gasF==='pgo'?(lang==='eu'?'Diesel':'Diésel'):gasF==='p95'?(lang==='eu'?'95':'Gasolina 95'):(lang==='eu'?'98':'Gasolina 98');
  el.innerHTML=`<div class="gchips">
  <button class="chip ${gasF==='pgo'?'on':''}" data-gf="pgo">${lang==='eu'?'Diesel':'Diésel'}</button>
