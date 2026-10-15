@@ -40,8 +40,8 @@ Object.assign(I,{gear:'<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
-es:{ask:'Preguntar',qsec:'Preguntas al pueblo',qall:'Ver todas',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible',esq:'Esquelas',esqread:'Leer esquela',esqsrc:'Anuncios publicados por las familias en Diario Vasco',esqno:'Hoy no hay esquelas publicadas'},
-eu:{ask:'Galdetu',qsec:'Herriaren galderak',qall:'Dena ikusi',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa',esq:'Eskeulak',esqread:'Eskeula irakurri',esqsrc:'Familiak Diario Vascon argitaratuak',esqno:'Gaurko eskeularik ez'}};
+es:{ask:'Preguntar',qsec:'Preguntas al pueblo',qall:'Ver todas',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible',esq:'Esquelas',esqread:'Leer esquela',esqsrc:'Anuncios publicados por las familias en Diario Vasco',esqno:'Hoy no hay esquelas publicadas',noti:'Notificaciones',hoy:'Hoy',antes:'Antes'},
+eu:{ask:'Galdetu',qsec:'Herriaren galderak',qall:'Dena ikusi',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa',esq:'Eskeulak',esqread:'Eskeula irakurri',esqsrc:'Familiak Diario Vascon argitaratuak',esqno:'Gaurko eskeularik ez',noti:'Jakinarazpenak',hoy:'Gaur',antes:'Lehenago'}};
 const t=k=>T[lang][k]||k;
 
 const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
@@ -104,10 +104,10 @@ let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'
 
 try{localStorage.removeItem('kalea_kua')}catch(e){}
 function nav(){
- const tabs=[['home','home'],['explore','search'],['plus','plus'],['profile','user']];
- $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
+ const tabs=[['home','home'],['explore','search'],['plus','plus'],['noti','bell'],['profile','user']];
+ $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}${k==='noti'&&!notifRead&&tab!=='noti'?'<i class="dot"></i>':''}<span>${t(k)}</span></button>`).join('');
 }
-function topBar(){return `<div class="top"><div class="brand"><span class="wm">Kalea</span><span class="bloc">${ic('pin')} Elgoibar</span></div><div class="icons"><button class="ib" data-notif="1" aria-label="Avisos">${ic('bell')}${notifRead?'':'<i class="dot"></i>'}</button></div></div>`}
+function topBar(){return `<div class="top"><div class="brand"><span class="wm">Kalea</span><span class="bloc">${ic('pin')} Elgoibar</span></div></div>`}
 function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this,'stfb','${B[k].cg}')"></div><span>${B[k].short}</span></button>`).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
@@ -251,6 +251,26 @@ function notifSheet(){notifRead=true;const lb=(LB.of||[]).filter(o=>ZONE.comarca
  openSheet(`<h3>Avisos</h3><div class="nots">${it.map(x=>`<button class="notr" ${x[3]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div></button>`).join('')}</div><button class="big-cta ghostcta" data-tab="profile">Elegir qué avisos recibo</button>`);if(tab==='home')refreshHome()}
 function home(){view.innerHTML=topBar()+stories()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Automático</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
+function notiRow(x){return `<button class="nrow" ${x[4]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div><small class="nt">${x[3]}</small></button>`}
+function noti(){
+ notifRead=true;
+ const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z)))[0];const p=PLANS[1];
+ const av=NEWS.find(n=>n.kind==='Aviso');
+ const it=[
+  ['chat','Ane ha recibido 2 respuestas en su pregunta',t('qsec')+' · ejemplo','hace 25 min','data-tab="ask"'],
+  ['bolt',B[FLASH[0].b].name+': '+FLASH[0].txt,t('flash')+' · ejemplo','hace 32 min','data-flash="0"'],
+  lb?['bag','Nueva oferta en '+cap(lb.municipio)+': '+cap(lb.desEmpleo),'Lanbide','hace 1 h','data-tab="work" data-wt="of"']:null,
+  av?['town',av.title,'Aviso del ayuntamiento · Automático','hace 2 h','data-tab="town"']:null,
+  ['user',p.title+': faltan '+Math.max(0,p.min-p.now)+' para que se haga','Plan en grupo · ejemplo','hace 3 h','data-tab="home"'],
+  ['heart','A 12 vecinos les gusta tu comentario','Tus publicaciones · ejemplo','ayer','data-tab="profile"'],
+ ].filter(Boolean);
+ return `<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">${t('noti')}</div><span class="tag">Ejemplo</span></div>
+ <div class="sec"><h3>${t('hoy')}</h3></div>
+ <div class="notv">${it.slice(0,5).map(notiRow).join('')}</div>
+ <div class="sec"><h3>${t('antes')}</h3></div>
+ <div class="notv">${it.slice(5).map(notiRow).join('')}</div>
+ <button class="big-cta ghostcta" data-tab="profile">Elegir qué avisos recibo</button>`}
+
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
  view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div><span class="tag">Ejemplo</span></div>
@@ -455,7 +475,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV}[tab]||home)();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
+function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV,noti}[tab]||home)();hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on');if(pubSheetOn){pubSheetOn=false;ptype=null;if(tab==='publish')publish()}}
