@@ -883,3 +883,17 @@ html.dark .on>.rad{border-color:#0095f6}
 .gcard .gdir{display:inline-block;margin-top:8px;font-weight:600;font-size:13px;color:#0095f6}
 .sheet .preview{margin:0;padding:0;border:0;background:none}
 .sheet .reach{margin-top:12px}
+
+/* Micro-interacciones */
+body{-webkit-tap-highlight-color:transparent}
+.pill{color:var(--muted);text-decoration:none;transition:transform .12s var(--ease),opacity .2s}
+.pill:visited{color:var(--muted)}
+.pill:active{transform:scale(.95)}
+.li{transition:background-color .2s,transform .15s var(--ease)}
+.li:active{background:#fafafa}
+.opt{transition:background-color .2s,color .2s,border-color .2s,transform .12s var(--ease)}
+.opt:active{transform:scale(.95)}
+.seg button{transition:background-color .2s,color .2s}
+.wbtn{transition:transform .12s var(--ease),background-color .2s}
+.wbtn:active{transform:scale(.98)}
+.st{cursor:pointer}
