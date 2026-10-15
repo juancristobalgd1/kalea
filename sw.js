@@ -1,5 +1,5 @@
-const C='kalea-v52';
-const SHELL=['app.html','manifest.webmanifest','icons/icon-192.png','icons/apple-180.png'];
+const C='kalea-v53';
+const SHELL=['index.html','app.html','manifest.webmanifest','icons/icon-192.png','icons/apple-180.png'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 const put=(req,res)=>{if(res&&res.ok){const cl=res.clone();caches.open(C).then(c=>c.put(req,cl))}return res};
