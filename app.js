@@ -264,7 +264,7 @@ function noti(){
   ['user',p.title+': faltan '+Math.max(0,p.min-p.now)+' para que se haga','Plan en grupo · ejemplo','hace 3 h','data-tab="home"'],
   ['heart','A 12 vecinos les gusta tu comentario','Tus publicaciones · ejemplo','ayer','data-tab="profile"'],
  ].filter(Boolean);
- return `<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">${t('noti')}</div><span class="tag">Ejemplo</span></div>
+ view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">${t('noti')}</div><span class="tag">Ejemplo</span></div>
  <div class="sec"><h3>${t('hoy')}</h3></div>
  <div class="notv">${it.slice(0,5).map(notiRow).join('')}</div>
  <div class="sec"><h3>${t('antes')}</h3></div>
@@ -475,9 +475,7 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();window._dbg=null;let fn=null;try{fn=({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV,noti}[tab])}catch(e){window._dbg='eval '+(e.message||e)}
- if(!fn)fn=()=>{home();view.insertAdjacentHTML('afterbegin','<div style="padding:10px 16px;font-size:12px;color:#c00">DBG tab='+tab+' fn='+(window._dbg||'indef')+'</div>')};
- try{fn()}catch(e){view.innerHTML='<div style="padding:24px;font-size:13px;color:#c00">ERR['+tab+'] '+(e.message||e)+' @ '+String((e.stack||'').split('\n')[1]||'')+'</div>'}
+function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();try{({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV,noti}[tab])()}catch(e){console.error(e)}
  hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
