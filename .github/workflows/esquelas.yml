@@ -1,0 +1,18 @@
+name: Actualizar esquelas
+on:
+  schedule:
+    - cron: '30 7 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  esquelas:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 scripts/esquelas.py
+      - run: |
+          git config user.name "kalea-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add esquelas.json
+          git diff --cached --quiet || (git commit -m "Esquelas actualizadas" && git push)

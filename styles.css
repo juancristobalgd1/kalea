@@ -95,6 +95,9 @@ svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke
 .date b{display:block;font-size:18px}.date small{font-size:10px;color:var(--gold);text-transform:uppercase}
 .ev p{font-size:13px;font-weight:600;line-height:1.3}.ev span{font-size:11px;color:var(--muted)}
 .board{margin:0 18px 10px;padding:12px 14px;background:var(--card);border:1px solid var(--line);border-radius:18px}
+.bslider{display:flex;gap:10px;overflow-x:auto;padding:0 18px 10px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.bslider::-webkit-scrollbar{display:none}
+.bslider .board{margin:0;flex:0 0 230px;scroll-snap-align:start}
 .board .k{font-size:11px;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.6px}
 .board b{display:block;font-size:14px;margin:4px 0 2px}.board small{color:var(--muted);font-size:12px}
 .wallet{margin:8px 18px 14px;border-radius:26px;padding:20px;background:linear-gradient(135deg,#f3d38a 0%,#d6a84c 45%,#4cb5f9 100%);color:#2a1a04;position:relative;overflow:hidden}

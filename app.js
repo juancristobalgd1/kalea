@@ -40,8 +40,8 @@ Object.assign(I,{gear:'<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
-es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible'},
-eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa'}};
+es:{ask:'Preguntar',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible',esq:'Esquelas',esqread:'Leer esquela',esqsrc:'Anuncios publicados por las familias en Diario Vasco',esqno:'Hoy no hay esquelas publicadas'},
+eu:{ask:'Galdetu',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa',esq:'Eskeulak',esqread:'Eskeula irakurri',esqsrc:'Familiak Diario Vascon argitaratuak',esqno:'Gaurko eskeularik ez'}};
 const t=k=>T[lang][k]||k;
 
 const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
@@ -147,13 +147,13 @@ const RULES=[
  [['asesor','renta','impuestos','gestoria','autonomo'],p=>/Asesor/.test(p.sub),'Asesorías en Elgoibar:']];
 const score=p=>p.r*Math.log((p.v||0)+2);
 function aiAnswer(text){const tx=nrm(text);
- for(const [kw,fn,intro] of RULES){if(kw.some(k=>tx.includes(k))){const L=PL.filter(fn).sort((a,b)=>score(b)-score(a)).slice(0,3);if(L.length)return{intro,list:L.map(p=>p.k),pisder:/Inmobiliaria/.test(L[0].sub)}}}
+ for(const [kw,fn,intro] of RULES){if(kw.some(k=>tx.includes(k))){const L=PL.filter(fn).sort((a,b)=>score(b)-score(a)).slice(0,3);if(L.length)return{intro,list:L.map(p=>p.k)}}}
  const tk=tx.split(/[^a-z0-9ñ]+/).filter(w=>w.length>3);
  const L=PL.filter(p=>tk.some(w=>nrm(p.n+' '+p.sub).includes(w))).sort((a,b)=>score(b)-score(a)).slice(0,3);
  if(L.length)return{intro:'Esto es lo que he encontrado en Elgoibar:',list:L.map(p=>p.k)};
  return{intro:'No encuentro un negocio del pueblo para eso. Publica la pregunta y los vecinos te ayudan.',list:[]}}
 function miniBiz(k){const b=B[k];return `<button class="minib" data-biz="${k}">${av(b,'mav')}<div><b>${b.name}</b><small>${b.cat} · ${b.street}${b.rev?` · ★ ${b.rating}`:''}</small></div><span>Ver</span></button>`}
-function aiBox(text){const r=aiAnswer(text);return `<div class="aians"><div class="aihd"><span class="aidot">${ic('spark')}</span><b>Kalea IA</b><span class="aitag">Automático</span></div><p>${r.intro}</p>${r.list.map(miniBiz).join('')}${r.pisder?'<a class="pisder" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener">Ver pisos en Pisder</a>':''}</div>`}
+function aiBox(text){const r=aiAnswer(text);return `<div class="aians"><div class="aihd"><span class="aidot">${ic('spark')}</span><b>Kalea IA</b><span class="aitag">Automático</span></div><p>${r.intro}</p>${r.list.map(miniBiz).join('')}</div>`}
 const QS=[
  {id:'q1',who:'Ane',time:'hace 25 min',q:'¿Alguien sabe quién arregla persianas en Elgoibar?',ans:[{who:'Mikel',txt:'Pregunta en la ferretería, suelen conocer a quién lo hace en el pueblo.',v:7},{who:'Itziar',txt:'A nosotros nos lo arregló un autónomo del pueblo, si quieres te paso el contacto por privado.',v:3}]},
  {id:'q2',who:'Iker',time:'hace 1 h',q:'¿Dónde puedo ver el partido del sábado con buen ambiente?',ans:[{who:'Jon',txt:'En la zona de San Frantzisko suele haber ambiente los días de partido.',v:5}]},
@@ -325,6 +325,22 @@ function gasV(){
  if(!GAS){fetch('gas.json?v=1').then(r=>r.json()).then(j=>{GAS=j;if($('#gasb'))gasPaint()}).catch(()=>{const el=$('#gasb');if(el)el.innerHTML='<div class="empty">No he podido cargar los precios ahora mismo</div>'});return}
  gasPaint();
 }
+let ESQ=null;
+function esqCard(e){return `<a class="gcard" href="${e.u}" target="_blank" rel="noopener"><div class="gt1"><b>${esc(e.n)}</b><span class="gpr">${e.k>1?e.k+' esquelas':'esquela'}</span></div><small>${esc(e.mun)}</small><span class="gdir">${t('esqread')} ›</span></a>`}
+function esqPaint(){
+ const el=$('#esqb');if(!el)return;
+ const L=ESQ.es;
+ if(!L.length){el.innerHTML=`<div class="empty">${t('esqno')}</div>`;return}
+ const towns=[...new Set(L.map(e=>e.mun))].sort((a,b)=>(a==='Elgoibar'?-1:b==='Elgoibar'?1:a.localeCompare(b)));
+ el.innerHTML=`<div class="gsrc">${t('gact')}: ${esc(ESQ.fecha)} · ${t('esqsrc')}</div>`+towns.map(m=>`<div class="sec"><h3>${esc(m)}</h3></div>`+L.filter(e=>e.mun===m).map(esqCard).join('')).join('');
+}
+function esqV(){
+ history.pushState({s:1},'','#esquelas');
+ view.innerHTML=`<div class="bptop"><button class="ib" id="ebk" aria-label="Volver">${ic('back')}</button><b>${t('esq')}</b><span class="ib" style="visibility:hidden"></span></div><div id="esqb"><div class="note">Cargando...</div></div>`;
+ $('#ebk').onclick=()=>{tab='explore';render()};
+ if(!ESQ){fetch('esquelas.json?v=1').then(r=>r.json()).then(j=>{ESQ=j;if($('#esqb'))esqPaint()}).catch(()=>{const el=$('#esqb');if(el)el.innerHTML=`<div class="empty">${t('esqno')}</div>`});return}
+ esqPaint();
+}
 let q='',exMode='list';
 function exMap(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0]);const term=(q.trim()||(cg[1]?cg[0]:'comercios y bares'))+' Elgoibar';return `<div class="mapw"><iframe title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(term)}&output=embed"></iframe><small>En el mapa ves el horario, si está abierto ahora y la distancia.</small></div>`}
 const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Alimentación','alim'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud'],['Servicios','serv']];
@@ -333,11 +349,8 @@ function bizList(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0])[1],qq=q.trim().t
  if(!L.length)return `<div class="empty">No hay resultados para "${q}"</div>`;
  return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${ONK.has(p.k)?'<span class="onk">En Kalea</span> ':''}${b.cat} · ${b.street}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} ${b.rev==1?'reseña':'reseñas'}`:'Sin reseñas todavía'}</small></div>${ONK.has(p.k)?`<span class="mini">${t(ACT[b.action][0])}</span>`:b.phone?`<span class="mini ghost2" data-tel="${p.k}">Llamar</span>`:`<span class="mini ghost2" data-map="${p.k}">Cómo llegar</span>`}</button>`}).join('')}
 function explore(){
- view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div class="viewsw"><button class="${exMode==='list'?'on':''}" data-exm="list">${ic('list')} Lista</button><button class="${exMode==='map'?'on':''}" data-exm="map">${ic('map')} Mapa</button></div><div id="bl">${exMode==='map'?exMap():bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
- <div class="sec"><h3>${t('board')}</h3></div>
- <button class="board" data-tab="work" data-wt="of"><div class="k">${ic('work')} Trabajo y formación</div><b>Ofertas de Lanbide, cursos gratis y Se busca</b><small>Elgoibar y comarca</small></button>
- <button class="board" data-gas="1"><div class="k">${ic('pin')} ${t('gas')}</div><b>95, 98 y diésel al día</b><small>Precios oficiales, de cerca a lejos</small></button>
- <a class="board" href="https://juancristobalgd1.github.io/pisder/" target="_blank" rel="noopener"><div class="k">${ic('house')} Pisos · con Pisder</div><b>Pisos en alquiler y venta</b><small>Se abre en Pisder</small></a>`;
+ view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div class="viewsw"><button class="${exMode==='list'?'on':''}" data-exm="list">${ic('list')} Lista</button><button class="${exMode==='map'?'on':''}" data-exm="map">${ic('map')} Mapa</button></div><div class="sec"><h3>${t('board')}</h3></div><div class="bslider"><button class="board" data-tab="work" data-wt="of"><div class="k">${ic('work')} Trabajo y formación</div><b>Ofertas de Lanbide, cursos gratis y Se busca</b><small>Elgoibar y comarca</small></button><button class="board" data-gas="1"><div class="k">${ic('pin')} ${t('gas')}</div><b>95, 98 y diésel al día</b><small>Precios oficiales, de cerca a lejos</small></button><button class="board" data-esq="1"><div class="k">${ic('spark')} ${t('esq')}</div><b>Fallecimientos de hoy</b><small>Elgoibar y comarca</small></button></div><div id="bl">${exMode==='map'?exMap():bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
+`;
  const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=exMode==='map'?exMap():bizList()};
 }
 
@@ -545,7 +558,7 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-share],[data-save],[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-gas]');if(!el)return;
+ const el=e.target.closest('[data-share],[data-save],[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-gas],[data-esq]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
  if(d.save){const k=d.save;saved.has(k)?saved.delete(k):saved.add(k);try{localStorage.setItem('kalea_saved',JSON.stringify([...saved]))}catch(e){}el.classList.toggle('on',saved.has(k));el.classList.remove('pop');void el.offsetWidth;if(saved.has(k)){el.classList.add('pop');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}}toast(saved.has(k)?'Guardado en tu perfil':'Quitado de guardados');return}
@@ -584,7 +597,7 @@ document.addEventListener('click',e=>{
  else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
  else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
  else if(d.logout)logout();
- else if(d.gas){gasV()}
+ else if(d.gas){gasV()}else if(d.esq){esqV()}
  else if(d.story)story(d.story);
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
@@ -596,7 +609,7 @@ const _h0=decodeURIComponent(location.hash.slice(1));
 render();
 (()=>{const k=_h0;if(B[k]){history.replaceState({k},'','#'+k);profile(k,1)}})();
 addEventListener('popstate',()=>{const k=decodeURIComponent(location.hash.slice(1));if(k==='ajustes')settingsV(1);else if(k==='apariencia')appearV(1);else if(B[k])profile(k,1);else{if($('#story').classList.contains('on'))closeStory();closeSheet();render()}});
-try{if(new URLSearchParams(location.search).get('vista')==='gas')gasV()}catch(e){}
+try{const _v=new URLSearchParams(location.search).get('vista');if(_v==='gas')gasV();if(_v==='esq')esqV()}catch(e){}
 try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.getItem('kalea_lang'))return}catch(e){}openSheet(`<h3>Ongi etorri · Bienvenido</h3><div class="sub">Aukeratu hizkuntza · Elige idioma</div><div class="langpick"><button data-lang="eu">Euskara</button><button data-lang="es">Castellano</button></div>`)},400)}catch(e){}
 
 
