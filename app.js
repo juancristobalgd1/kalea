@@ -292,7 +292,7 @@ function ics(id){const e=AIEV.find(x=>x.id===id);const txt=['BEGIN:VCALENDAR','V
 
 
 // ---------- Gasolineras: precios oficiales del Ministerio ----------
-let GAS=null,gasF='pgo',gasPos=null,gasGeo=0;
+let GAS=null,gasF='pgo',gasS='cheap',gasPos=null,gasGeo=0;
 function gasDist(o){const a=gasPos[0],b=gasPos[1],R=6371,x=Math.sin((o.lat-a)*Math.PI/360)**2+Math.cos(a*Math.PI/180)*Math.cos(o.lat*Math.PI/180)*Math.sin((o.lng-b)*Math.PI/360)**2;return 2*R*Math.asin(Math.sqrt(x))}
 function gasCard(e){const p=e[gasF],d=gasDist(e),h24=/24\s*h/i.test(e.hor||'');
  return `<a class="gcard" href="https://www.google.com/maps/dir/?api=1&destination=${e.lat},${e.lng}" target="_blank" rel="noopener">
