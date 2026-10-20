@@ -37,11 +37,16 @@ ver:'<path d="M12 2l2.4 2.1 3.2-.3.8 3.1 2.8 1.6-1.2 3 1.2 3-2.8 1.6-.8 3.1-3.2-
 };
 const ic=(n,c='')=>`<svg viewBox="0 0 24 24" class="${c}">${I[n]}</svg>`;
 Object.assign(I,{gear:'<path d="M12.2 2h-.4a2 2 0 0 0-2 2v.2a2 2 0 0 1-1 1.7l-.4.3a2 2 0 0 1-2 0l-.2-.1a2 2 0 0 0-2.7.7l-.2.4a2 2 0 0 0 .7 2.7l.2.1a2 2 0 0 1 1 1.7v.5a2 2 0 0 1-1 1.7l-.2.1a2 2 0 0 0-.7 2.7l.2.4a2 2 0 0 0 2.7.7l.2-.1a2 2 0 0 1 2 0l.4.3a2 2 0 0 1 1 1.7v.2a2 2 0 0 0 2 2h.4a2 2 0 0 0 2-2v-.2a2 2 0 0 1 1-1.7l.4-.3a2 2 0 0 1 2 0l.2.1a2 2 0 0 0 2.7-.7l.2-.4a2 2 0 0 0-.7-2.7l-.2-.1a2 2 0 0 1-1-1.7v-.5a2 2 0 0 1 1-1.7l.2-.1a2 2 0 0 0 .7-2.7l-.2-.4a2 2 0 0 0-2.7-.7l-.2.1a2 2 0 0 1-2 0l-.4-.3a2 2 0 0 1-1-1.7V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/>',moon:'<path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>',bellx:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',help:'<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.4M12 17v.01"/>',out:'<path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"/>',lng:'<path d="M4 5h8M8 3v2M5.5 5c.8 3.5 3 6 6.5 7.5M10.5 5c-.8 3.5-3 6-6 7.5M13 21l4-9 4 9M14.5 17.5h5"/>',grid:'<path d="M3 3h18v18H3zM9 3v18M15 3v18M3 9h18M3 15h18"/>',info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.6v.4"/>',clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.2 2"/>',star:'<path d="m12 3 2.8 5.7 6.2.9-4.5 4.4 1 6.2L12 17.3 6.5 20.2l1-6.2L3 9.6l6.2-.9z"/>',dl:'<path d="M12 3v12M7 10l5 5 5-5M5 21h14"/>'});
+I.toolbox='<path d="M3.5 8.5h17v10a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2zM8 8.5V6a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2.5M3.5 12h17M10 12v2h4v-2"/>';
+I.dots='<circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/>';
 
 let lang='es';try{lang=localStorage.getItem('kalea_lang')||'es'}catch(e){}
 const T={
 es:{ask:'Preguntar',qsec:'Preguntas al pueblo',qall:'Ver todas',home:'Inicio',explore:'Explorar',points:'Puntos',profile:'Perfil',flash:'Huecos de última hora',stories:'Historias',feed:'En Elgoibar hoy',reservar:'Reservar',cita:'Pedir cita',pedir:'Pedir',agenda:'Agenda del pueblo',board:'Tablón',see:'Ver todo',gas:'Gasolineras',gact:'Actualizado',gcheap:'Más barato',gnear:'Más cerca',gdir:'Cómo llegar',g24:'Abre 24 h',gnodata:'Sin precio para este combustible',esq:'Esquelas',esqread:'Leer esquela',esqsrc:'Anuncios publicados por las familias en Diario Vasco',esqno:'Hoy no hay esquelas publicadas',noti:'Notificaciones',hoy:'Hoy',antes:'Antes'},
 eu:{ask:'Galdetu',qsec:'Herriaren galderak',qall:'Dena ikusi',home:'Hasiera',explore:'Arakatu',points:'Puntuak',profile:'Profila',flash:'Azken orduko hutsuneak',stories:'Istorioak',feed:'Gaur Elgoibarren',reservar:'Erreserbatu',cita:'Txanda eskatu',pedir:'Eskatu',agenda:'Herriko agenda',board:'Iragarki taula',see:'Dena ikusi',gas:'Gasolindegiak',gact:'Eguneratua',gcheap:'Merkeena',gnear:'Gertuen',gdir:'Nola joan',g24:'24 ordu',gnodata:'Ez dago prezioa',esq:'Eskeulak',esqread:'Eskeula irakurri',esqsrc:'Familiak Diario Vascon argitaratuak',esqno:'Gaurko eskeularik ez',noti:'Jakinarazpenak',hoy:'Gaur',antes:'Lehenago'}};
+T.es.useful='Útiles';T.eu.useful='Baliabideak';
+Object.assign(T.es,{usefulTitle:'Todo lo útil en Elgoibar',usefulIntro:'Gasolina, esquelas, empleo y servicios del pueblo desde un mismo sitio.',usefulJobs:'Trabajo y formación',usefulJobsDesc:'Ofertas de Lanbide y cursos',usefulFuel:'Gasolineras',usefulFuelDesc:'Precios y cómo llegar',usefulEsq:'Esquelas',usefulEsqDesc:'Elgoibar y comarca',usefulTown:'Ayuntamiento y noticias',usefulTownDesc:'Avisos, agenda y participación'});
+Object.assign(T.eu,{usefulTitle:'Elgoibarko baliabideak',usefulIntro:'Erregaia, eskelak, lana eta herriko zerbitzuak leku berean.',usefulJobs:'Enplegua eta ikastaroak',usefulJobsDesc:'Lanbideko eskaintzak eta ikastaroak',usefulFuel:'Gasolindegiak',usefulFuelDesc:'Prezioak eta nola iritsi',usefulEsq:'Eskelak',usefulEsqDesc:'Elgoibar eta eskualdea',usefulTown:'Udala eta albisteak',usefulTownDesc:'Abisuak, agenda eta parte-hartzea'});
 const t=k=>T[lang][k]||k;
 
 const ACTBY={bar:'reservar',rest:'reservar',cafe:'pedir',alim:'pedir',belleza:'cita',tienda:'pedir',salud:'cita',serv:'cita'};
@@ -70,6 +75,9 @@ const POSTS=[
  {b:'pasteleria',time:'hace 40 min',txt:'Croissants recién salidos del horno. Pídelos antes de las 8:30 y te los llevamos a casa para el desayuno.',likes:158,com:12},
  {b:'meraki',time:'hace 2 h',txt:'Nuevo color de otoño. Esta semana, tratamiento hidratante gratis con cualquier color reservado en la app.',likes:96,com:8},
  {b:'maala',time:'hace 3 h',txt:'Terraza abierta con vistas al pueblo. Esta tarde, café y pastel por 4 € reservando desde Kalea.',likes:301,com:41}];
+function storedSet(key){try{const value=JSON.parse(localStorage.getItem(key)||'[]');return new Set(Array.isArray(value)?value:[])}catch(e){return new Set()}}
+function saveSet(key,set){try{localStorage.setItem(key,JSON.stringify([...set]))}catch(e){}}
+const hiddenPosts=storedSet('kalea_hidden_posts'),mutedBiz=storedSet('kalea_muted_biz'),reportedPosts=storedSet('kalea_reported_posts');
 const ONKP=['tantaka','pasteleria','meraki','maala','txarriduna','josebarber'];
 const order=['tantaka','txarriduna','pasteleria','meraki','josebarber','maala','lanbroa','vientosur','ibaiondo','malape','ametsa','marem','kingkong','belaustegi','bst'].filter(k=>B[k]);
 const ONK=new Set([...order,...ONKP]);
@@ -88,34 +96,36 @@ const PLANS=[
  {id:'bus',org:'Ayuntamiento',by:'Ayuntamiento de Elgoibar',title:'Autobús al festival de Donostia',price:10,min:50,now:42,until:'Cierra el jueves 22',img:'assets/concierto.jpg',cof:'El ayuntamiento pone 5 € por persona'},
  {id:'cena',org:'Negocio',by:'Restaurante Txarriduna',title:'Cena de sidrería con menú cerrado',price:35,min:30,now:24,until:'Cierra el miércoles 21',img:B.txarriduna?B.txarriduna.img:'assets/restaurante.jpg'},
  {id:'mus',org:'Vecino',by:'Ane, vecina de Elgoibar',title:'Txapelketa de mus en el bar del jubilado',price:5,min:16,now:16,until:'Cierra el sábado 17',img:'assets/bar.jpg'}];
-const joinedP=new Set();
+const joinedP=storedSet('kalea_plans');
 function planCard(p){const j=joinedP.has(p.id),n=p.now+(j?1:0),ok=n>=p.min,pc=Math.min(100,Math.round(n*100/p.min));
- return `<div class="plan"><div class="im" style="background-image:url(${p.img})"><span class="org o-${p.org}">${p.org}</span>${ok?'<span class="ok">Se hace</span>':''}</div><div class="bd"><b>${p.title}</b><small>${p.by}</small>
- <div class="prog"><span style="width:${pc}%"></span></div><div class="pn"><b>${n} de ${p.min}</b><span>${ok?'Mínimo conseguido':'Faltan '+(p.min-n)}</span></div>
+ return `<div class="plan" data-plan-card="${p.id}"><div class="im" style="background-image:url(${p.img})"><span class="org o-${p.org}">${p.org}</span><span class="ok" data-plan-success ${ok?'':'hidden'}>Se hace</span></div><div class="bd"><b>${p.title}</b><small>${p.by}</small>
+ <div class="prog" role="progressbar" aria-label="Vecinos apuntados" aria-valuemin="0" aria-valuemax="${Math.max(p.min,n)}" aria-valuenow="${n}"><span style="width:${pc}%"></span></div><div class="pn" aria-live="polite"><b data-plan-count>${n} de ${p.min}</b><span data-plan-remaining>${ok?'Mínimo conseguido':'Faltan '+(p.min-n)}</span></div>
  <div class="pm">${p.price} € por persona · ${p.until}</div>${p.cof?`<div class="cof">${ic('town')} ${p.cof}</div>`:''}
- <i class="psp"></i><button class="cta wide ${j?'done':''}" data-plan="${p.id}">${j?ic('check')+' Apuntado':'Me apunto'}</button><small class="nocharge">${ok?'Se cobra al cerrar el plan':'Solo pagas si se llega al mínimo'}</small></div></div>`}
+ <i class="psp"></i><button class="cta wide ${j?'done':''}" data-plan="${p.id}" aria-pressed="${j}">${j?ic('check')+(lang==='eu'?' Izena emanda · utzi':' Apuntado · salir'):(lang==='eu'?'Izena eman':'Me apunto')}</button><small class="nocharge">${lang==='eu'?'Demoa: zure interesa gailu honetan bakarrik gordetzen da; ez du tokirik gordetzen edo kobratzen.':'Demo: tu interés solo se guarda en este dispositivo; no reserva plaza ni realiza cobros.'}</small></div></div>`}
+function updatePlanCard(p){const card=document.querySelector(`[data-plan-card="${p.id}"]`);if(!card)return;const j=joinedP.has(p.id),n=p.now+(j?1:0),ok=n>=p.min,pc=Math.min(100,Math.round(n*100/p.min)),bar=card.querySelector('.prog'),button=card.querySelector('[data-plan]'),success=card.querySelector('[data-plan-success]');if(bar){bar.setAttribute('aria-valuemax',Math.max(p.min,n));bar.setAttribute('aria-valuenow',n);bar.firstElementChild.style.width=pc+'%'}const count=card.querySelector('[data-plan-count]'),remaining=card.querySelector('[data-plan-remaining]');if(count)count.textContent=`${n} de ${p.min}`;if(remaining)remaining.textContent=ok?(lang==='eu'?'Gutxienekoa lortuta':'Mínimo conseguido'):(lang==='eu'?`${p.min-n} falta dira`:`Faltan ${p.min-n}`);if(success)success.hidden=!ok;if(button){button.classList.toggle('done',j);button.setAttribute('aria-pressed',String(j));button.innerHTML=j?ic('check')+(lang==='eu'?' Izena emanda · utzi':' Apuntado · salir'):(lang==='eu'?'Izena eman':'Me apunto')}card.classList.toggle('plan-ready',ok);card.classList.remove('plan-pulse');void card.offsetWidth;card.classList.add('plan-pulse');setTimeout(()=>card.classList.remove('plan-pulse'),520)}
 function plans(){return `<div class="sec"><h3>Si somos tantos, se hace</h3><a href="#" data-tab="publish" data-pt2="plan">Crear plan</a></div><div class="plans">${PLANS.map(planCard).join('')}</div>`}
-let scope='pueblo';const going=new Set();
+let scope='pueblo',feedMode=(()=>{try{return localStorage.getItem('kalea_feed_mode')==='following'?'following':'all'}catch(e){return 'all'}})();const going=storedSet('kalea_going');
 const ACT={reservar:['reservar','cal'],cita:['cita','scis'],pedir:['pedir','bag']};
 
 const $=s=>document.querySelector(s);
 const view=$('#view');
-let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'}catch(e){return 'home'}})(),liked=new Set(),cat='Todos',points=1240;
+let tab=(()=>{try{return new URLSearchParams(location.search).get('tab')||'home'}catch(e){return 'home'}})(),liked=storedSet('kalea_liked'),cat='Todos',points=1240;
 
 try{localStorage.removeItem('kalea_kua')}catch(e){}
 function nav(){
- const tabs=[['home','home'],['explore','search'],['plus','plus'],['noti','bell'],['profile','user']];
- $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')?'on':''}" data-tab="${k}">${ic(i)}${k==='noti'&&!notifRead&&tab!=='noti'?'<i class="dot"></i>':''}<span>${t(k)}</span></button>`).join('');
+ const tabs=[['home','home'],['explore','search'],['plus','plus'],['useful','toolbox'],['profile','user']];
+ $('#tabbar').innerHTML=tabs.map(([k,i])=>k==='plus'?`<button class="plus" data-tab="publish" aria-label="Publicar">${ic('plus')}</button>`:`<button class="tab ${tab===k||(k==='profile'&&tab==='points')||(['ask','work','town'].includes(tab)&&k==='useful')?'on':''}" data-tab="${k}">${ic(i)}<span>${t(k)}</span></button>`).join('');
 }
-function topBar(){return `<div class="top"><div class="brand"><span class="wm">Kalea</span><span class="bloc">${ic('pin')} Elgoibar</span></div></div>`}
-function stories(){return `<div class="stories">${order.map((k,i)=>`<button class="st" data-story="${k}"><div class="ring ${seenS.has(k)?'seen':''}"><img src="${B[k].img}" alt="" referrerpolicy="no-referrer" onerror="imgFail(this,'stfb','${B[k].cg}')"></div><span>${B[k].short}</span></button>`).join('')}</div>`}
+function notificationButton(){return `<button class="ib header-notifications" type="button" data-tab="noti" aria-label="${lang==='eu'?'Jakinarazpenak ireki':'Abrir notificaciones'}">${ic('bell')}${!notifRead?'<i class="dot" aria-hidden="true"></i>':''}</button>`}
+function topBar(){return `<div class="top"><div class="brand"><span class="wm">Kalea</span><span class="bloc">${ic('pin')} Elgoibar</span></div>${notificationButton()}</div>`}
+function stories(){const groupLabel=lang==='eu'?'Saltokien istorioak':'Historias de negocios',actionLabel=lang==='eu'?'istorioa ikusi':'ver historia';return `<div class="stories home-stories" aria-label="${groupLabel}">${order.map(k=>{const b=B[k],label=b.name||b.short,seen=seenS.has(k);return `<button class="st fb-story ${seen?'seen':''}" type="button" data-story="${k}" aria-label="${esc(label)}, ${actionLabel}"><span class="story-card"><img class="story-card__photo" src="${b.img}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="imgFail(this,'story-card__photo-fallback','${b.cg}')"><span class="story-card__shade" aria-hidden="true"></span><span class="story-card__avatar ${seen?'seen':''}" aria-hidden="true">${av(b,'story-card__avatar-img')}</span><span class="story-card__name">${esc(label)}</span></span></button>`}).join('')}</div>`}
 function flash(){return `<div class="sec"><h3 class="live">${t('flash')}</h3><a href="#" data-tab="explore">${t('see')}</a></div><div class="flash">${FLASH.map((f,i)=>`<button class="fc" data-flash="${i}"><div class="im" style="background-image:url(${B[f.b].img})"><span class="off">${f.off}</span><span class="left">${f.left}</span><span class="ejf">Ejemplo</span></div><div class="bd"><b>${f.txt}</b><small>${B[f.b].name}</small></div></button>`).join('')}</div>`}
 function muni(){return `<div class="muni"><div class="ic">${ic('town')}</div><div><b>Bonos del comercio local<span class="tag">Ejemplo</span></b><p>Tu ayuntamiento te regala 10 € para gastar en cualquier negocio de Kalea.</p></div></div>`}
-const VER=`<svg class="ver" viewBox="0 0 24 24" aria-label="En Kalea"><circle cx="12" cy="12" r="10" fill="#0095f6"/><path d="m7.5 12.3 3 3 6-6" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-const saved=new Set();try{JSON.parse(localStorage.getItem('kalea_saved')||'[]').forEach(x=>saved.add(x))}catch(e){}
+const DEMOBADGE='<span class="demo-badge" title="Perfil y publicaciones de demostración">Demo</span>';
+const saved=storedSet('kalea_saved');
 const ALAB={reservar:'Reservar mesa',cita:'Pedir cita',pedir:'Hacer un pedido'};
 function dbl(k){need('Para dar me gusta',()=>{if(!liked.has(k))setLike(k,true);const h=document.querySelector(`[data-heart="${k}"]`);if(h){h.classList.remove('pop');void h.offsetWidth;h.classList.add('pop')}})}
-function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b),sv=saved.has(p.b),st=order.includes(p.b),i=POSTS.indexOf(p);return `<article class="post igp"><div class="ph">${st?`<button class="avr ${seenS.has(p.b)?'seen':''}" data-story="${p.b}" aria-label="Ver historia">${av(b,'av')}</button>`:av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${b.short||b.name}${ONK.has(p.b)?VER:''}</b><small>${b.street}</small></button><button class="more" data-biz="${p.b}" aria-label="Ver perfil">•••</button></div><div class="pimw" ondblclick="dbl('${p.b}')"><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nopic')"><span class="bigheart" data-heart="${p.b}">${ic('heart')}</span></div><button class="shopbar" data-act="${p.b}"><span>${ic(a[1])} ${ALAB[b.action]||t(a[0])}</span>${ic('chev')}</button><div class="pa igpa"><button class="ib2 ${l?'liked':''}" data-like="${p.b}" aria-label="Me gusta">${ic('heart')}</button><button class="ib2" data-com="${p.b}" data-cmt="${esc(b.short||b.name)}" aria-label="Comentar">${ic('chat')}</button><button class="ib2" data-share="${p.b}" aria-label="Compartir">${ic('send')}</button><button class="ib2 save ${sv?'on':''}" data-save="${p.b}" aria-label="Guardar">${ic('bookmark')}</button></div><div class="likes">${(p.likes+(l?1:0)).toLocaleString('es-ES')} Me gusta</div><p class="cap"><b>${b.short||b.name}</b> ${p.txt} <span class="ej">Ejemplo</span></p>${cmPrev(p.b,b.short||b.name)}<div class="ptime">${p.time}</div></article>`}
+function post(p){const b=B[p.b],a=ACT[b.action],l=liked.has(p.b),sv=saved.has(p.b),st=order.includes(p.b);return `<article class="post igp" data-post="${p.b}"><div class="ph">${st?`<button class="avr ${seenS.has(p.b)?'seen':''}" data-story="${p.b}" aria-label="Ver historia">${av(b,'av')}</button>`:av(b,'av')}<button class="nm" data-biz="${p.b}"><b>${esc(b.short||b.name)}${ONK.has(p.b)?DEMOBADGE:''}</b><small>${esc(b.street)} · <span class="trust-pill">Publicación de ejemplo</span></small></button><button class="more" data-postmenu="${p.b}" aria-label="Opciones de la publicación de ${esc(b.name)}">•••</button></div><div class="pimw" ondblclick="dbl('${p.b}')"><img class="pimg" src="${b.img}" alt="" referrerpolicy="no-referrer" onerror="this.parentNode.classList.add('nopic')"><span class="bigheart" data-heart="${p.b}">${ic('heart')}</span></div><button class="shopbar" data-act="${p.b}"><span>${ic(a[1])} ${ALAB[b.action]||t(a[0])}</span>${ic('chev')}</button><div class="pa igpa"><button class="ib2 ${l?'liked':''}" data-like="${p.b}" aria-label="Me gusta" aria-pressed="${l}">${ic('heart')}</button><button class="ib2" data-com="${p.b}" data-cmt="${esc(b.short||b.name)}" aria-label="Comentar">${ic('chat')}</button><button class="ib2" data-share="${p.b}" aria-label="Compartir">${ic('send')}</button><button class="ib2 save ${sv?'on':''}" data-save="${p.b}" aria-label="Guardar" aria-pressed="${sv}">${ic('bookmark')}</button></div><div class="likes">${(p.likes+(l?1:0)).toLocaleString('es-ES')} Me gusta</div><p class="cap"><b>${esc(b.short||b.name)}</b> ${esc(p.txt)}</p>${cmPrev(p.b,b.short||b.name)}<div class="ptime">${p.time} · Demo</div></article>`}
 
 /* ===== Pregunta al pueblo ===== */
 const nrm=x=>x.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
@@ -165,7 +175,7 @@ function qCard(q){const all=q.ans.map((a,i)=>({...a,i,v:a.v+(upv.has(q.id+':'+i)
  <div class="rep"><input id="r-${q.id}" placeholder="Escribe tu respuesta"><button data-reply="${q.id}">Responder</button></div></article>`}
 function askCard(){const q=QS[0];return `<div class="sec"><h3>Pregunta al pueblo</h3><a href="#" data-tab="ask">Ver todas</a></div><div class="askc"><button class="askin" data-tab="publish" data-pt2="ask">${ic('spark')}<span>¿Qué necesitas en Elgoibar?</span></button><button class="askq" data-tab="ask"><small>${q.who} preguntó <span class="ej">Ejemplo</span></small><b>${q.q}</b><span>Kalea IA y ${q.ans.length} vecinos han respondido</span></button></div>`}
 function askV(){
- view.innerHTML=`<div class="top"><div class="place">Pregunta al pueblo</div></div><p class="asksub">Pregunta lo que quieras. La IA te responde al momento con negocios de Elgoibar y los vecinos te dan su opinión.</p>
+ view.innerHTML=`<div class="top"><div class="place">Pregunta al pueblo</div>${notificationButton()}</div><p class="asksub">Pregunta lo que quieras. La IA te responde al momento con negocios de Elgoibar y los vecinos te dan su opinión.</p>
  <div class="askbox"><textarea id="aq" rows="2" placeholder="¿Qué necesitas en Elgoibar? Ej.: quién arregla persianas"></textarea><button class="cta" id="ago">Preguntar</button></div>
  <div class="chips">${['¿Dónde veo el partido?','Busco dentista','Taller para el coche','Tarta de cumpleaños','Peluquería esta tarde'].map(x=>`<button class="chip" data-sug="${x}">${x}</button>`).join('')}</div>
  <div id="ares"></div><div class="sec"><h3>Últimas preguntas</h3></div>${myQs.concat(QS).map(qCard).join('')}`;
@@ -213,7 +223,7 @@ function lbList(k){
 function workCard(){return `<div class="sec"><h3>Trabajo y formación</h3><a href="#" data-tab="work">Ver todo</a></div><div class="wtiles"><button data-tab="work" data-wt="of"><span class="wkic">${ic('bag')}</span><b>Ofertas de empleo</b><small>Lanbide en tu zona</small></button><button data-tab="work" data-wt="cu"><span class="wkic g">${ic('book')}</span><b>Cursos subvencionados</b><small>Gratis con Lanbide</small></button><button data-tab="work" data-wt="se"><span class="wkic o">${ic('store')}</span><b>Se busca</b><small>Negocios del pueblo</small></button></div>`}
 function workV(){
  const zones=wtab==='se'?'':`<div class="seg wz">${[['elgoibar','Elgoibar'],['comarca','Comarca']].concat(wtab==='cu'?[['online','Online']]:[]).map(([k,l])=>`<button class="${wzone===k?'on':''}" data-wz="${k}">${l}</button>`).join('')}</div>`;
- view.innerHTML=`<div class="top"><div class="place">Trabajo y formación</div></div>
+ view.innerHTML=`<div class="top work-top"><button class="ib" type="button" data-tab="useful" aria-label="${lang==='eu'?'Atzera':'Volver'}">${ic('back')}</button><div class="place">Trabajo y formación</div>${notificationButton()}</div>
  <div class="wtabs">${[['of','Ofertas'],['cu','Cursos'],['se','Se busca']].map(([k,l])=>`<button class="${wtab===k?'on':''}" data-wt="${k}">${l}</button>`).join('')}</div>
  <div class="wbar">${zones}<button class="walert ${walert?'on':''}" data-walert="1">${ic('bell')} ${walert?'Aviso activado':'Avísame'}</button></div>
  ${wtab==='se'?`<button class="big-cta wpub" data-jobpub="1">Publicar una oferta de mi negocio</button>${JOBS.map(jobCard).join('')}`:lbList(wtab)}`}
@@ -249,7 +259,9 @@ function demoBar(){return `<div class="demobar">Versión de prueba. Los negocios
 function notifSheet(){notifRead=true;const lb=(LB.of||[]).filter(o=>ZONE.comarca.some(z=>nrm(o.municipio||'').toUpperCase().includes(z)))[0];const p=PLANS[1];
  const it=[[ 'bolt',`${B[FLASH[0].b].name}: ${FLASH[0].txt}`,'Hueco de última hora · ejemplo',`data-flash="0"`],lb?['bag',`Nueva oferta en ${cap(lb.municipio)}: ${cap(lb.desEmpleo)}`,'Lanbide',`data-tab="work" data-wt="of"`]:null,['user',`${p.title}: faltan ${Math.max(0,p.min-p.now)} para que se haga`,'Plan en grupo · ejemplo',`data-tab="home"`],['chat','Ane ha recibido 2 respuestas en su pregunta','Pregunta al pueblo · ejemplo',`data-tab="ask"`]].filter(Boolean);
  openSheet(`<h3>Avisos</h3><div class="nots">${it.map(x=>`<button class="notr" ${x[3]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div></button>`).join('')}</div><button class="big-cta ghostcta" data-tab="profile">Elegir qué avisos recibo</button>`);if(tab==='home')refreshHome()}
-function home(){view.innerHTML=topBar()+stories()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feed()}
+function feedFilters(){return `<div class="feed-filters" role="group" aria-label="${lang==='eu'?'Hasierako jarioa':'Filtrar el inicio'}"><button type="button" data-feedmode="all" aria-pressed="${feedMode==='all'}" class="${feedMode==='all'?'on':''}">${lang==='eu'?'Guztia':'Todo'}</button><button type="button" data-feedmode="following" aria-pressed="${feedMode==='following'}" class="${feedMode==='following'?'on':''}">${lang==='eu'?'Jarraitzen':'Siguiendo'}</button></div>`}
+function home(){view.innerHTML=topBar()+stories()+agenda()+`<div class="sec"><h3>${scope==='pueblo'?t('feed'):'En Gipuzkoa'}</h3><div class="seg"><button class="${scope==='pueblo'?'on':''}" data-scope="pueblo">Elgoibar</button><button class="${scope==='provincia'?'on':''}" data-scope="provincia">Gipuzkoa</button></div></div>`+feedFilters()+feed()}
+function useful(){view.innerHTML=topBar()+`<div class="useful-heading"><p>${t('board')}</p><h1>${t('usefulTitle')}</h1><small>${t('usefulIntro')}</small></div><div class="useful-grid"><button class="useful-card" data-tab="work" data-wt="of"><span class="useful-icon">${ic('work')}</span><span class="useful-copy"><b>${t('usefulJobs')}</b><small>${t('usefulJobsDesc')}</small></span><span class="useful-arrow" aria-hidden="true">›</span></button><button class="useful-card" data-gas="1"><span class="useful-icon">${ic('pin')}</span><span class="useful-copy"><b>${t('usefulFuel')}</b><small>${t('usefulFuelDesc')}</small></span><span class="useful-arrow" aria-hidden="true">›</span></button><button class="useful-card" data-esq="1"><span class="useful-icon">${ic('news')}</span><span class="useful-copy"><b>${t('usefulEsq')}</b><small>${t('usefulEsqDesc')}</small></span><span class="useful-arrow" aria-hidden="true">›</span></button><button class="useful-card" data-tab="town"><span class="useful-icon">${ic('town')}</span><span class="useful-copy"><b>${t('usefulTown')}</b><small>${t('usefulTownDesc')}</small></span><span class="useful-arrow" aria-hidden="true">›</span></button></div>`}
 function agenda(){return `<div class="sec"><h3 class="aih">${ic('spark')} Pasa en Elgoibar</h3><small class="aisub">Automático</small></div><div class="agenda">${AIEV.map(e=>`<button class="ag agev" data-ev="${e.id}"><div class="im" style="background-image:url(${e.img})"><span class="d"><b>${e.day}</b>${e.mon}</span><span class="sc">${e.scope==='pueblo'?'Elgoibar':'Gipuzkoa'}</span></div><div class="bd"><b>${e.title}</b><small>${e.going} vecinos van</small></div></button>`).join('')}${NEWS.map(n=>`<button class="ag nw" data-news="${n.id}"><div class="nk ${n.kind==='Aviso'?'warn':''}">${ic(n.kind==='Aviso'?'alert':'news')} ${n.kind}</div><b>${n.title}</b><small>${n.src}</small></button>`).join('')}</div>`}
 function notiRow(x){return `<button class="nrow" ${x[4]}><span class="wkic">${ic(x[0])}</span><div><b>${x[1]}</b><small>${x[2]}</small></div><small class="nt">${x[3]}</small></button>`}
 function noti(){
@@ -273,7 +285,7 @@ function noti(){
 
 function townCard(){return `<div class="townc"><div class="th"><div class="ic">${ic('town')}</div><div><b>Tu ayuntamiento</b><small>Avisos, encuestas, incidencias y bonos</small></div><button class="go" data-tab="town">Abrir</button></div><div class="tq"><button data-tab="town">${ic('alert')}<span>Avisos</span></button><button data-tab="town">${ic('vote')}<span>Participa</span></button><button data-inc="1">${ic('wrench')}<span>Incidencia</span></button><button data-bono="1">${ic('coin')}<span>Bono 10 €</span></button></div></div>`}
 function town(){const tot=POLL.o.reduce((a,x)=>a+x[1],0)+(voted!==null?1:0);
- view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div><span class="tag">Ejemplo</span></div>
+ view.innerHTML=`<div class="top"><button class="ib" data-tab="home">${ic('back')}</button><div class="ttl">Ayuntamiento de Elgoibar ${ic('ver','ver')}</div>${notificationButton()}</div>
  <div class="tsec"><h3>${ic('alert')} Avisos oficiales</h3>${NEWS.filter(n=>n.kind==='Aviso').map(n=>`<div class="tcard warn"><b>${n.title}</b><p>${n.txt}</p><small>Te llega como notificación a todos los vecinos</small></div>`).join('')}<div class="tcard"><b>Recogida de enseres</b><p>Jueves 15 de octubre. Avísanos desde la app y pasamos por tu portal.</p></div></div>
  <div class="tsec"><h3>${ic('vote')} Participa</h3><div class="tcard"><b>${POLL.q}</b>${POLL.o.map((o,i)=>{const v=o[1]+(voted===i?1:0),p=Math.round(v*100/tot);return `<button class="pollo ${voted===i?'on':''}" data-vote="${i}"><span class="bar" style="width:${voted!==null?p:0}%"></span><span class="lb">${o[0]}</span>${voted!==null?`<span class="pc">${p}%</span>`:''}</button>`}).join('')}<small>${voted!==null?'Gracias por votar · +20 puntos':'312 vecinos han votado · votar da 20 puntos'}</small></div></div>
  <div class="tsec"><h3>${ic('wrench')} Incidencias</h3><div class="tcard"><p>¿Una farola fundida, un bache, basura acumulada? Haz una foto y llega directa al ayuntamiento. Te avisamos cuando esté arreglado.</p><i class="psp"></i><button class="cta wide" data-inc="1">${ic('wrench')} Avisar de una incidencia</button></div></div>
@@ -297,6 +309,8 @@ function qSheet(qid){const q=myQs.concat(QS).find(x=>x.id===qid);if(!q)return;co
  ci.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();send()}};cs.onclick=send;}
 function askHome(){const qs=myQs.concat(QS).slice(0,3);return `<div class="sec"><h3>${t('qsec')}</h3><a href="#" data-tab="ask">${t('qall')}</a></div><div class="askc"><button class="askin" data-tab="publish" data-pt2="ask">${ic('spark')}<span>${lang==='eu'?'Zer behar duzu Elgoibarren?':'¿Qué necesitas en Elgoibar?'}</span></button></div>${qs.map(qPost).join('')}`}
 function feed(){
+ const visiblePosts=POSTS.filter(p=>!hiddenPosts.has(p.b)&&!mutedBiz.has(p.b));
+ if(feedMode==='following'){const followed=visiblePosts.filter(p=>follows.has(p.b));return followed.length?followed.map(post).join(''):`<div class="feed-empty"><b>${lang==='eu'?'Oraindik ez duzu negoziorik jarraitzen':'Todavía no sigues a ningún negocio'}</b><p>${lang==='eu'?'Jarraitu zure gogoko negozioei haien berriak hemen ikusteko.':'Sigue tus negocios favoritos para ver aquí sus novedades.'}</p><button class="cta" data-tab="explore">${lang==='eu'?'Negozioak arakatu':'Explorar negocios'}</button></div>`}
  loadNews();if(!LB.of&&!LB.ld.of&&!LB.err.of)lbLoad('of');
  const nw=EUNEWS||[];
  if(scope==='provincia'){const out=[];const n=nw.filter(x=>!x.local);AIEV.forEach((e,i)=>{out.push(aiPost(e));if(n[i])out.push(newsPost(n[i]))});n.slice(AIEV.length,12).forEach(x=>out.push(newsPost(x)));return out.join('')}
@@ -307,8 +321,8 @@ function feed(){
  const out=[];myQs.forEach(q=>out.push(qPost(q)));JOBS.filter(j=>!j.ej).forEach(j=>out.push(jobPost(j)));
  const ins=[qPost(QS[0]),flash(),lb[0]?lbPost(lb[0]):jobPost(JOBS.find(j=>j.ej)),plans(),townCard(),lb[1]?lbPost(lb[1]):''];
  let ni=0;
- POSTS.forEach((p,i)=>{out.push(post(p));if(ins[i])out.push(ins[i]);if(i%2===1&&loc[ni])out.push(newsPost(loc[ni++]))});
- ins.slice(POSTS.length).forEach(x=>x&&out.push(x));
+ visiblePosts.forEach((p,i)=>{out.push(post(p));if(ins[i])out.push(ins[i]);if(i%2===1&&loc[ni])out.push(newsPost(loc[ni++]))});
+ ins.slice(visiblePosts.length).forEach(x=>x&&out.push(x));
  const rest=loc.slice(ni,ni+6);
  if(rest.length)out.push(`<div class="nlist"><div class="nlh">${ic('news')} Más noticias de la zona</div>${rest.map(n=>`<a href="${esc(n.u)}" target="_blank" rel="noopener"><b>${esc(n.t)}</b><small>${n.local?'Cerca de ti · ':''}${esc(n.s)} · ${ago(n.ts)}</small></a>`).join('')}</div>`);
  return out.join('');
@@ -341,17 +355,20 @@ function gasPaint(){
  <button class="chip ${gasF==='p95'?'on':''}" data-gf="p95">95</button>
  <button class="chip ${gasF==='p98'?'on':''}" data-gf="p98">98</button>
  <span class="gsep"></span>
- <button class="chip ${gasS==='cheap'?'on':''}" data-gs="cheap">${t('gcheap')}</button>
- <button class="chip ${gasS==='near'?'on':''}" data-gs="near">${t('gnear')}</button></div>
+ <button class="chip ${gasS==='cheap'?'on':''}" data-gs="cheap" aria-pressed="${gasS==='cheap'}">${t('gcheap')}</button>
+ <button class="chip ${gasS==='near'?'on':''}" data-gs="near" aria-pressed="${gasS==='near'}">${t('gnear')}</button></div>
+ ${gasS==='near'&&!gasPos?`<div class="gas-location-note"><div><b>${lang==='eu'?'Ordenatu gertuen daudenak':'Ordena por cercanía'}</b><small>${gasGeo<0?(lang==='eu'?'Kokapena ez dago erabilgarri; prezioaren arabera ordenatu dira.':'No se obtuvo ubicación; se muestran primero las más baratas.'):(lang==='eu'?'Zure kokapena zure gailuan bakarrik erabiliko da distantzia kalkulatzeko.':'Usaremos tu ubicación solo para calcular distancias en este dispositivo.')}</small></div><button type="button" data-gasloc="1" ${gasGeo===2?'disabled':''}>${gasGeo===2?(lang==='eu'?'Kokapena bilatzen…':'Buscando…'):(gasGeo<0?(lang==='eu'?'Berriro saiatu':'Reintentar'):(lang==='eu'?'Erabili kokapena':'Usar mi ubicación'))}</button></div>`:''}
  <div class="gsrc">${t('gact')}: ${esc(GAS.fecha)} · Precios oficiales del Ministerio</div>
  <div class="gasl">${L.map(gasCard).join('')}</div>`;
  el.querySelectorAll('[data-gf]').forEach(b=>b.onclick=()=>{gasF=b.dataset.gf;gasPaint()});
- el.querySelectorAll('[data-gs]').forEach(b=>b.onclick=()=>{gasS=b.dataset.gs;gasPaint()});
+ el.querySelectorAll('[data-gs]').forEach(b=>b.onclick=()=>{gasS=b.dataset.gs;gasGeo=gasPos?1:gasGeo;gasPaint()});
 }
+function requestGasLocation(){if(!navigator.geolocation){gasGeo=-1;gasPaint();toast(lang==='eu'?'Kokapena ez dago erabilgarri nabigatzaile honetan':'Tu navegador no permite obtener la ubicación');return}gasGeo=2;gasPaint();navigator.geolocation.getCurrentPosition(p=>{gasPos=[p.coords.latitude,p.coords.longitude];gasGeo=1;gasPaint();toast(lang==='eu'?'Distantzia zure gailuan kalkulatu da':'Distancias calculadas en este dispositivo')},()=>{gasGeo=-1;gasPaint();toast(lang==='eu'?'Ezin izan dugu kokapena eskuratu':'No se pudo obtener la ubicación')},{timeout:8000,maximumAge:300000,enableHighAccuracy:false})}
 function gasV(){
+ tab='useful';nav();
  history.pushState({s:1},'','#gasolineras');
- view.innerHTML=`<div class="bptop"><button class="ib" id="gbk" aria-label="Volver">${ic('back')}</button><b>${t('gas')}</b><span class="ib" style="visibility:hidden"></span></div><div id="gasb"><div class="note">Cargando precios...</div></div>`;
- $('#gbk').onclick=()=>{tab='explore';render()};
+ view.innerHTML=`<div class="bptop"><button class="ib" id="gbk" aria-label="Volver">${ic('back')}</button><b>${t('gas')}</b>${notificationButton()}</div><div id="gasb"><div class="note">Cargando precios...</div></div>`;
+ $('#gbk').onclick=()=>{tab='useful';render()};
  if(!GAS){fetch('gas.json?v=1').then(r=>r.json()).then(j=>{GAS=j;if($('#gasb'))gasPaint()}).catch(()=>{const el=$('#gasb');if(el)el.innerHTML='<div class="empty">No he podido cargar los precios ahora mismo</div>'});return}
  gasPaint();
 }
@@ -365,26 +382,30 @@ function esqPaint(){
  el.innerHTML=`<div class="gsrc">${t('gact')}: ${esc(ESQ.fecha)} · ${t('esqsrc')}</div>`+towns.map(m=>`<div class="sec"><h3>${esc(m)}</h3></div>`+L.filter(e=>e.mun===m).map(esqCard).join('')).join('');
 }
 function esqV(){
+ tab='useful';nav();
  history.pushState({s:1},'','#esquelas');
- view.innerHTML=`<div class="bptop"><button class="ib" id="ebk" aria-label="Volver">${ic('back')}</button><b>${t('esq')}</b><span class="ib" style="visibility:hidden"></span></div><div id="esqb"><div class="note">Cargando...</div></div>`;
- $('#ebk').onclick=()=>{tab='explore';render()};
+ view.innerHTML=`<div class="bptop"><button class="ib" id="ebk" aria-label="Volver">${ic('back')}</button><b>${t('esq')}</b>${notificationButton()}</div><div id="esqb"><div class="note">Cargando...</div></div>`;
+ $('#ebk').onclick=()=>{tab='useful';render()};
  if(!ESQ){fetch('esquelas.json?v=1').then(r=>r.json()).then(j=>{ESQ=j;if($('#esqb'))esqPaint()}).catch(()=>{const el=$('#esqb');if(el)el.innerHTML=`<div class="empty">${t('esqno')}</div>`});return}
  esqPaint();
 }
-let q='',exMode='list';
-function exMap(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0]);const term=(q.trim()||(cg[1]?cg[0]:'comercios y bares'))+' Elgoibar';return `<div class="mapw"><iframe title="Mapa" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=${encodeURIComponent(term)}&output=embed"></iframe><small>En el mapa ves el horario, si está abierto ahora y la distancia.</small></div>`}
+let q='';
 const CATS=[['Todos',''],['Bares','bar'],['Restaurantes','rest'],['Cafés y panaderías','cafe'],['Alimentación','alim'],['Belleza','belleza'],['Tiendas','tienda'],['Salud y deporte','salud'],['Servicios','serv']];
 function bizList(){const cg=(CATS.find(c=>c[0]===cat)||CATS[0])[1],qq=q.trim().toLowerCase();
  const L=PL.filter(p=>(!cg||p.c===cg)&&(!qq||(p.n+' '+p.sub+' '+p.a).toLowerCase().includes(qq))).sort((a,b)=>(ONK.has(b.k)-ONK.has(a.k))||(!!b.ph-!!a.ph)||(b.v-a.v));
- if(!L.length)return `<div class="empty">No hay resultados para "${q}"</div>`;
- return L.map(p=>{const b=B[p.k];return `<button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${b.name}</b><small>${ONK.has(p.k)?'<span class="onk">En Kalea</span> ':''}${b.cat} · ${b.street}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} ${b.rev==1?'reseña':'reseñas'}`:'Sin reseñas todavía'}</small></div>${ONK.has(p.k)?`<span class="mini">${t(ACT[b.action][0])}</span>`:b.phone?`<span class="mini ghost2" data-tel="${p.k}">Llamar</span>`:`<span class="mini ghost2" data-map="${p.k}">Cómo llegar</span>`}</button>`}).join('')}
+ if(!L.length)return `<div class="empty">No hay resultados para "${esc(q)}"</div>`;
+ return L.map(p=>{const b=B[p.k];return `<div class="bizrow"><button class="biz" data-biz="${p.k}">${av(b,'bimg')}<div class="i"><b>${esc(b.name)}</b><small>${ONK.has(p.k)?`<span class="onk">${lang==='eu'?'Datu publikoak':'Datos públicos'}</span> `:''}${esc(b.cat)} · ${esc(b.street)}</small><small>${b.rev?`<span class="star">★ ${b.rating}</span> · ${b.rev} ${b.rev==1?'reseña':'reseñas'}`:'Sin reseñas todavía'}</small></div>${ONK.has(p.k)?`<span class="mini">${t(ACT[b.action][0])}</span>`:b.phone?`<span class="mini ghost2" data-tel="${p.k}">Llamar</span>`:`<span class="mini ghost2" data-map="${p.k}">Cómo llegar</span>`}</button><button class="ib biz-more" type="button" data-bizmenu="${p.k}" aria-label="${lang==='eu'?'Aukera gehiago: ':'Más opciones de '}${esc(b.name)}">${ic('dots')}</button></div>`}).join('')}
+function bizMenu(k){const b=B[k];if(!b)return;openSheet(`<div class="biz-menu"><h3>${esc(b.name)}</h3><small>${esc(b.cat)} · ${esc(b.street)}</small><a class="biz-menu-item" href="${b.maps}" target="_blank" rel="noopener">${ic('pin')}<span>Ver en el mapa</span>${ic('chev')}</a><button class="biz-menu-item" type="button" data-bizopen="${k}">${ic('store')}<span>Ver ficha en Kalea</span>${ic('chev')}</button>${b.phone?`<a class="biz-menu-item" href="${tel(b)}">${ic('phone')}<span>Llamar al negocio</span>${ic('chev')}</a>`:''}</div>`)}
 function explore(){
- view.innerHTML=`<div class="top"><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div><label class="search">${ic('search')}<input id="q" placeholder="Busca un bar, una peluquería..." value="${q.replace(/"/g,'&quot;')}"></label><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div class="viewsw"><button class="${exMode==='list'?'on':''}" data-exm="list">${ic('list')} Lista</button><button class="${exMode==='map'?'on':''}" data-exm="map">${ic('map')} Mapa</button></div><div class="sec"><h3>${t('board')}</h3></div><div class="bslider"><button class="board" data-tab="work" data-wt="of"><div class="k">${ic('work')} Trabajo y formación</div><b>Ofertas de Lanbide, cursos gratis y Se busca</b><small>Elgoibar y comarca</small></button><button class="board" data-gas="1"><div class="k">${ic('pin')} ${t('gas')}</div><b>95, 98 y diésel al día</b><small>Precios oficiales, de cerca a lejos</small></button><button class="board" data-esq="1"><div class="k">${ic('spark')} ${t('esq')}</div><b>Fallecimientos de hoy</b><small>Elgoibar y comarca</small></button></div><div id="bl">${exMode==='map'?exMap():bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
+ view.innerHTML=`<div class="top"><div><div class="place">${t('explore')}</div><small class="cnt">${PL.length} negocios</small></div>${notificationButton()}</div><div class="search biz-search">${ic('search')}<input id="q" type="search" aria-label="${lang==='eu'?'Bilatu Elgoibarko negozioak':'Buscar negocios en Elgoibar'}" enterkeyhint="search" placeholder="${lang==='eu'?'Bilatu Elgoibarko negozioak':'Buscar negocios en Elgoibar'}" value="${esc(q)}"><button class="search-clear" type="button" data-qclear="1" aria-label="${lang==='eu'?'Garbitu bilaketa':'Borrar búsqueda'}" ${q?'':'hidden'}>×</button></div><div class="chips">${CATS.map(c=>`<button class="chip ${c[0]===cat?'on':''}" data-cat="${c[0]}">${c[0]}</button>`).join('')}</div><div id="bl">${bizList()}</div><div class="gsrc">Datos y fotos: Google Maps</div>
 `;
- const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=exMode==='map'?exMap():bizList()};
+ const qi=$('#q');qi.oninput=()=>{q=qi.value;$('#bl').innerHTML=bizList();const clear=$('.search-clear');if(clear)clear.hidden=!q};
 }
 
-const follows=new Set();try{JSON.parse(localStorage.getItem('kalea_follow')||'[]').forEach(x=>follows.add(x))}catch(e){}
+const follows=storedSet('kalea_follow');
+function toggleFollow(k){follows.has(k)?follows.delete(k):follows.add(k);saveSet('kalea_follow',follows);return follows.has(k)}
+function postMenu(k){const b=B[k];if(!b)return;openSheet(`<div class="post-menu"><h3>${lang==='eu'?'Argitalpen aukerak':'Opciones de publicación'}</h3><p>${esc(b.name)} · ${lang==='eu'?'gailu honetan bakarrik':'solo afecta a tu inicio en este dispositivo'}.</p><button class="post-menu-item" data-postfollow="${k}">${ic(follows.has(k)?'check':'user')}<span>${follows.has(k)?(lang==='eu'?'Jarraitzen utzi':'Dejar de seguir'):(lang==='eu'?'Saltokia jarraitu':'Seguir negocio')}</span>${ic('chev')}</button><button class="post-menu-item" data-hidepost="${k}">${ic('info')}<span>${lang==='eu'?'Argitalpen hau ezkutatu':'Ocultar esta publicación'}</span>${ic('chev')}</button><button class="post-menu-item" data-mutebiz="${k}">${ic('bellx')}<span>${mutedBiz.has(k)?(lang==='eu'?'Isiltasuna kendu':'Dejar de silenciar'):(lang==='eu'?'Saltokia isilarazi':'Silenciar este negocio')}</span>${ic('chev')}</button><button class="post-menu-item danger" data-report="${k}">${ic('alert')}<span>${lang==='eu'?'Argitalpena salatu':'Denunciar publicación'}</span>${ic('chev')}</button><small class="demo-note">${lang==='eu'?'Aldaketak eta salaketak demo honetan bakarrik gordetzen dira; ez zaizkio inori bidaltzen.':'Los cambios y denuncias se guardan solo en esta demo; no se envían al negocio ni a moderación.'}</small></div>`)}
+function reportSheet(k){const b=B[k],reasons=lang==='eu'?['Eduki engainagarria','Spam edo nahi ez den publizitatea','Eduki desegokia','Beste arrazoi bat']:['Contenido engañoso','Spam o publicidad no deseada','Contenido inapropiado','Otro motivo'];openSheet(`<div class="report-sheet"><h3>${lang==='eu'?'Argitalpena salatu':'Denunciar publicación'}</h3><p class="sub">${lang==='eu'?'Zerk kezkatzen zaitu':'¿Qué te preocupa de'} ${esc(b.name)}?</p>${reasons.map((r,i)=>`<button class="post-menu-item" data-reportreason="${k}" data-reason="${i}"><span>${r}</span>${ic('chev')}</button>`).join('')}<small class="demo-note">${lang==='eu'?'Demo honetan salaketa ez zaio inori bidaltzen.':'En esta demo la denuncia no se envía a ninguna persona.'}</small></div>`)}
 function profile(k,noPush){
  const b=B[k],a=ACT[b.action],on=ONK.has(k),ps=POSTS.filter(p=>p.b===k),st=order.includes(k),fo=follows.has(k),bio=CAPK[k]||CAPC[b.cg],mn=b.action==='cita'?'Servicios':'Carta';
  const tiles=[...ps.map(p=>({img:b.img,txt:p.txt,i:POSTS.indexOf(p)})),{txt:bio},...(b.menu||[]).slice(0,5).map(m=>({txt:m[0],pr:m[2]}))];
@@ -392,9 +413,9 @@ function profile(k,noPush){
  const main=on?`<button data-act="${k}">${ic(a[1])} ${t(a[0])}</button>`:b.phone?`<a href="${tel(b)}">${ic('phone')} Llamar</a>`:`<a href="${b.maps}" target="_blank" rel="noopener">${ic('pin')} Cómo llegar</a>`;
  const avh=st?`<button class="bpav ${seenS.has(k)?'seen':''}" data-story="${k}" aria-label="Ver historia">${av(b,'bpimg')}</button>`:`<div class="bpav none">${av(b,'bpimg')}</div>`;
  const hl=[['menu','book',mn],['maps','clock','Horario'],['maps','pin','Ubicación'],['maps','star','Reseñas']];
- view.innerHTML=`<div class="bptop"><button class="ib" id="bpback" aria-label="Volver">${ic('back')}</button><b>${esc(b.short||b.name)}${on?VER:''}</b><button class="ib" data-share="${k}" aria-label="Compartir">${ic('send')}</button></div>
+ view.innerHTML=`<div class="bptop"><button class="ib" id="bpback" aria-label="Volver">${ic('back')}</button><b>${esc(b.short||b.name)}${on?DEMOBADGE:''}</b><button class="ib" data-share="${k}" aria-label="Compartir">${ic('send')}</button></div>
  <div class="bph">${avh}<div class="bpst"><div><b>${tiles.length}</b><small>publicaciones</small></div><div><b id="bpfn">${nf(fo)}</b><small>seguidores</small></div><div><b>${b.rating?'★ '+b.rating:'Nuevo'}</b><small>${b.rev?b.rev+(b.rev==1?' reseña':' reseñas'):'en Kalea'}</small></div></div></div>
- <div class="bpi"><h1>${esc(b.name)}</h1><div class="cat">${esc(b.cat)} · ${esc(b.street)}</div><p>${esc(bio)} <span class="ej">Ejemplo</span></p><span class="lnk">${ic('globe')} kalea.app/elgoibar/${k}</span>${on?'':`<div class="notk">Este negocio todavía no está en Kalea. Puedes llamar o ver cómo llegar.</div>`}</div>
+ <div class="bpi"><h1>${esc(b.name)}</h1><div class="cat">${esc(b.cat)} · ${esc(b.street)}</div><p>${esc(bio)} <span class="ej">Ejemplo</span></p><span class="lnk">${ic('globe')} kalea.app/elgoibar/${k}</span><div class="demo-note">Ficha de demostración basada en datos públicos. El negocio no ha confirmado este perfil y las acciones no se envían.</div></div>
  <div class="bpb"><button class="pri ${fo?'on':''}" id="bpf">${fo?'Siguiendo':'Seguir'}</button>${b.phone?`<a href="${tel(b)}">Llamar</a>`:''}<a href="${b.maps}" target="_blank" rel="noopener">Cómo llegar</a></div>
  <div class="bphl">${hl.map(h=>h[0]==='menu'?`<button data-pt="menu"><i><span>${ic(h[1])}</span></i>${h[2]}</button>`:`<a href="${b.maps}" target="_blank" rel="noopener"><i><span>${ic(h[1])}</span></i>${h[2]}</a>`).join('')}</div>
  <div class="bptabs"><button class="on" data-pt="grid" aria-label="Publicaciones">${ic('grid')}</button><button data-pt="info" aria-label="Información">${ic('info')}</button><button data-pt="menu" aria-label="${mn}">${ic('book')}</button></div><div id="pt"></div>
@@ -405,7 +426,7 @@ function profile(k,noPush){
   document.querySelectorAll('.bptabs [data-pt]').forEach(x=>x.classList.toggle('on',x.dataset.pt===w));
   el.querySelectorAll('[data-gpost]').forEach(x=>x.onclick=()=>openSheet(`<div class="gpsheet">${post(POSTS[+x.dataset.gpost])}</div>`))};
  view.querySelectorAll('[data-pt]').forEach(x=>x.onclick=()=>{pt(x.dataset.pt);if(x.closest('.bphl')){const tb=$('.bptabs');if(tb)tb.scrollIntoView({behavior:'smooth',block:'start'})}});
- $('#bpf').onclick=()=>need('Para seguir a '+b.name,()=>{follows.has(k)?follows.delete(k):follows.add(k);try{localStorage.setItem('kalea_follow',JSON.stringify([...follows]))}catch(e){}const f=follows.has(k),btn=$('#bpf');if(btn){btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}btn.classList.toggle('on',f);btn.textContent=f?'Siguiendo':'Seguir';$('#bpfn').textContent=nf(f)}toast(f?'Sigues a '+b.name:'Has dejado de seguir a '+b.name)});
+ $('#bpf').onclick=()=>need('Para seguir a '+b.name,()=>{const f=toggleFollow(k),btn=$('#bpf');if(btn){btn.classList.remove('pop');void btn.offsetWidth;btn.classList.add('pop');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}btn.classList.toggle('on',f);btn.textContent=f?'Siguiendo':'Seguir';$('#bpfn').textContent=nf(f)}toast(f?'Sigues a '+b.name:'Has dejado de seguir a '+b.name)});
  pt('grid');view.scrollTop=0;
  $('#bpback').onclick=()=>{if(history.state&&history.state.k)history.back();else render()};
  if(!noPush&&location.hash!=='#'+k)history.pushState({k},'','#'+k);
@@ -460,8 +481,8 @@ function walletMini(){const p=user?points:0;return `<button class="wmini" data-t
 let alerts={flash:true,job:true,plan:true,ask:true};try{Object.assign(alerts,JSON.parse(localStorage.getItem('kalea_alerts')||'{}'))}catch(e){}
 function me(){
  setTimeout(()=>{const g=$('#gear');if(g)g.onclick=()=>settingsV()},0);
- if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
- view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div>
+ if(!user){view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="top-actions">${notificationButton()}<button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div></div><div class="guest"><div class="ava">${ic('user')}</div><b>Estás de visita</b><p>Mira todo lo que quieras. Entra con Google para reservar, pedir, comentar y sumar puntos.</p><button class="gbtn" data-login="1">${GLOGO} Continuar con Google</button></div>${walletMini()}${instRow()}<div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div></div>`;return}
+ view.innerHTML=`<div class="top"><div class="place">${t('profile')}</div><div class="top-actions">${notificationButton()}<button class="ib gear" id="gear" aria-label="Ajustes">${ic('gear')}</button></div></div>
  <div class="me">${user.picture?`<img class="ava" src="${user.picture}" alt="" referrerpolicy="no-referrer">`:`<div class="ava">${user.name[0]}</div>`}<div><b>${user.name}</b><small>Vecino de Elgoibar · Nivel Oro</small></div></div>
  ${walletMini()}${instRow()}
  <div class="sec"><h3>Próximas</h3></div><div class="list">
@@ -475,12 +496,14 @@ function me(){
  <div class="list"><div class="li"><div class="ic">${ic('town')}</div><div class="t"><b>¿Tienes un negocio?</b><small>Crea tu página gratis en 2 minutos</small></div><span class="v">›</span></div><button class="li out" data-logout="1"><div class="ic">${ic('back')}</div><div class="t"><b>Cerrar sesión</b></div></button></div>`;
 }
 
-function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();try{({home,explore,points:pointsV,profile:me,publish,town,ask:askV,work:workV,noti}[tab])()}catch(e){console.error(e)}
+function render(){if(B[decodeURIComponent(location.hash.slice(1))])history.replaceState(null,'',location.pathname+location.search);setTimeout(stWatch,0);nav();try{({home,explore,points:pointsV,profile:me,publish,useful,town,ask:askV,work:workV,noti}[tab])()}catch(e){console.error(e)}
  hookPub();view.scrollTop=0;view.classList.remove('vin');void view.offsetWidth;view.classList.add('vin');clearTimeout(window._vt);window._vt=setTimeout(()=>view.classList.remove('vin'),600)}
 
 function openSheet(html){$('#sheet').classList.remove('csheet');$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('on');$('#scrim').classList.add('on')}
 function closeSheet(){$('#sheet').classList.remove('on','csheet');$('#scrim').classList.remove('on');if(pubSheetOn){pubSheetOn=false;ptype=null;if(tab==='publish')publish()}}
-function toast(m,p){const e=$('#toast');e.innerHTML=ic('check')+' '+m+(p?`<span>+${p}</span>`:'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove('on'),2600)}
+let toastUndo=null;
+function toast(m,p,undo){const e=$('#toast');toastUndo=typeof undo==='function'?undo:null;e.innerHTML=ic('check')+' '+esc(m)+(p?`<span>+${p}</span>`:'')+(toastUndo?'<button class="toast-undo" type="button" data-toastundo="1">Deshacer</button>':'');e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(()=>{e.classList.remove('on');toastUndo=null},3200)}
+function updateSaved(k,on){on?saved.add(k):saved.delete(k);saveSet('kalea_saved',saved);document.querySelectorAll(`[data-save="${k}"]`).forEach(b=>{b.classList.toggle('on',on);b.setAttribute('aria-pressed',String(on));b.classList.remove('pop');void b.offsetWidth;if(on)b.classList.add('pop')})}
 
 const CFG=window.KALEA_CONFIG||{};
 let user=null;try{user=JSON.parse(localStorage.getItem('kalea_user')||'null')}catch(e){}
@@ -504,7 +527,7 @@ function done(u){user=u;try{localStorage.setItem('kalea_user',JSON.stringify(u))
 function logout(){user=null;try{localStorage.removeItem('kalea_user')}catch(e){}if(window.google&&google.accounts)google.accounts.id.disableAutoSelect();render();toast('Sesión cerrada')}
 const COMMENTS={itsasoa:[['Ane','El jueves ahí estamos'],['Iker','Las gildas, las mejores del pueblo']],goxo:[['Maite','Los de chocolate también, porfa']],ile:[['Leire','Me encantó el color']],etxea:[['Jon','La Elgoibar está brutal'],['Nerea','¿Reparto a Azkue también?']]};
 let MYCM={};try{MYCM=JSON.parse(localStorage.getItem('kalea_cm')||'{}')}catch(e){}
-const cmLiked=new Set();
+const cmLiked=storedSet('kalea_cm_liked'),cmHelpful=storedSet('kalea_cm_helpful');
 const CMN=['Ane','Iker','Maite','Jon','Nerea','Leire','Unai','Amaia','Mikel','Itziar','Asier','Garazi','Aitor','June'];
 const CMT=['Qué buena pinta','Mañana me paso sin falta','¿Hasta qué hora abrís hoy?','Siempre de 10, eskerrik asko','Me lo apunto para el finde','¿Hay que reservar antes o se puede ir directamente?','El trato, de lo mejor del pueblo','Ondo pasa!','Ayer estuve y genial','Muy recomendable','¡Qué ganas!','Lo comparto con la cuadrilla','Zorionak por el trabajo','¿Esto vale también el sábado?'];
 const CMH=['12 min','40 min','1 h','2 h','3 h','5 h','8 h','1 d'];
@@ -514,7 +537,7 @@ function cmList(k){const base=(typeof COMMENTS!=='undefined'&&COMMENTS[k])?COMME
  return base.concat((MYCM[k]||[]).map((c,j)=>({n:c[0],t:c[1],h:'Ahora',id:k+'u'+j,me:1})))}
 function cmAv(n){return `<span class="cav">${esc((n||'?')[0].toUpperCase())}</span>`}
 function cmPrev(k,title){const l=cmList(k),last=l.slice(-2);return `<div class="cprev">${l.length?`<button class="vcom" data-com="${esc(k)}" data-cmt="${esc(title)}">${l.length==1?'Ver 1 comentario':'Ver los '+l.length+' comentarios'}</button>`:''}<button class="cadd" data-com="${esc(k)}" data-cmt="${esc(title)}" data-cfoc="1">${user?cmAv(user.name):'<span class="cav">'+ic('user')+'</span>'}<span>Añade un comentario...</span></button></div>`}
-function cmRow(c){const l=cmLiked.has(c.id);return `<div class="crow">${cmAv(c.n)}<div class="cbd"><div><b>${esc(c.n)}</b><small>${c.h}</small></div><p>${esc(c.t)}</p><button class="crep" data-crep="${esc(c.n)}">Responder</button></div><button class="clk ${l?'on':''}" data-clk="${esc(c.id)}" aria-label="Me gusta">${ic('heart')}</button></div>`}
+function cmRow(c){const l=cmLiked.has(c.id),useful=cmHelpful.has(c.id);return `<div class="crow">${cmAv(c.n)}<div class="cbd"><div><b>${esc(c.n)}</b><small>${c.h}</small></div><p>${esc(c.t)}</p><div class="cactions"><button class="crep" data-crep="${esc(c.n)}">Responder</button><button class="cuseful ${useful?'on':''}" data-cuseful="${esc(c.id)}" aria-pressed="${useful}">${useful?'Gracias':'Útil · Agradecer'}</button></div></div><button class="clk ${l?'on':''}" data-clk="${esc(c.id)}" aria-label="Me gusta" aria-pressed="${l}">${ic('heart')}</button></div>`}
 function cmSheet(k,title,foc){
  const draw=()=>{const l=cmList(k);$('#cl').innerHTML=l.map(cmRow).join('')};
  openSheet(`<div class="chead"><h3>Comentarios</h3>${title?`<div class="sub">${esc(title)}</div>`:''}</div><div id="cl" class="clist"></div>
@@ -526,8 +549,9 @@ function cmSheet(k,title,foc){
   if(!$('#cl')){cmSheet(k,title);return}
   ci.value='';cs.disabled=true;draw();const cl=$('#cl');cl.lastElementChild&&cl.lastElementChild.classList.add('cnew');cl.lastElementChild&&cl.lastElementChild.scrollIntoView({block:'nearest',behavior:'smooth'});if(tab==='home')home()})};
  cs.onclick=send;ci.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();send()}};
- $('#cl').onclick=e=>{const lk=e.target.closest('[data-clk]'),rp=e.target.closest('[data-crep]');
-  if(lk){e.stopPropagation();const id=lk.dataset.clk;cmLiked.has(id)?cmLiked.delete(id):cmLiked.add(id);lk.classList.toggle('on');lk.classList.remove('pop');void lk.offsetWidth;lk.classList.add('pop')}
+ $('#cl').onclick=e=>{const lk=e.target.closest('[data-clk]'),rp=e.target.closest('[data-crep]'),useful=e.target.closest('[data-cuseful]');
+  if(useful){e.stopPropagation();const id=useful.dataset.cuseful,was=cmHelpful.has(id);was?cmHelpful.delete(id):cmHelpful.add(id);saveSet('kalea_cm_helpful',cmHelpful);draw();toast(was?'Se quitó tu agradecimiento':'Gracias por valorar la respuesta');return}
+  if(lk){e.stopPropagation();const id=lk.dataset.clk;cmLiked.has(id)?cmLiked.delete(id):cmLiked.add(id);saveSet('kalea_cm_liked',cmLiked);lk.classList.toggle('on');lk.setAttribute('aria-pressed',String(cmLiked.has(id)));lk.classList.remove('pop');void lk.offsetWidth;lk.classList.add('pop')}
   if(rp){e.stopPropagation();ci.value='@'+rp.dataset.crep+' ';cs.disabled=false;ci.focus()}};
  if(foc)setTimeout(()=>ci.focus(),350)}
 function commentSheet(i){const p=POSTS[i];cmSheet(p.b,B[p.b].name)}
@@ -542,28 +566,29 @@ function opts(list,on,deal){return `<div class="opts">${list.map(x=>`<button cla
 function action(k,pre){
  const b=B[k];
  if(b.action==='pedir'){
-  openSheet(`<h3>Pedir a ${b.name}</h3><div class="sub">Reparto en Elgoibar · 20 a 30 min</div>${b.menu.map((m,i)=>`<div class="qty"><div>${m[0]}<small style="display:block;color:var(--muted);font-size:12px">${m[2]}</small></div><div class="c"><button data-q="${i}" data-d="-1">−</button><span id="q${i}">${i===0?2:0}</span><button data-q="${i}" data-d="1">+</button></div></div>`).join('')}<button class="big-cta" id="go">Pedir · <span id="tot"></span></button><div class="earn">${ic('coin')} Ganas puntos con este pedido</div>`);
+  openSheet(`<h3>Pedir a ${b.name}</h3><div class="sub">Reparto en Elgoibar · 20 a 30 min</div>${b.menu.map((m,i)=>`<div class="qty"><div>${m[0]}<small style="display:block;color:var(--muted);font-size:12px">${m[2]}</small></div><div class="c"><button data-q="${i}" data-d="-1">−</button><span id="q${i}">${i===0?2:0}</span><button data-q="${i}" data-d="1">+</button></div></div>`).join('')}<div class="demo-note">Vista de demostración: el pedido no se envía y no se realiza ningún cobro.</div><button class="big-cta" id="go">Ver pedido de prueba · <span id="tot"></span></button>`);
   const q=b.menu.map((_,i)=>i===0?2:0),pr=b.menu.map(m=>parseFloat(m[2].replace(',','.')));
   const up=()=>{const s=q.reduce((a,n,i)=>a+n*pr[i],0);$('#tot').textContent=s.toFixed(2).replace('.',',')+' €';q.forEach((n,i)=>$('#q'+i).textContent=n);return s};up();
   document.querySelectorAll('[data-q]').forEach(x=>x.onclick=()=>{const i=+x.dataset.q;q[i]=Math.max(0,q[i]+ +x.dataset.d);up()});
-  $('#go').onclick=()=>{const s=up();if(!s){toast('Añade algo al pedido');return}const p=Math.round(s*5);need('Para hacer tu pedido',()=>{closeSheet();if(user)points+=p;toast('Pedido enviado a '+b.name,p)})};return;
+  $('#go').onclick=()=>{const s=up();if(!s){toast('Añade algo al pedido');return}need('Para probar el pedido',()=>okDone(lang==='eu'?'Horrela ikusiko litzateke eskaera':'Así se vería tu pedido',b.name,null,lang==='eu'?'Ez zaio negozioari bidali eta ez da ordainketarik egin.':'No se envió al negocio ni se realizó ningún pago.'))};return;
  }
  const isC=b.action==='cita';
  openSheet(`<h3>${isC?'Pedir cita en':'Reservar en'} ${b.name}</h3><div class="sub">${b.street}, Elgoibar</div>
  <label>${isC?'Servicio':'Personas'}</label>${isC?opts(b.menu.map(m=>m[0]),b.menu[0][0]):opts(['2','3','4','5','6+'],'2')}
  <label>Día</label>${opts(['Hoy','Mañana','Sábado','Domingo'],'Hoy')}
  <label>Hora</label>${opts(isC?['10:00','12:30','16:00','17:30','19:00']:['13:30','14:00','20:30','21:30','22:00'],pre||(isC?'17:30':'21:30'),isC?{'17:30':'-20%'}:{'21:30':'-15%'})}
- <button class="big-cta" id="go">${isC?'Confirmar cita':'Confirmar reserva'}</button><div class="earn">${ic('coin')} +50 puntos al confirmar</div>`);
+ <div class="demo-note">Prototipo: no se bloquea una hora ni se envían tus datos al negocio.</div><button class="big-cta" id="go">${isC?'Probar cita':'Probar reserva'}</button>`);
  document.querySelectorAll('.sheet .opts').forEach(g=>g.querySelectorAll('.opt').forEach(o=>o.onclick=()=>{g.querySelectorAll('.opt').forEach(x=>x.classList.remove('on'));o.classList.add('on')}));
- $('#go').onclick=()=>need(isC?'Para confirmar tu cita':'Para confirmar tu reserva',()=>{points+=50;okDone(isC?'Cita confirmada':'Reserva confirmada',b.name,50)});
+ $('#go').onclick=()=>need(isC?'Para probar la cita':'Para probar la reserva',()=>okDone(lang==='eu'?(isC?'Horrela ikusiko litzateke hitzordua':'Horrela ikusiko litzateke erreserba'):(isC?'Así se vería tu cita':'Así se vería tu reserva'),b.name,null,lang==='eu'?'Ez da benetako ordurik gorde eta ez dira datuak bidali.':(isC?'No se reservó una hora real ni se enviaron tus datos.':'No se bloqueó una mesa ni se enviaron tus datos.')));
 }
-const seenS=new Set();let stIdx=0;
+const seenS=storedSet('kalea_seen_stories');let stIdx=0;
 const CAPC={bar:'Pintxo pote esta tarde en la barra',rest:'Menú del día listo. Quedan mesas para hoy',cafe:'Recién salido del horno',alim:'Producto fresco de hoy',belleza:'Me queda un hueco esta tarde',tienda:'Novedades de otoño en tienda',salud:'Nuevo horario de tarde',serv:'Pide tu cita desde Kalea'};
 const CAPK={tantaka:'Pintxo pote esta noche',txarriduna:'Chuletón del día a la brasa',pasteleria:'Hornada nueva a las 18:00',meraki:'Colores de otoño',josebarber:'Me queda un hueco hoy a las 17:30',maala:'Terraza abierta con vistas al pueblo',bst:'Clase de grupo a las 19:00'};
 const XSVG='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 function story(k){stIdx=Math.max(0,order.indexOf(k));showStory()}
-function closeStory(){const s=$('#story');s.classList.remove('on','paused');s.innerHTML='';document.querySelectorAll('[data-story]').forEach(el=>{const r=el.querySelector('.ring');if(r)r.classList.toggle('seen',seenS.has(el.dataset.story))})}
-function nextStory(){seenS.add(order[stIdx]);if(stIdx<order.length-1){stIdx++;showStory()}else closeStory()}
+function markStorySeen(k){if(!k)return;seenS.add(k);saveSet('kalea_seen_stories',seenS)}
+function closeStory(){const s=$('#story');if(s.classList.contains('on'))markStorySeen(order[stIdx]);s.classList.remove('on','paused');s.innerHTML='';document.querySelectorAll('[data-story]').forEach(el=>{const seen=seenS.has(el.dataset.story);if(el.matches('.fb-story'))el.classList.toggle('seen',seen);const r=el.querySelector('.ring');if(r)r.classList.toggle('seen',seen)})}
+function nextStory(){markStorySeen(order[stIdx]);if(stIdx<order.length-1){stIdx++;showStory()}else closeStory()}
 function prevStory(){if(stIdx>0)stIdx--;showStory()}
 function showStory(){
  const k=order[stIdx],b=B[k],a=ACT[b.action],s=$('#story');
@@ -573,11 +598,11 @@ function showStory(){
  <div class="sh">${av(b,'sav')}<div class="sn"><b>${b.short}</b><small>hace ${stIdx+1} h <span class="sej">Ejemplo</span></small></div><button class="x" id="sx" aria-label="Cerrar">${XSVG}</button></div>
  <div class="tapl" id="stl"></div><div class="tapr" id="str"></div>
  <div class="cap">${CAPK[k]||CAPC[b.cg]}</div>
- <div class="scta"><button class="sbtn main" id="sgo">${ic(a[1])} ${t(a[0])}</button><button class="sbtn" id="sprof">Ver perfil</button><button class="sbtn sic ${liked.has(k)?'on':''}" id="slike" aria-label="Me gusta">${ic('heart')}</button></div>`;
+ <div class="scta"><button class="sbtn main" id="sgo">${ic(a[1])} ${t(a[0])}</button><button class="sbtn" id="sprof">${lang==='eu'?'Profila ikusi':'Ver perfil'}</button><button class="sbtn sic ${liked.has(k)?'on':''}" id="slike" aria-label="${lang==='eu'?'Atsegin dut':'Me gusta'}" aria-pressed="${liked.has(k)}">${ic('heart')}</button></div>`;
  s.classList.add('on');
  const nx=order[stIdx+1];if(nx&&B[nx].img){const im=new Image();im.referrerPolicy='no-referrer';im.src=B[nx].img}
  s.querySelector('.bars i.run').addEventListener('animationend',nextStory);
- $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};$('#slike').onclick=()=>{if(!user){closeStory();return need('Para dar me gusta',()=>setLike(k,true))}const on=!liked.has(k);setLike(k,on);const h=$('#slike');h.classList.toggle('on',on);h.classList.remove('pop');void h.offsetWidth;if(on)h.classList.add('pop')};
+ $('#sx').onclick=closeStory;$('#sgo').onclick=()=>{closeStory();action(k)};$('#sprof').onclick=()=>{closeStory();profile(k)};$('#slike').onclick=()=>{if(!user){closeStory();return need('Para dar me gusta',()=>setLike(k,true))}const on=!liked.has(k);setLike(k,on);const h=$('#slike');h.classList.toggle('on',on);h.setAttribute('aria-pressed',String(on));h.classList.remove('pop');void h.offsetWidth;if(on)h.classList.add('pop')};
  [['#stl',prevStory],['#str',nextStory]].forEach(([sel,fn])=>{const el=$(sel);let t0=0;
   el.onpointerdown=e=>{t0=Date.now();window._stMv=false;s.classList.add('paused')};
   el.onpointerup=e=>{s.classList.remove('paused');if(Date.now()-t0<250&&!window._stMv)fn()};
@@ -591,14 +616,23 @@ function showStory(){
 document.addEventListener('keydown',e=>{if(!$('#story').classList.contains('on'))return;if(e.key==='Escape')closeStory();if(e.key==='ArrowRight')nextStory();if(e.key==='ArrowLeft')prevStory()});
 
 document.addEventListener('click',e=>{
- const el=e.target.closest('[data-share],[data-save],[data-tel],[data-map],[data-exm],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-gas],[data-esq],[data-qcom],[data-qclk]');if(!el)return;
+ const el=e.target.closest('[data-share],[data-save],[data-toastundo],[data-postmenu],[data-postfollow],[data-hidepost],[data-mutebiz],[data-report],[data-reportreason],[data-feedmode],[data-gasloc],[data-tel],[data-map],[data-notif],[data-pubas],[data-alert],[data-pqs],[data-wt],[data-wz],[data-walert],[data-lbretry],[data-jobi],[data-jobpub],[data-sug],[data-upv],[data-reply],[data-plan],[data-prole],[data-ev],[data-news],[data-vote],[data-inc],[data-bono],[data-scope],[data-ics],[data-going],[data-tab],[data-biz],[data-bizmenu],[data-bizopen],[data-qclear],[data-act],[data-like],[data-story],[data-flash],[data-cat],[data-ptype],[data-lang],[data-com],[data-rate],[data-login],[data-gas],[data-esq],[data-qcom],[data-qclk]');if(!el)return;
  if(el.tagName==='A')e.preventDefault();
  const d=el.dataset;
- if(d.save){const k=d.save;saved.has(k)?saved.delete(k):saved.add(k);try{localStorage.setItem('kalea_saved',JSON.stringify([...saved]))}catch(e){}el.classList.toggle('on',saved.has(k));el.classList.remove('pop');void el.offsetWidth;if(saved.has(k)){el.classList.add('pop');try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}}toast(saved.has(k)?'Guardado en tu perfil':'Quitado de guardados');return}
+ if(d.toastundo){const undo=toastUndo;toastUndo=null;clearTimeout($('#toast')._t);$('#toast').classList.remove('on');if(undo)undo();return}
+ if(d.save){const k=d.save,on=!saved.has(k);updateSaved(k,on);if(on){try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}}toast(on?'Guardado en tu perfil':'Quitado de guardados',null,()=>updateSaved(k,!on));return}
+ if(d.postmenu){postMenu(d.postmenu);return}
+ if(d.postfollow){const k=d.postfollow;need('Para seguir a '+B[k].name,()=>{const f=toggleFollow(k);closeSheet();if(tab==='home')refreshHome();toast(f?'Sigues a '+B[k].name:'Has dejado de seguir a '+B[k].name)});return}
+ if(d.hidepost){const k=d.hidepost;hiddenPosts.add(k);saveSet('kalea_hidden_posts',hiddenPosts);closeSheet();if(tab==='home')refreshHome();toast('Publicación ocultada',null,()=>{hiddenPosts.delete(k);saveSet('kalea_hidden_posts',hiddenPosts);if(tab==='home')refreshHome()});return}
+ if(d.mutebiz){const k=d.mutebiz,was=mutedBiz.has(k);was?mutedBiz.delete(k):mutedBiz.add(k);saveSet('kalea_muted_biz',mutedBiz);closeSheet();if(tab==='home')refreshHome();toast(was?'Has vuelto a ver publicaciones de '+B[k].name:'Has silenciado a '+B[k].name,null,()=>{was?mutedBiz.add(k):mutedBiz.delete(k);saveSet('kalea_muted_biz',mutedBiz);if(tab==='home')refreshHome()});return}
+ if(d.report){reportSheet(d.report);return}
+ if(d.reportreason){reportedPosts.add(d.reportreason+':'+d.reason);saveSet('kalea_reported_posts',reportedPosts);closeSheet();toast('Gracias. La denuncia quedó anotada solo en esta demo.');return}
  if(d.share){el.classList.remove('fly');void el.offsetWidth;el.classList.add('fly');const b=B[d.share],url=location.origin+location.pathname+'#'+d.share;if(navigator.share)navigator.share({title:b.name+' en Kalea',url}).catch(()=>{});else{try{navigator.clipboard.writeText(url)}catch(e){}toast('Enlace copiado')}return}
+ if(d.bizmenu){bizMenu(d.bizmenu);return}
+ if(d.bizopen){closeSheet();profile(d.bizopen);return}
+ if(d.qclear){const qi=$('#q');if(qi){q='';qi.value='';$('#bl').innerHTML=bizList();el.hidden=true;qi.focus()}return}
  if(d.tel){e.stopPropagation();location.href=tel(B[d.tel]);return}
  if(d.map){e.stopPropagation();window.open(B[d.map].maps,'_blank','noopener');return}
- if(d.exm){exMode=d.exm;explore();return}
  if(d.notif){notifSheet();return}
  if(d.pubas){pubAs=d.pubas;ptype=null;publish();hookPub();return}
  if(d.alert){alerts[d.alert]=!alerts[d.alert];try{localStorage.setItem('kalea_alerts',JSON.stringify(alerts))}catch(e){}me();return}
@@ -607,21 +641,22 @@ document.addEventListener('click',e=>{
  else if(d.wz){wzone=d.wz;workV()}
  else if(d.walert){need('Para recibir avisos',()=>{walert=!walert;workV();toast(walert?'Te avisaremos cuando salga algo nuevo en tu zona':'Aviso desactivado')})}
  else if(d.lbretry){LB.err[d.lbretry]=0;workV()}
- else if(d.jobi){const j=JOBS[+d.jobi];need('Para enviar tu interés',()=>toast('Interés enviado a '+j.biz))}
+ else if(d.jobi){const j=JOBS[+d.jobi];need('Para probar esta acción',()=>toast('Vista de demo: no se envió tu interés a '+j.biz))}
  else if(d.jobpub){need('Para publicar una oferta',()=>{openSheet(`<h3>Publicar oferta</h3><div class="sub">Gratis para negocios de Elgoibar</div><input class="field" id="jp" placeholder="Puesto (ej.: camarero/a fines de semana)"><input class="field" id="jb" placeholder="Nombre del negocio"><textarea class="field" id="jd" rows="3" placeholder="Horario, condiciones y requisitos"></textarea><button class="big-cta" id="jsend">Publicar</button>`);$('#jsend').onclick=()=>{const p=$('#jp').value.trim(),b=$('#jb').value.trim();if(!p||!b)return;const esc=x=>x.replace(/</g,'&lt;');JOBS.unshift({biz:esc(b),puesto:esc(p),det:esc($('#jd').value.trim()),when:'ahora'});closeSheet();tab='home';render();toast('Oferta publicada. Ya la ven tus vecinos en el inicio')}})}
  else if(d.sug){pendingQ=d.sug;askV()}
  else if(d.upv){const k=d.upv;need('Para votar respuestas',()=>{upv.has(k)?upv.delete(k):upv.add(k);askV()})}
  else if(d.reply){const id=d.reply,inp=$('#r-'+id),txt=inp?inp.value.trim():'';if(!txt){inp&&inp.focus();return}need('Para responder',()=>{const q=myQs.concat(QS).find(x=>x.id===id);q.ans.push({who:(user.name||'Tú').split(' ')[0],txt:txt.replace(/</g,'&lt;'),v:0});points+=10;askV();toast('Respuesta publicada',10)})}
- else if(d.plan){const k=d.plan;need('Para apuntarte al plan',()=>{if(joinedP.has(k))joinedP.delete(k);else{joinedP.add(k);const p=PLANS.find(x=>x.id===k);const n=p.now+1;toast(n>=p.min?'¡Mínimo conseguido! El plan se hace':'Apuntado. Faltan '+(p.min-n)+'. No pagas nada hasta que se llegue',10);points+=10}home()})}
+ else if(d.plan){const k=d.plan,p=PLANS.find(x=>x.id===k);if(!p)return;need('Para probar la inscripción',()=>{const was=joinedP.has(k),before=p.now+(was?1:0);if(was){joinedP.delete(k);saveSet('kalea_plans',joinedP);updatePlanCard(p);toast('Has retirado tu interés; no se había reservado plaza')}else{joinedP.add(k);saveSet('kalea_plans',joinedP);updatePlanCard(p);const after=p.now+1,justReached=before<p.min&&after>=p.min;toast(justReached?'¡El ejemplo alcanza el mínimo!':after>=p.min?'Tu interés se ha guardado en esta demo':'Interés guardado en esta demo. Faltan '+(p.min-after))}})}
  else if(d.prole){prole=d.prole;openPubSheet()}
  else if(d.ev)evSheet(d.ev);
  else if(d.news)newsSheet(d.news);
  else if(d.vote!==undefined){const i=+d.vote;need('Para votar',()=>{if(voted===null){voted=i;points+=20;toast('Voto enviado al ayuntamiento',20)}town()})}
  else if(d.inc)need('Para avisar al ayuntamiento',incSheet);
  else if(d.bono)need('Para pedir tu bono',()=>{if(!bonoOk){bonoOk=true;toast('Bono de 10 € activado. Úsalo en cualquier negocio')}if(tab==='town')town()});
- else if(d.scope){scope=d.scope;home()}
+ else if(d.scope){scope=d.scope;if(scope==='provincia'){feedMode='all';try{localStorage.setItem('kalea_feed_mode','all')}catch(e){}}home()}
+ else if(d.feedmode){feedMode=d.feedmode;try{localStorage.setItem('kalea_feed_mode',feedMode)}catch(e){}if(feedMode==='following')scope='pueblo';home()}
  else if(d.ics)ics(d.ics);
- else if(d.going){const k=d.going;need('Para apuntarte',()=>{if(going.has(k)){going.delete(k)}else{going.add(k);points+=10;toast('Te has apuntado. Te avisamos el día antes',10)}if(tab==='home')home()})}
+ else if(d.going){const k=d.going;need('Para probar la inscripción',()=>{if(going.has(k)){going.delete(k);saveSet('kalea_going',going);toast('Has salido del plan de evento')}else{going.add(k);saveSet('kalea_going',going);toast('Apuntado en esta demo; no reserva plaza ni envía datos')}if(tab==='home')home()})}
  else if(d.tab){try{navigator.vibrate&&navigator.vibrate(6)}catch(e){}if(d.tab===tab&&!d.wt&&!d.pt2&&!$('.bptop')&&!$('#sheet').classList.contains('on')&&view.scrollTop>0){view.scrollTo({top:0,behavior:'smooth'});bounceTab(d.tab);return}closeSheet();if(d.wt)wtab=d.wt;if(d.pt2)ptype=d.pt2;tab=d.tab;render();bounceTab(d.tab);if(d.pt2)openPubSheet()}
  else if(d.biz)profile(d.biz);
  else if(d.act)action(d.act);
@@ -632,7 +667,7 @@ document.addEventListener('click',e=>{
  else if(d.rate){const k=d.rate;need('Para valorar',()=>rateSheet(k))}
  else if(d.login)need('Para guardar tus reservas y puntos',()=>render());
  else if(d.logout)logout();
- else if(d.gas){gasV()}else if(d.esq){esqV()}
+ else if(d.gas){gasV()}else if(d.gasloc){requestGasLocation()}else if(d.esq){esqV()}
  else if(d.story)story(d.story);
  else if(d.flash){const f=FLASH[d.flash];action(f.b,f.txt.match(/\d{1,2}:\d{2}/)[0])}
  else if(d.cat){cat=d.cat;explore()}
@@ -650,15 +685,14 @@ try{if(!localStorage.getItem('kalea_lang'))setTimeout(()=>{try{if(localStorage.g
 
 let _bip=null;addEventListener('beforeinstallprompt',e=>{e.preventDefault();_bip=e});
 addEventListener('appinstalled',()=>{_bip=null;toast('Kalea instalada en tu móvil')});
-try{navigator.geolocation&&navigator.geolocation.getCurrentPosition(p=>{gasPos=[p.coords.latitude,p.coords.longitude];gasGeo=1;if(GAS&&$('#gasb'))gasPaint()},()=>{},{timeout:5000,maximumAge:600000})}catch(e){}
 function instRow(){if(matchMedia('(display-mode: standalone)').matches||navigator.standalone)return '';return `<button class="inst" data-inst="1"><div class="ic">${ic('dl')}</div><div class="t"><b>Instalar Kalea</b><small>Ábrela desde tu pantalla de inicio, como una app</small></div><span class="v">›</span></button>`}
 document.addEventListener('click',e=>{if(!e.target.closest('[data-inst]'))return;
  if(_bip){_bip.prompt();_bip.userChoice.finally(()=>{_bip=null})}
  else{const ios=/iphone|ipad|ipod/i.test(navigator.userAgent);openSheet(`<h3>Instalar Kalea</h3><div class="isteps">${ios?'<p><b>1.</b> Toca el botón Compartir de Safari (el cuadrado con la flecha).</p><p><b>2.</b> Elige «Añadir a pantalla de inicio».</p><p><b>3.</b> Toca «Añadir».</p>':'<p><b>1.</b> Abre el menú del navegador (los tres puntos).</p><p><b>2.</b> Toca «Instalar aplicación» o «Añadir a pantalla de inicio».</p><p><b>3.</b> Confirma y tendrás Kalea con su icono.</p>'}</div>`)}});
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 
-function setLike(k,on){if(on)liked.add(k);else liked.delete(k);try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
- document.querySelectorAll(`[data-like="${k}"]`).forEach(b=>{if(b.classList.contains('liked')===on)return;b.classList.toggle('liked',on);b.classList.remove('pop');void b.offsetWidth;if(on)b.classList.add('pop');const L=b.closest('article')&&b.closest('article').querySelector('.likes');if(L){const n=parseInt(L.textContent.replace(/\D/g,''))||0;L.textContent=Math.max(0,n+(on?1:-1)).toLocaleString('es-ES')+' Me gusta';L.classList.remove('bump');void L.offsetWidth;L.classList.add('bump')}})}
+function setLike(k,on){if(on)liked.add(k);else liked.delete(k);saveSet('kalea_liked',liked);try{navigator.vibrate&&navigator.vibrate(8)}catch(e){}
+ document.querySelectorAll(`[data-like="${k}"]`).forEach(b=>{if(b.classList.contains('liked')===on)return;b.classList.toggle('liked',on);b.setAttribute('aria-pressed',String(on));b.classList.remove('pop');void b.offsetWidth;if(on)b.classList.add('pop');const L=b.closest('article')&&b.closest('article').querySelector('.likes');if(L){const n=parseInt(L.textContent.replace(/\D/g,''))||0;L.textContent=Math.max(0,n+(on?1:-1)).toLocaleString('es-ES')+' Me gusta';L.classList.remove('bump');void L.offsetWidth;L.classList.add('bump')}})}
 
 (()=>{let y0=null,dy=0;const ind=document.createElement('div');ind.className='ptr';ind.innerHTML='<i></i>';$('#screen').appendChild(ind);
  view.addEventListener('touchstart',e=>{y0=(tab==='home'&&view.scrollTop<=0&&!$('#story').classList.contains('on'))?e.touches[0].clientY:null;dy=0},{passive:true});
@@ -680,7 +714,7 @@ new MutationObserver(()=>{document.querySelectorAll('img:not(.ld)').forEach(i=>{
 })();
 
 // Confirmación con check animado
-function okDone(t1,t2,p){try{navigator.vibrate&&navigator.vibrate([12,60,12])}catch(e){}openSheet(`<div class="okv"><svg class="okc" viewBox="0 0 52 52"><circle cx="26" cy="26" r="23"/><path d="M15.5 27.5l7 7 14-15"/></svg><h3>${esc(t1)}</h3><p>${esc(t2)}</p>${p?`<span class="okp">+${p} puntos</span>`:''}</div>`);clearTimeout(window._okT);window._okT=setTimeout(closeSheet,2100)}
+function okDone(t1,t2,p,detail=''){openSheet(`<div class="okv"><span class="preview-label">${lang==='eu'?'DEMO':'SOLO DEMO'}</span><svg class="okc" viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="23"/><path d="M15.5 27.5l7 7 14-15"/></svg><h3>${esc(t1)}</h3><p>${esc(t2)}</p>${detail?`<small class="demo-note">${esc(detail)}</small>`:''}${p?`<span class="okp">+${p} puntos</span>`:''}<button class="big-cta" id="okclose">${lang==='eu'?'Itxi':'Cerrar'}</button></div>`);clearTimeout(window._okT);$('#okclose').onclick=closeSheet}
 // Selector con píldora que se desliza
 const SEGP={};
 function segInd(){document.querySelectorAll('.seg').forEach(g=>{const b0=g.querySelector('button');if(!b0)return;const key=Object.keys(b0.dataset)[0]||'seg';let i=g.querySelector('.segi');if(!i){i=document.createElement('span');i.className='segi';g.prepend(i);g.classList.add('hasi')}

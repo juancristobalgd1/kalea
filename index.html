@@ -2,52 +2,17 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<meta name="robots" content="noindex">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Kalea · Tu pueblo en una app</title>
-<meta name="description" content="Kalea: la red social local de Elgoibar. Historias de los negocios, reservas, citas, pedidos a domicilio, huecos de última hora y puntos del pueblo.">
 <meta name="theme-color" content="#ffffff">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" href="icons/apple-180.png">
-<link rel="icon" href="icons/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Kalea">
-<meta name="mobile-web-app-capable" content="yes">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="styles.css?v=19">
+<meta http-equiv="refresh" content="0;url=app.html">
+<title>Kalea · Elgoibar</title>
+<script>
+  const destination = new URL('app.html', location.href);
+  destination.search = location.search;
+  location.replace(destination.href);
+</script>
 </head>
 <body>
-<div class="stage">
-  <aside class="pitch">
-    <div class="brand"><span class="logo">K</span> Kalea</div>
-    <h1>Todo tu pueblo,<br>en una app.</h1>
-    <p>Historias de los negocios, reservas, citas, pedidos a domicilio, huecos de última hora y puntos que se canjean en cualquier comercio. Empezamos por Elgoibar.</p>
-    <ul>
-      <li>Cada negocio tiene su página web automática</li>
-      <li>Huecos libres con descuento, avisando a vecinos cercanos</li>
-      <li>La IA publica los eventos del pueblo y de Gipuzkoa</li>
-      <li>Puntos del pueblo y bonos del ayuntamiento</li>
-      <li>Euskera y castellano</li>
-    </ul>
-    <div class="ctas"><a class="btn-main" href="app.html">Entrar a Kalea →</a><span>Sin registro para mirar</span></div>
-    <p class="note">Solo te pedimos entrar con Google para reservar, pedir, comentar o valorar. Prototipo: negocios y datos ficticios.</p>
-  </aside>
-  <div class="device">
-    <div class="screen" id="screen">
-      <div class="statusbar"><span>9:41</span><span class="sb-r">●●● ◔ ▮</span></div>
-      <main id="view"></main>
-      <nav class="tabbar" id="tabbar"></nav>
-      <div class="scrim" id="scrim"></div>
-      <section class="sheet" id="sheet"></section>
-      <section class="story" id="story"></section>
-      <div class="toast" id="toast"></div>
-    </div>
-  </div>
-</div>
-<script src="config.js?v=19"></script>
-<script src="places.js?v=19"></script>
-<script src="app.js?v=19"></script>
-<script>if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));</script>
+<a href="app.html">Abrir Kalea</a>
 </body>
 </html>
