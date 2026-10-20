@@ -595,8 +595,8 @@ a.board,button.board{display:block;width:calc(100% - 36px);text-align:left;color
 .useful-icon{display:grid;width:38px;height:38px;flex:none;place-items:center;border-radius:12px;background:#e8f4ff;color:var(--blue)}
 .useful-icon svg{width:20px;height:20px}
 .useful-copy{display:block;flex:1;min-width:0}
-.useful-copy b{display:block;font-size:13px;line-height:1.3}
-.useful-copy small{display:block;margin-top:4px;color:var(--muted);font-size:10.5px;line-height:1.35}
+.useful-copy b{display:block;font-size:14px;line-height:1.3}
+.useful-copy small{display:block;margin-top:4px;color:var(--muted);font-size:12px;line-height:1.4}
 .useful-arrow{flex:none;color:var(--muted);font-size:21px;font-weight:300}
 .useful-grid .board{margin:0;width:auto}
 .bizrow{display:flex;align-items:center;border-bottom:1px solid var(--line);padding-right:8px;content-visibility:auto;contain-intrinsic-size:auto 92px}
@@ -611,7 +611,7 @@ a.board,button.board{display:block;width:calc(100% - 36px);text-align:left;color
 .biz-menu-item svg{width:20px;height:20px;color:var(--blue);flex:none}
 .biz-menu-item span{flex:1}
 .biz-menu-item svg:last-child{width:17px;height:17px;color:var(--muted)}
-@media(max-width:360px){.useful-grid{gap:8px;padding-right:12px;padding-left:12px}.useful-card{gap:7px;padding:9px}.useful-icon{width:32px;height:32px}.useful-copy b{font-size:12px}}
+@media(max-width:360px){.useful-grid{gap:8px;padding-right:12px;padding-left:12px}.useful-card{gap:7px;padding:9px}.useful-icon{width:32px;height:32px}.useful-copy b{font-size:13px}.useful-copy small{font-size:11px}}
 /* ===== Pulido pro ===== */
 .brand{display:flex;align-items:baseline;gap:10px}
 .wm{font-size:26px;font-weight:800;letter-spacing:-1px;color:#000}
