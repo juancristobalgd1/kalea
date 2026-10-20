@@ -314,5 +314,5 @@ html.dark .cactions .cuseful{color:#4cb5f9}
 html.dark .gas-location-note{background:#071725;border-color:#12344a}
 html.dark .gas-location-note b{color:#f5f5f5}
 html.dark .plan .nocharge{color:#a8a8a8}
-html.dark .tabbar{background:rgba(12,12,12,.72);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -8px 24px rgba(0,0,0,.22);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px)}
+html.dark .tabbar{background:rgba(12,12,12,.84);border-top:1px solid rgba(255,255,255,.12);box-shadow:0 -8px 24px rgba(0,0,0,.22);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px)}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){html.dark .tabbar{background:rgba(0,0,0,.96)}}

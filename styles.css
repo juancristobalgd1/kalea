@@ -15,7 +15,7 @@ img{display:block}
 .pitch li:before{content:"";position:absolute;left:0;top:8px;width:8px;height:8px;border-radius:50%;background:var(--gold)}
 .pitch .note{font-size:13px;opacity:.7}
 .device{width:390px;height:844px;border-radius:56px;padding:12px;background:#1b1b1d;box-shadow:0 0 0 2px #3a3a3e,0 40px 90px rgba(0,0,0,.6);flex-shrink:0}
-.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;background:var(--bg)}
+.screen{position:relative;width:100%;height:100%;border-radius:44px;overflow:hidden;overflow:clip;background:var(--bg)}
 @media (max-width:860px){.pitch{display:none}.stage{padding:0;display:block}.device{width:100%;height:100dvh;border-radius:0;padding:0;box-shadow:none;background:none}.screen{border-radius:0}}
 .statusbar{height:44px;display:flex;justify-content:space-between;align-items:center;padding:0 28px;font-size:14px;font-weight:600}
 .sb-r{font-size:10px;letter-spacing:2px;opacity:.9}
@@ -653,6 +653,8 @@ body,button,input,textarea{font-feature-settings:"ss01","cv11";text-rendering:op
 .post .evbody,.post .qtext,.post .jtext{margin-top:2px}
 /* cabeceras de sección */
 .sec{padding:30px 16px 14px}
+.slider-sec{padding:24px 8px 12px}
+.slider-sec h3{min-width:0;font-size:17px;line-height:1.2;letter-spacing:-.25px;text-wrap:balance}
 .sec h3{font-size:17px;font-weight:700;letter-spacing:-.3px}
 .sec a{font-size:14px;font-weight:600}
 /* barra superior fija con desenfoque */
@@ -1041,5 +1043,5 @@ body{-webkit-tap-highlight-color:transparent}
 #view .agenda{padding-left:8px;padding-right:8px;scroll-padding-left:8px;scroll-padding-right:8px}
 
 /* Barra inferior de cristal */
-.tabbar{background:rgba(255,255,255,.72);border-top:1px solid rgba(219,219,219,.58);box-shadow:0 -8px 24px rgba(0,0,0,.06);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px)}
+.tabbar{background:rgba(255,255,255,.84);border-top:1px solid rgba(219,219,219,.65);box-shadow:0 -8px 24px rgba(0,0,0,.06);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px)}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.tabbar{background:rgba(255,255,255,.96)}}
