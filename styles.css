@@ -362,7 +362,11 @@ main{padding-bottom:80px}
 .opt.deal:after{background:#ed4956}
 .aisub,.aitag,.nk,.tag,.web,.evtip{background:#efefef;color:#262626;border:0}
 .date small,.evdate small,.ag .d{color:#ed4956}
-.wallet{background:linear-gradient(135deg,#262626,#4a4a4a);color:#fff}
+.wallet{border:1px solid #dcecff;background:linear-gradient(118deg,#eef7ff 0%,#f8fbff 54%,#fff 100%);color:#262626;box-shadow:0 4px 16px rgba(0,64,128,.06)}
+.wallet:after{background:rgba(0,149,246,.08)}
+.wallet>small{color:#5f6b76;opacity:1}
+.wallet .pts{color:#17191c;line-height:1.05;font-variant-numeric:tabular-nums}
+.wallet .qr{background:var(--blue);color:#fff}
 .prog span,.bars span{background:var(--blue)}
 .plan .org.o-Ayuntamiento{background:#262626}
 .mini{color:var(--blue)}

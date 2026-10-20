@@ -143,6 +143,11 @@ html.dark .ib2{color:#f5f5f5}
 html.dark .ib2.save.on svg{fill:#f5f5f5}
 html.dark .post p.cap{color:#f5f5f5}
 html.dark .ptime{color:#a8a8a8}
+html.dark .wallet{border:1px solid #23435d;background:linear-gradient(118deg,#0b2236 0%,#101820 68%,#121212 100%);color:#f5f5f5;box-shadow:none}
+html.dark .wallet:after{background:rgba(0,149,246,.16)}
+html.dark .wallet>small{color:#c1d5e6}
+html.dark .wallet .pts{color:#fff}
+html.dark .wallet .qr{background:#0095f6;color:#fff}
 @media(min-width:520px){html.dark body.app{background:#121212}
 html.dark .app .device{background:#000}}
 html.dark #view .post{border-bottom:1px solid #262626}
