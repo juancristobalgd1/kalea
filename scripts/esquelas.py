@@ -1,11 +1,12 @@
 import json, re, html, subprocess, time, sys
 
-URL = "https://canales.diariovasco.com/esquelas/diario/"
+# canales.diariovasco.com redirige aquí desde el 21/10/2026; el listado se renderiza con JavaScript.
+URL = "https://esquelas.diariovasco.com/esquelas/diario/"
 BASE = URL
 
 def fetch():
     for a in range(3):
-        p = subprocess.run(["curl", "-s", "--max-time", "30", "-A", "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36", URL], capture_output=True)
+        p = subprocess.run(["curl", "-sL", "--max-time", "30", "-A", "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36", URL], capture_output=True)
         if p.returncode == 0 and len(p.stdout) > 5000:
             return p.stdout.decode("utf-8", "replace")
         time.sleep(3)
@@ -37,6 +38,10 @@ for pos, kind, val in marks:
         if not cur or not name:
             continue
         es.append({"n": name, "mun": cur, "u": BASE + val, "k": int(cm.group(1)) if cm else 1})
+
+# Sin este guard el script escribiría un JSON vacío y CI lo commitearía.
+if not es:
+    raise SystemExit("0 esquelas: el listado nuevo se renderiza con JavaScript y el scraper aún no lo lee; reescribir contra esquelas.diariovasco.com")
 
 fecha_fmt = ""
 if fecha:

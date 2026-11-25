@@ -24,6 +24,30 @@ Prototipo de interfaz (HTML, CSS y JS sin dependencias). Negocios, eventos, prec
 - Se puede mirar todo sin registro. Para dar me gusta, comentar, valorar, reservar, pedir o apuntarse a un evento se pide entrar con Google.
 - Acceso con Google: pegar el ID de cliente OAuth (tipo *Aplicación web*, origen `https://juancristobalgd1.github.io`) en `config.js`. Sin ID funciona en modo demo. En producción, el token de Google se tiene que verificar en el servidor.
 
+## Ejecutar en local
+No hay dependencias ni compilación: es HTML, CSS y JS planos. Sirve la carpeta con cualquier servidor estático y abre la app:
+
+```bash
+python3 -m http.server 8000
+# → http://localhost:8000/  (index.html redirige a app.html)
+```
+
+No abras `app.html` con doble clic (`file://`): el navegador bloquea `fetch` y el service worker, y las secciones de noticias y empleo se quedan vacías en silencio.
+
+**Acceso con Google en local:** en la consola de Google, añade `http://localhost:8000` como origen autorizado además de `https://juancristobalgd1.github.io`, y pega el ID de cliente en `config.js`. Sin ID todo funciona en modo demo.
+
+## Datos automáticos (`scripts/`)
+Los JSON se regeneran desde la raíz del repo; solo hacen falta Python 3 y `curl`, nada que instalar con `pip`:
+
+- `python3 scripts/news.py` — escribe `news.json` (RSS de Diario Vasco y Naiz) y `lanbide.json` (ofertas de Lanbide; si el servicio tarda en responder, se queda para la siguiente ejecución).
+- `python3 scripts/gas.py` — escribe `gas.json` (precios de la API de minetur para estaciones a menos de 25 km de Elgoibar).
+- `python3 scripts/esquelas.py` — ⚠️ roto desde el 21/10/2026: Diario Vasco movió las esquelas a [esquelas.diariovasco.com](https://esquelas.diariovasco.com/), un portal que renderiza el listado con JavaScript, y el scraper ya no encuentra datos. El script lo detecta y falla sin tocar `esquelas.json`; hace falta reescribirlo contra el portal nuevo (o su API).
+
+GitHub Actions ejecuta `news.py` cada hora, `gas.py` cada 3 horas y `esquelas.py` a diario y commitea los JSON cambiados (`.github/workflows/`).
+
+## Comprobaciones
+`python3 scripts/check.py` comprueba en local, sin dependencias: que los cuatro JSON se pueden leer y tienen las claves esperadas, que los archivos que usan `app.html` y el service worker existen y que los scripts de Python compilan.
+
 ## Próximos pasos
 1. Backend: negocios, publicaciones, historias, reservas y pedidos.
 2. Páginas de negocio renderizadas en servidor con datos estructurados para Google.
