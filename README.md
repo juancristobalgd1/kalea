@@ -41,7 +41,7 @@ Los JSON se regeneran desde la raíz del repo; solo hacen falta Python 3 y `curl
 
 - `python3 scripts/news.py` — escribe `news.json` (RSS de Diario Vasco y Naiz) y `lanbide.json` (ofertas de Lanbide; si el servicio tarda en responder, se queda para la siguiente ejecución).
 - `python3 scripts/gas.py` — escribe `gas.json` (precios de la API de minetur para estaciones a menos de 25 km de Elgoibar).
-- `python3 scripts/esquelas.py` — ⚠️ roto desde el 21/10/2026: Diario Vasco movió las esquelas a [esquelas.diariovasco.com](https://esquelas.diariovasco.com/), un portal que renderiza el listado con JavaScript, y el scraper ya no encuentra datos. El script lo detecta y falla sin tocar `esquelas.json`; hace falta reescribirlo contra el portal nuevo (o su API).
+- `python3 scripts/esquelas.py` — escribe `esquelas.json` (esquelas de Diario Vasco). El 21/10/2026 Diario Vasco movió las esquelas de `canales.diariovasco.com` a [esquelas.diariovasco.com](https://esquelas.diariovasco.com/); el scraper lee ya el portal nuevo. Si el portal cambia de maquetación, el script puede quedarse sin datos: revisar `scripts/esquelas.py` antes de commitear un JSON vacío.
 
 GitHub Actions ejecuta `news.py` cada hora, `gas.py` cada 3 horas y `esquelas.py` a diario y commitea los JSON cambiados (`.github/workflows/`).
 
